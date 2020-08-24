@@ -4,6 +4,12 @@ import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 
+import '../../common/entitys/app.dart';
+import '../../common/entitys/app.dart';
+import '../../common/entitys/app.dart';
+import '../../common/entitys/entitys.dart';
+import '../../global.dart';
+
 class SettingPage extends StatefulWidget {
   @override
   _SettingPageState createState() => _SettingPageState();
@@ -11,6 +17,8 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final TextEditingController _addCateController = TextEditingController();
+  List<Category> categories = [];
+
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0.0,
@@ -74,9 +82,10 @@ class _SettingPageState extends State<SettingPage> {
                 child: RaisedButton(
                   child: Text('添加'),
                   onPressed: () {
-                    Category cate;
-                    cate.cateName = _addCateController.value.text;
-                    print(cate.cateName);
+                    Category category = Category();
+                    category.cateName = _addCateController.value.text;
+                    categories.add(category);
+                    print(categories.length);
                     Navigator.pop(context);
                   },
                   splashColor: Colors.grey,
@@ -91,10 +100,45 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  // 内容页
+  Widget _buildCateView() {
+    return Container();
+  }
+
+  // 打赏
+  Widget _buildBottomTip() {
+    return BottomNavigationBar(
+        // items: _bottomTabs,
+        // currentIndex: _page,
+        // // fixedColor: AppColors.primaryElement,
+        // type: BottomNavigationBarType.fixed,
+        // onTap: _handleNavBarTap,
+        // showSelectedLabels: false,
+        // showUnselectedLabels: false,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
+      body: categories.length > 0
+          ? _buildCateView()
+          : Container(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('暂无分类'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+      // bottomNavigationBar: _buildBottomTip(),
     );
   }
 }

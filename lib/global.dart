@@ -54,7 +54,7 @@ class Global {
   }
 
   // 持久化 用户信息
-  static Future<bool> saveProfile(AppEntity newAppEntity) {
+  static Future<bool> saveAppEntity(AppEntity newAppEntity) {
     return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, newAppEntity.toJson());
   }
 }
