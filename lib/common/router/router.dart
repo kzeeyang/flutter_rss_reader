@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 import 'package:flutter_rss_reader/pages/application/application.dart';
 import 'package:flutter_rss_reader/pages/index/index.dart';
 import 'package:flutter_rss_reader/pages/main/main.dart';
@@ -25,6 +26,8 @@ class $AppRouter {
   MainPage mainPage;
 
   SettingPage settingPage;
+
+  AddCatePage addCatePage;
 
   // @CustomRoute(transitionsBuilder: zoomInTransition)
   // DetailsPage detailsPageRoute;

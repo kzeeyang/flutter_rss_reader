@@ -26,7 +26,8 @@ class Global {
   /// 是否 release
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
-  static AppEntity appEntity;
+  ///全局
+  // static AppEntity appState = AppEntity();
 
   /// init
   static Future init() async {
@@ -50,11 +51,11 @@ class Global {
     }
 
     //读取配置
-    appEntity = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
+    appState = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
   }
 
   // 持久化 用户信息
-  static Future<bool> saveAppEntity(AppEntity newAppEntity) {
-    return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, newAppEntity.toJson());
+  static Future<bool> saveAppEntity() {
+    return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState);
   }
 }

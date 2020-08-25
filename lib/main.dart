@@ -16,7 +16,7 @@ void main() => Global.init().then((e) => runApp(
           ),
         ],
         child: Consumer<AppState>(builder: (context, appState, _) {
-          if (appState.isGrayFilter) {
+          if (appState.darkmode) {
             return ColorFiltered(
               colorFilter: ColorFilter.mode(Colors.white, BlendMode.color),
               child: MyApp(),

@@ -1,33 +1,20 @@
-// import 'package:json_annotation/json_annotation.dart';
-
-// part 'app.g.dart';
-
-// @jsonSerializable(nullable: false)
-// class AppEntities {
-//   final bool darkMode;
-//   final List<Category> categories;
-//   AppEntities({this.darkMode, this.categories});
-//   factory AppEntities.formJson(Map<String, dynamic> json) =>
-//       _$AppEntitiesFromJson(json);
-//   Map<String, dynamic> toJson() => _$AppEntitiesToJson(this);
-// }
-
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app.g.dart';
 
 @JsonSerializable(nullable: false)
-class AppEntity {
+class AppEntity with ChangeNotifier {
   final bool darkMode;
   final List<Category> categories;
-  AppEntity({this.darkMode, this.categories});
+  AppEntity({this.darkMode = false, this.categories});
   factory AppEntity.fromJson(Map<String, dynamic> json) =>
       _$AppEntityFromJson(json);
   Map<String, dynamic> toJson() => _$AppEntityToJson(this);
 }
 
 @JsonSerializable(nullable: false)
-class Category {
+class Category with ChangeNotifier {
   String cateName;
   List<RssSetting> rssSettings;
   Category({this.cateName, this.rssSettings});
@@ -37,7 +24,7 @@ class Category {
 }
 
 @JsonSerializable(nullable: false)
-class RssSetting {
+class RssSetting with ChangeNotifier {
   String rssName;
   String url;
   bool opened;

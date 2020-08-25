@@ -11,3 +11,9 @@ bool duCheckStringLength(String input, int length) {
   if (input == null || input.isEmpty) return false;
   return input.length >= length;
 }
+
+/// 检查字符长度
+bool duCheckStringEmpty(String input) {
+  if (input == null || input.isEmpty) return false;
+  return true;
+}

@@ -1,14 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rss_reader/common/entitys/entitys.dart';
+import 'package:flutter_rss_reader/common/provider/provider.dart';
+import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
-
-import '../../common/entitys/app.dart';
-import '../../common/entitys/app.dart';
-import '../../common/entitys/app.dart';
-import '../../common/entitys/entitys.dart';
-import '../../global.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -35,7 +31,7 @@ class _SettingPageState extends State<SettingPage> {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(
-          Icons.arrow_back,
+          Icons.arrow_back_ios,
           color: AppColors.primaryText,
         ),
         onPressed: () {
@@ -48,7 +44,9 @@ class _SettingPageState extends State<SettingPage> {
             Icons.add,
             color: AppColors.primaryText,
           ),
-          onPressed: _openSimpleDialog,
+          onPressed: () {
+            ExtendedNavigator.rootNavigator.pushNamed(Routes.addCatePage);
+          },
         ),
       ],
     );

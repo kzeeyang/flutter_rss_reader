@@ -12,6 +12,7 @@ import 'package:flutter_rss_reader/pages/welcome/welcome.dart';
 import 'package:flutter_rss_reader/pages/application/application.dart';
 import 'package:flutter_rss_reader/pages/main/main.dart';
 import 'package:flutter_rss_reader/pages/setting/setting.dart';
+import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 
 abstract class Routes {
   static const indexPageRoute = '/';
@@ -19,12 +20,14 @@ abstract class Routes {
   static const applicationPage = '/application-page';
   static const mainPage = '/main-page';
   static const settingPage = '/setting-page';
+  static const addCatePage = '/add-cate-page';
   static const all = {
     indexPageRoute,
     welcomePageRoute,
     applicationPage,
     mainPage,
     settingPage,
+    addCatePage,
   };
 }
 
@@ -72,6 +75,11 @@ class AppRouter extends RouterBase {
       case Routes.settingPage:
         return MaterialPageRoute<dynamic>(
           builder: (context) => SettingPage(),
+          settings: settings,
+        );
+      case Routes.addCatePage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => AddCatePage(),
           settings: settings,
         );
       default:
@@ -122,4 +130,6 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
   Future pushMainPage() => pushNamed(Routes.mainPage);
 
   Future pushSettingPage() => pushNamed(Routes.settingPage);
+
+  Future pushAddCatePage() => pushNamed(Routes.addCatePage);
 }

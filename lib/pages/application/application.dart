@@ -36,7 +36,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         color: AppColors.secondaryElementText,
       ),
       title: Text('main'),
-      backgroundColor: AppColors.primaryBackground,
+      backgroundColor: AppColors.primaryGreyBackground,
     ),
     new BottomNavigationBarItem(
       icon: Icon(
@@ -48,7 +48,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         color: AppColors.secondaryElementText,
       ),
       title: Text('category'),
-      backgroundColor: AppColors.primaryBackground,
+      backgroundColor: AppColors.primaryGreyBackground,
     ),
     new BottomNavigationBarItem(
       icon: Icon(
@@ -60,7 +60,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         color: AppColors.secondaryElementText,
       ),
       title: Text('tag'),
-      backgroundColor: AppColors.primaryBackground,
+      backgroundColor: AppColors.primaryGreyBackground,
     ),
     new BottomNavigationBarItem(
       icon: Icon(
@@ -72,7 +72,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         color: AppColors.secondaryElementText,
       ),
       title: Text('my'),
-      backgroundColor: AppColors.primaryBackground,
+      backgroundColor: AppColors.primaryGreyBackground,
     ),
   ];
 

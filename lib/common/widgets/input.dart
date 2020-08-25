@@ -54,7 +54,7 @@ Widget inputEmailEdit({
     height: duSetHeight(44),
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
     decoration: BoxDecoration(
-      color: AppColors.primaryBackground,
+      color: AppColors.primaryWhiteBackground,
       borderRadius: Radii.k6pxRadius,
       boxShadow: [
         BoxShadow(
