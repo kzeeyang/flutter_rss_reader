@@ -5,8 +5,6 @@ import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:provider/provider.dart';
 
-import 'pages/index/index.dart';
-
 // void main() => runApp(MyApp());
 void main() => Global.init().then((e) => runApp(
       MultiProvider(
@@ -16,14 +14,7 @@ void main() => Global.init().then((e) => runApp(
           ),
         ],
         child: Consumer<AppState>(builder: (context, appState, _) {
-          if (appState.darkmode) {
-            return ColorFiltered(
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.color),
-              child: MyApp(),
-            );
-          } else {
-            return MyApp();
-          }
+          return MyApp();
         }),
       ),
     ));

@@ -9,14 +9,11 @@ part of 'app.dart';
 AppState _$AppStateFromJson(Map<String, dynamic> json) {
   return AppState(
     darkMode: json['darkMode'] as bool,
-  )..categories = (json['categories'] as List)
-      .map((e) => Category.fromJson(e as Map<String, dynamic>))
-      .toList();
+  );
 }
 
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
       'darkMode': instance.darkMode,
-      'categories': instance.categories,
     };
 
 Category _$CategoryFromJson(Map<String, dynamic> json) {

@@ -21,8 +21,10 @@ class _AddCatePageState extends State<AddCatePage> {
     }
     Category category = Category();
     category.cateName = _cateController.value.text;
+    print(category.cateName);
     Global.appState.addCategory(category);
-    print(Global.appState);
+    print(Global.appState.categoryLenth);
+    Global.saveAppState();
     Navigator.pop(context);
   }
 

@@ -51,11 +51,16 @@ class Global {
     }
 
     //读取配置
-    appState = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
+    print(isFirstOpen);
+    if (!isFirstOpen) {
+      appState = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
+    }
+    debugPrint("appstate: ${appState.darkMode}");
+    debugPrint("cateLength: ${appState.categoryLenth}");
   }
 
   // 持久化 用户信息
-  static Future<bool> saveAppEntity() {
+  static Future<bool> saveAppState() {
     return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState);
   }
 }

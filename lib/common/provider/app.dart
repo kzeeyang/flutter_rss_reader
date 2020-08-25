@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rss_reader/common/entitys/app.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app.g.dart';
 
 @JsonSerializable(nullable: false)
 class AppState with ChangeNotifier {
-  bool darkMode;
-  List<Category> categories;
-  get darkmode => darkMode;
-  get category => categories;
+  bool _darkMode;
+  List<Category> _categories;
+  bool get darkMode => _darkMode;
+  int get categoryLenth => _categories.length;
+  List<Category> get categories => _categories;
   AppState({bool darkMode = false}) {
-    this.darkMode = darkMode;
+    this._darkMode = darkMode;
+    _categories = [];
   }
 
   //change darkmode
   switctDarkMode() {
-    darkMode = !darkMode;
+    _darkMode = !darkMode;
     notifyListeners();
   }
 
-  //update app data
+  // update app data
   updateCategories(List<Category> tCategories) {
-    categories = tCategories;
+    _categories = tCategories;
     notifyListeners();
   }
 
   //add category
   addCategory(Category category) {
-    categories.add(category);
+    _categories.add(category);
     notifyListeners();
   }
 
