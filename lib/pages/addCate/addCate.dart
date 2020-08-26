@@ -75,7 +75,6 @@ class _AddCatePageState extends State<AddCatePage> {
             color: AppColors.primaryWhiteBackground,
             child: inputTextEdit(
               controller: _cateController,
-              keyboardType: TextInputType.emailAddress,
               hintText: "名称",
               marginTop: 0,
               // autofocus: true,

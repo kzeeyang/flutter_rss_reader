@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
@@ -12,7 +13,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  List<Category> categories = Global.appState.categories;
+  List<Category> _categories = Global.appState.categories;
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -53,7 +54,70 @@ class _SettingPageState extends State<SettingPage> {
 
   // 内容页
   Widget _buildCateView() {
-    return Container();
+    return _categories.length > 0
+        ? Container(
+            color: AppColors.primaryGreyBackground,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: duSetHeight(10),
+                ),
+                cateListWidget(_categories),
+              ],
+            ),
+          )
+        : Container(
+            color: AppColors.primaryGreyBackground,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('暂无分类'),
+                  ],
+                ),
+              ],
+            ),
+          );
+  }
+
+  Widget cateListWidget(List<Category> categories) {
+    return Container(
+      color: AppColors.primaryGreyBackground,
+      child: Column(
+        children: categories.map((item) {
+          return Container(
+            height: duSetHeight(50),
+            padding:
+                EdgeInsets.only(left: duSetWidth(20), right: duSetWidth(10)),
+            color: AppColors.primaryWhiteBackground,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  item.cateName,
+                  style: TextStyle(
+                    fontSize: duSetFontSize(20),
+                  ),
+                ),
+                Spacer(),
+                IconButton(
+                  icon: Icon(
+                    Icons.chevron_right,
+                    color: AppColors.primaryText,
+                  ),
+                  onPressed: () {
+                    ExtendedNavigator.rootNavigator
+                        .pushNamed(Routes.addCatePage);
+                  },
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   // 打赏
@@ -73,22 +137,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: categories.length > 0
-          ? _buildCateView()
-          : Container(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('暂无分类'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+      body: _buildCateView(),
       // bottomNavigationBar: _buildBottomTip(),
     );
   }
