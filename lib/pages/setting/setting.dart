@@ -88,29 +88,38 @@ class _SettingPageState extends State<SettingPage> {
       child: Column(
         children: categories.map((item) {
           return Container(
-            height: duSetHeight(50),
-            padding:
-                EdgeInsets.only(left: duSetWidth(20), right: duSetWidth(10)),
+            height: duSetHeight(55),
             color: AppColors.primaryWhiteBackground,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
               children: <Widget>[
-                Text(
-                  item.cateName,
-                  style: TextStyle(
-                    fontSize: duSetFontSize(20),
+                Container(
+                  padding: EdgeInsets.only(
+                      left: duSetWidth(20), right: duSetWidth(10)),
+                  alignment: Alignment.center,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        item.cateName,
+                        style: TextStyle(
+                          fontSize: duSetFontSize(20),
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.chevron_right,
+                          color: AppColors.primaryText,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
-                IconButton(
-                  icon: Icon(
-                    Icons.chevron_right,
-                    color: AppColors.primaryText,
-                  ),
-                  onPressed: () {
-                    ExtendedNavigator.rootNavigator
-                        .pushNamed(Routes.addCatePage);
-                  },
+                Container(
+                  height: 5,
+                  color: AppColors.primaryGreyBackground,
                 ),
               ],
             ),
@@ -120,17 +129,25 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  // 打赏
+  // 导入导出JSON
   Widget _buildBottomTip() {
-    return BottomNavigationBar(
-        // items: _bottomTabs,
-        // currentIndex: _page,
-        // // fixedColor: AppColors.primaryElement,
-        // type: BottomNavigationBarType.fixed,
-        // onTap: _handleNavBarTap,
-        // showSelectedLabels: false,
-        // showUnselectedLabels: false,
-        );
+    return Container(
+      height: duSetHeight(60),
+      child: Row(
+        children: <Widget>[
+          FlatButton(
+            child: Text('导入JSON'),
+            onPressed: () {},
+            textColor: AppColors.primaryText,
+          ),
+          FlatButton(
+            child: Text('导出JSON'),
+            onPressed: () {},
+            textColor: AppColors.primaryText,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -138,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildCateView(),
-      // bottomNavigationBar: _buildBottomTip(),
+      bottomNavigationBar: _buildBottomTip(),
     );
   }
 }
