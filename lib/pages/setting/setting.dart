@@ -130,32 +130,65 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   // 导入导出JSON
-  Widget _buildBottomTip() {
+  Widget _buildBottomTip(double width) {
     return Container(
-      height: duSetHeight(60),
-      child: Row(
-        children: <Widget>[
-          FlatButton(
-            child: Text('导入JSON'),
-            onPressed: () {},
-            textColor: AppColors.primaryText,
+      height: duSetHeight(50),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: duSetWidth(50),
+          vertical: duSetHeight(3),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            // color: Color(0xFFff6e6e),
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(duSetWidth(25)),
           ),
-          FlatButton(
-            child: Text('导出JSON'),
-            onPressed: () {},
-            textColor: AppColors.primaryText,
+          child: Row(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topRight,
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25.0),
+                    bottomLeft: Radius.circular(25.0),
+                  ),
+                ),
+                child: Center(
+                  child:
+                      Text("Animated", style: TextStyle(color: Colors.white)),
+                ),
+              ),
+              Container(
+                alignment: Alignment.topRight,
+                decoration: BoxDecoration(
+                  color: Color(0xFFff6e6e),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25.0),
+                    bottomRight: Radius.circular(25.0),
+                  ),
+                ),
+                child: Center(
+                  child:
+                      Text("Animated", style: TextStyle(color: Colors.white)),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildCateView(),
-      bottomNavigationBar: _buildBottomTip(),
+      bottomNavigationBar: _buildBottomTip(width),
     );
   }
 }
