@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rss_reader/common/entitys/app.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app.g.dart';

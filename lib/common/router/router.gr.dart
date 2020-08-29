@@ -13,6 +13,9 @@ import 'package:flutter_rss_reader/pages/application/application.dart';
 import 'package:flutter_rss_reader/pages/main/main.dart';
 import 'package:flutter_rss_reader/pages/setting/setting.dart';
 import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
+import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
+import 'package:flutter_rss_reader/common/provider/app.dart';
+import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
 
 abstract class Routes {
   static const indexPageRoute = '/';
@@ -21,6 +24,8 @@ abstract class Routes {
   static const mainPage = '/main-page';
   static const settingPage = '/setting-page';
   static const addCatePage = '/add-cate-page';
+  static const cateDetail = '/cate-detail';
+  static const addRss = '/add-rss';
   static const all = {
     indexPageRoute,
     welcomePageRoute,
@@ -28,6 +33,8 @@ abstract class Routes {
     mainPage,
     settingPage,
     addCatePage,
+    cateDetail,
+    addRss,
   };
 }
 
@@ -82,6 +89,21 @@ class AppRouter extends RouterBase {
           builder: (context) => AddCatePage(),
           settings: settings,
         );
+      case Routes.cateDetail:
+        if (hasInvalidArgs<CateDetailArguments>(args)) {
+          return misTypedArgsRoute<CateDetailArguments>(args);
+        }
+        final typedArgs = args as CateDetailArguments ?? CateDetailArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) =>
+              CateDetail(key: typedArgs.key, item: typedArgs.item),
+          settings: settings,
+        );
+      case Routes.addRss:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => AddRss(),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -102,6 +124,13 @@ class IndexPageArguments {
 class WelcomePageArguments {
   final Key key;
   WelcomePageArguments({this.key});
+}
+
+//CateDetail arguments holder class
+class CateDetailArguments {
+  final Key key;
+  final Category item;
+  CateDetailArguments({this.key, this.item});
 }
 
 // *************************************************************************
@@ -132,4 +161,15 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
   Future pushSettingPage() => pushNamed(Routes.settingPage);
 
   Future pushAddCatePage() => pushNamed(Routes.addCatePage);
+
+  Future pushCateDetail({
+    Key key,
+    Category item,
+  }) =>
+      pushNamed(
+        Routes.cateDetail,
+        arguments: CateDetailArguments(key: key, item: item),
+      );
+
+  Future pushAddRss() => pushNamed(Routes.addRss);
 }

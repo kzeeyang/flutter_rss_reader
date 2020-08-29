@@ -92,29 +92,37 @@ class _SettingPageState extends State<SettingPage> {
             color: AppColors.primaryWhiteBackground,
             child: Column(
               children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(
-                      left: duSetWidth(20), right: duSetWidth(10)),
-                  alignment: Alignment.center,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        item.cateName,
-                        style: TextStyle(
-                          fontSize: duSetFontSize(20),
+                InkWell(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        left: duSetWidth(20), right: duSetWidth(10)),
+                    alignment: Alignment.center,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          item.cateName,
+                          style: TextStyle(
+                            fontSize: duSetFontSize(20),
+                          ),
                         ),
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.chevron_right,
-                          color: AppColors.primaryText,
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            Icons.chevron_right,
+                            color: AppColors.primaryText,
+                          ),
+                          onPressed: () {
+                            ExtendedNavigator.rootNavigator
+                                .pushCateDetail(item: item);
+                          },
                         ),
-                        onPressed: () {},
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  onTap: () {
+                    ExtendedNavigator.rootNavigator.pushCateDetail(item: item);
+                  },
                 ),
                 Spacer(),
                 Container(
@@ -133,45 +141,48 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildBottomTip(double width) {
     return Container(
       height: duSetHeight(50),
+      color: AppColors.primaryGreyBackground,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: duSetWidth(50),
-          vertical: duSetHeight(3),
+          vertical: duSetWidth(5),
+          horizontal: duSetHeight(50),
         ),
         child: Container(
           decoration: BoxDecoration(
-            // color: Color(0xFFff6e6e),
-            color: Colors.black,
             borderRadius: BorderRadius.circular(duSetWidth(25)),
           ),
           child: Row(
             children: <Widget>[
               Container(
-                alignment: Alignment.topRight,
+                width: duSetWidth(width / 2) - 75,
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent,
+                  color: Colors.green[400],
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25.0),
-                    bottomLeft: Radius.circular(25.0),
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
                   ),
                 ),
                 child: Center(
-                  child:
-                      Text("Animated", style: TextStyle(color: Colors.white)),
+                  child: Text(
+                    "导入JSON",
+                    style: TextStyle(color: AppColors.primaryElementText),
+                  ),
                 ),
               ),
               Container(
-                alignment: Alignment.topRight,
+                width: duSetWidth(width / 2) - 75,
                 decoration: BoxDecoration(
-                  color: Color(0xFFff6e6e),
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25.0),
-                    bottomRight: Radius.circular(25.0),
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
                   ),
                 ),
                 child: Center(
-                  child:
-                      Text("Animated", style: TextStyle(color: Colors.white)),
+                  child: Text(
+                    "导出JSON",
+                    style: TextStyle(color: AppColors.primaryElementText),
+                  ),
                 ),
               ),
             ],

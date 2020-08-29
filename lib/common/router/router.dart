@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
+import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
 import 'package:flutter_rss_reader/pages/application/application.dart';
+import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
 import 'package:flutter_rss_reader/pages/index/index.dart';
 import 'package:flutter_rss_reader/pages/main/main.dart';
 import 'package:flutter_rss_reader/pages/setting/setting.dart';
@@ -28,6 +30,10 @@ class $AppRouter {
   SettingPage settingPage;
 
   AddCatePage addCatePage;
+
+  CateDetail cateDetail;
+
+  AddRss addRss;
 
   // @CustomRoute(transitionsBuilder: zoomInTransition)
   // DetailsPage detailsPageRoute;
