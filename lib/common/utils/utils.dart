@@ -9,3 +9,4 @@ export 'date.dart';
 export 'authentication.dart';
 export 'http.dart';
 export 'net_cache.dart';
+export 'httpRss.dart';

@@ -19,20 +19,16 @@ import 'package:flutter_rss_reader/global.dart';
   * 从2.1.x升级到 3.x
   * https://github.com/flutterchina/dio/blob/master/migration_to_3.0.md
 */
-class HttpUtil {
-  static HttpUtil _instance = HttpUtil._internal();
-  factory HttpUtil() => _instance;
+class HttpRssUtil {
+  static HttpRssUtil _instance = HttpRssUtil._internal();
+  factory HttpRssUtil() => _instance;
 
   Dio dio;
   CancelToken cancelToken = new CancelToken();
 
-  HttpUtil._internal() {
+  HttpRssUtil._internal() {
     // BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
     BaseOptions options = new BaseOptions(
-      // 请求基地址,可以包含子路径
-      baseUrl: SERVER_API_URL,
-
-      // baseUrl: storage.read(key: STORAGE_KEY_APIURL) ?? SERVICE_API_BASEURL,
       //连接服务器超时时间，单位是毫秒.
       connectTimeout: 10000,
 
@@ -59,10 +55,6 @@ class HttpUtil {
     );
 
     dio = new Dio(options);
-
-    // Cookie管理
-    CookieJar cookieJar = CookieJar();
-    dio.interceptors.add(CookieManager(cookieJar));
 
     // 添加拦截器
     dio.interceptors
@@ -211,18 +203,6 @@ class HttpUtil {
     token.cancel("cancelled");
   }
 
-  /// 读取本地配置
-  Map<String, dynamic> getAuthorizationHeader() {
-    var headers;
-    String accessToken = Global.profile?.accessToken;
-    if (accessToken != null) {
-      headers = {
-        'Authorization': 'Bearer $accessToken',
-      };
-    }
-    return headers;
-  }
-
   /// restful get 操作
   /// refresh 是否下拉刷新 默认 false
   /// noCache 是否不缓存 默认 true
@@ -249,10 +229,6 @@ class HttpUtil {
       "cacheKey": cacheKey,
       "cacheDisk": cacheDisk,
     });
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.merge(headers: _authorization);
-    }
 
     var response = await dio.get(path,
         queryParameters: params,
@@ -272,10 +248,6 @@ class HttpUtil {
     requestOptions = requestOptions.merge(extra: {
       "context": context,
     });
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.merge(headers: _authorization);
-    }
     var response = await dio.post(path,
         data: params, options: requestOptions, cancelToken: cancelToken);
     return response.data;
@@ -292,10 +264,6 @@ class HttpUtil {
     requestOptions = requestOptions.merge(extra: {
       "context": context,
     });
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.merge(headers: _authorization);
-    }
     var response = await dio.put(path,
         data: params, options: requestOptions, cancelToken: cancelToken);
     return response.data;
@@ -312,10 +280,6 @@ class HttpUtil {
     requestOptions = requestOptions.merge(extra: {
       "context": context,
     });
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.merge(headers: _authorization);
-    }
     var response = await dio.patch(path,
         data: params, options: requestOptions, cancelToken: cancelToken);
     return response.data;
@@ -332,10 +296,7 @@ class HttpUtil {
     requestOptions = requestOptions.merge(extra: {
       "context": context,
     });
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.merge(headers: _authorization);
-    }
+
     var response = await dio.delete(path,
         data: params, options: requestOptions, cancelToken: cancelToken);
     return response.data;
@@ -352,26 +313,11 @@ class HttpUtil {
     requestOptions = requestOptions.merge(extra: {
       "context": context,
     });
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.merge(headers: _authorization);
-    }
+
     var response = await dio.post(path,
         data: FormData.fromMap(params),
         options: requestOptions,
         cancelToken: cancelToken);
     return response.data;
-  }
-}
-
-// 异常处理
-class ErrorEntity implements Exception {
-  int code;
-  String message;
-  ErrorEntity({this.code, this.message});
-
-  String toString() {
-    if (message == null) return "Exception";
-    return "Exception: code $code, $message";
   }
 }

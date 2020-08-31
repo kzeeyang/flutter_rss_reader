@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rss_reader/common/apis/api.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
@@ -13,7 +14,7 @@ class AddRss extends StatefulWidget {
 class _AddRssState extends State<AddRss> {
   // 控制器
   final TextEditingController _urlController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
   bool _used = true;
 
   AppBar _buildAppBar() {
@@ -63,18 +64,14 @@ class _AddRssState extends State<AddRss> {
             controller: _urlController,
             hintText: "URL",
             marginTop: 0,
-            onEditingComplete: () {
+            onEditingComplete: () async {
               print(_urlController.value.text);
-              var client = new http.Client();
-
-              // RSS feed
-              client.get(_urlController.value.text).then((response) {
-                return response.body;
-              }).then((bodyString) {
-                var channel = new RssFeed.parse(bodyString);
-                print(channel.title);
-                return channel;
-              });
+              RssFeed channel = await Rss.testConn(
+                _urlController.value.text,
+                context: context,
+                cacheDisk: true,
+              );
+              _nameController = TextEditingController(text: channel.title);
             },
           ),
           Container(
