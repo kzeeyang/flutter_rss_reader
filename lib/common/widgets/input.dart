@@ -12,10 +12,10 @@ Widget inputTextEdit({
   bool autofocus = false,
 }) {
   return Container(
-    height: duSetHeight(44),
+    height: duSetHeight(50),
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
     decoration: BoxDecoration(
-      color: AppColors.secondaryElement,
+      color: AppColors.primaryWhiteBackground,
       borderRadius: Radii.k6pxRadius,
     ),
     child: TextField(
@@ -23,7 +23,8 @@ Widget inputTextEdit({
       controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        hintText: hintText,
+        //hintText: hintText,
+        labelText: hintText,
         contentPadding: EdgeInsets.fromLTRB(20, 10, 0, 9),
         border: InputBorder.none,
       ),
@@ -85,6 +86,47 @@ Widget inputEmailEdit({
       maxLines: 1,
       autocorrect: false, // 自动纠正
       obscureText: isPassword, // 隐藏输入内容, 密码框
+    ),
+  );
+}
+
+// RssURL
+Widget inputRSSURLEdit({
+  @required TextEditingController controller,
+  TextInputType keyboardType = TextInputType.text,
+  String hintText,
+  bool isPassword = false,
+  double marginTop = 15,
+  bool autofocus = false,
+  Function onEditingComplete,
+}) {
+  return Container(
+    height: duSetHeight(50),
+    margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+    decoration: BoxDecoration(
+      color: AppColors.primaryWhiteBackground,
+      borderRadius: Radii.k6pxRadius,
+    ),
+    child: TextField(
+      autofocus: autofocus,
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        //hintText: hintText,
+        labelText: hintText,
+        contentPadding: EdgeInsets.fromLTRB(20, 10, 0, 9),
+        border: InputBorder.none,
+      ),
+      style: TextStyle(
+        color: AppColors.primaryText,
+        fontFamily: "Avenir",
+        fontWeight: FontWeight.w400,
+        fontSize: duSetFontSize(18),
+      ),
+      maxLines: 1,
+      autocorrect: false, // 自动纠正
+      obscureText: isPassword, // 隐藏输入内容, 密码框
+      onEditingComplete: onEditingComplete,
     ),
   );
 }

@@ -11,7 +11,7 @@ class AddCatePage extends StatefulWidget {
 }
 
 class _AddCatePageState extends State<AddCatePage> {
-  // email的控制器
+  // 控制器
   final TextEditingController _cateController = TextEditingController();
 
   _addHandler() {
@@ -71,15 +71,12 @@ class _AddCatePageState extends State<AddCatePage> {
           Container(
             height: duSetHeight(10),
           ),
-          Container(
-            color: AppColors.primaryWhiteBackground,
-            child: inputTextEdit(
-              controller: _cateController,
-              hintText: "名称",
-              marginTop: 0,
-              // autofocus: true,
-            ),
-          )
+          inputTextEdit(
+            controller: _cateController,
+            hintText: "名称",
+            marginTop: 0,
+            // autofocus: true,
+          ),
         ],
       ),
     );
