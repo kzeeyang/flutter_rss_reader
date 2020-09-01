@@ -100,6 +100,11 @@ Widget inputRSSURLEdit({
   bool autofocus = false,
   Function onEditingComplete,
 }) {
+  AnimationController animationController;
+  animationController = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  );
   return Container(
     height: duSetHeight(50),
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
@@ -116,6 +121,16 @@ Widget inputRSSURLEdit({
         labelText: hintText,
         contentPadding: EdgeInsets.fromLTRB(20, 10, 0, 9),
         border: InputBorder.none,
+        suffixIcon: RotationTransition(
+          alignment: Alignment.center,
+          turns: animationController,
+          child: IconButton(
+            icon: Icon(Icons.rotate_right),
+            onPressed: () {
+              animationController.forward();
+            },
+          ),
+        ),
       ),
       style: TextStyle(
         color: AppColors.primaryText,

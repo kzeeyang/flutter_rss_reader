@@ -14,7 +14,7 @@ class AddRss extends StatefulWidget {
 class _AddRssState extends State<AddRss> {
   // 控制器
   final TextEditingController _urlController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   bool _used = true;
 
   AppBar _buildAppBar() {
@@ -65,13 +65,12 @@ class _AddRssState extends State<AddRss> {
             hintText: "URL",
             marginTop: 0,
             onEditingComplete: () async {
-              print(_urlController.value.text);
               RssFeed channel = await Rss.testConn(
                 _urlController.value.text,
                 context: context,
                 cacheDisk: true,
               );
-              _nameController = TextEditingController(text: channel.title);
+              _nameController.text = channel.title;
             },
           ),
           Container(
