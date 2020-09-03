@@ -63,4 +63,23 @@ class Global {
   static Future<bool> saveAppState() {
     return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState);
   }
+
+  static Future<bool> addRssByCategoryName(String cate, RssSetting rss) {
+    var index = getCategoryIndex(cate);
+    appState.categories[index].rssSettings.add(rss);
+    return saveAppState();
+  }
+
+  // getCategoryIndex
+  static int getCategoryIndex(String cate) {
+    if (cate == null || cate.isEmpty) {
+      return -1;
+    }
+    for (var i = 0; i < appState.categories.length; i++) {
+      if (appState.categories[i].cateName == cate) {
+        return i;
+      }
+    }
+    return -1;
+  }
 }

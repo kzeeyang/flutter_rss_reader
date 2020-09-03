@@ -12,7 +12,7 @@ Widget inputTextEdit({
   bool autofocus = false,
 }) {
   return Container(
-    height: duSetHeight(50),
+    height: duSetHeight(55),
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
@@ -52,7 +52,7 @@ Widget inputEmailEdit({
   bool autofocus = false,
 }) {
   return Container(
-    height: duSetHeight(44),
+    height: duSetHeight(55),
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
@@ -99,14 +99,10 @@ Widget inputRSSURLEdit({
   double marginTop = 15,
   bool autofocus = false,
   Function onEditingComplete,
+  Widget rotationTransition,
 }) {
-  AnimationController animationController;
-  animationController = AnimationController(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  );
   return Container(
-    height: duSetHeight(50),
+    height: duSetHeight(55),
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
@@ -121,16 +117,7 @@ Widget inputRSSURLEdit({
         labelText: hintText,
         contentPadding: EdgeInsets.fromLTRB(20, 10, 0, 9),
         border: InputBorder.none,
-        suffixIcon: RotationTransition(
-          alignment: Alignment.center,
-          turns: animationController,
-          child: IconButton(
-            icon: Icon(Icons.rotate_right),
-            onPressed: () {
-              animationController.forward();
-            },
-          ),
-        ),
+        suffixIcon: rotationTransition,
       ),
       style: TextStyle(
         color: AppColors.primaryText,

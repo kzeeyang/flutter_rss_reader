@@ -17,3 +17,11 @@ bool duCheckStringEmpty(String input) {
   if (input == null || input.isEmpty) return false;
   return true;
 }
+
+/// URL检测
+bool duIsURL(String input) {
+  if (input == null || input.isEmpty) return false;
+
+  String regexEmail = "^https?";
+  return RegExp(regexEmail).hasMatch(input);
+}

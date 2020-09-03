@@ -45,7 +45,8 @@ class _CateDetailState extends State<CateDetail> {
             color: AppColors.primaryText,
           ),
           onPressed: () {
-            ExtendedNavigator.rootNavigator.pushNamed(Routes.addRss);
+            ExtendedNavigator.rootNavigator
+                .pushAddRss(cateName: widget.item.cateName);
           },
         ),
       ],
@@ -53,13 +54,65 @@ class _CateDetailState extends State<CateDetail> {
   }
 
   Widget _buildBody() {
+    return widget.item.rssSettings.length > 0
+        ? Container(
+            color: AppColors.primaryGreyBackground,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: duSetHeight(10),
+                ),
+                _rssListWidgets(widget.item.rssSettings),
+              ],
+            ),
+          )
+        : Container(
+            color: AppColors.primaryGreyBackground,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('暂无分类'),
+                  ],
+                ),
+              ],
+            ),
+          );
+  }
+
+  Widget _rssListWidgets(List<RssSetting> rssSetting) {
     return Container(
-      color: AppColors.primaryGreyBackground,
-    );
+        height: duSetHeight(45),
+        color: AppColors.primaryWhiteBackground,
+        child: Column(
+          children: rssSetting.map((item) {
+            return Container(
+              alignment: Alignment.center,
+              padding:
+                  EdgeInsets.only(left: duSetWidth(20), right: duSetWidth(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    item.rssName,
+                    style: TextStyle(
+                      fontSize: duSetFontSize(20),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.item.rssSettings != null) {
+      print('rssLength: ${widget.item.rssSettings.length}');
+    }
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBody(),
