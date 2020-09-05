@@ -14,7 +14,6 @@ import 'package:flutter_rss_reader/pages/main/main.dart';
 import 'package:flutter_rss_reader/pages/setting/setting.dart';
 import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
-import 'package:flutter_rss_reader/common/provider/app.dart';
 import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
 
 abstract class Routes {
@@ -96,7 +95,7 @@ class AppRouter extends RouterBase {
         final typedArgs = args as CateDetailArguments ?? CateDetailArguments();
         return MaterialPageRoute<dynamic>(
           builder: (context) =>
-              CateDetail(key: typedArgs.key, item: typedArgs.item),
+              CateDetail(key: typedArgs.key, cateKey: typedArgs.cateKey),
           settings: settings,
         );
       case Routes.addRss:
@@ -134,8 +133,8 @@ class WelcomePageArguments {
 //CateDetail arguments holder class
 class CateDetailArguments {
   final Key key;
-  final Category item;
-  CateDetailArguments({this.key, this.item});
+  final String cateKey;
+  CateDetailArguments({this.key, this.cateKey});
 }
 
 //AddRss arguments holder class
@@ -176,11 +175,11 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
 
   Future pushCateDetail({
     Key key,
-    Category item,
+    String cateKey,
   }) =>
       pushNamed(
         Routes.cateDetail,
-        arguments: CateDetailArguments(key: key, item: item),
+        arguments: CateDetailArguments(key: key, cateKey: cateKey),
       );
 
   Future pushAddRss({

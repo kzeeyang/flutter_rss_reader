@@ -39,7 +39,7 @@ class Global {
 
     // 读取设备第一次打开
     isFirstOpen = !StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
-    if (!isFirstOpen) {
+    if (isFirstOpen) {
       StorageUtil().setBool(STORAGE_DEVICE_ALREADY_OPEN_KEY, true);
     }
 
@@ -51,12 +51,14 @@ class Global {
     }
 
     //读取配置
-    print(isFirstOpen);
-    if (!isFirstOpen) {
-      appState = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
+    if (isFirstOpen) {
+      var _appStateJSON = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
+      if (_appStateJSON != null) {
+        appState = AppState.fromJson(_appStateJSON);
+      }
     }
-    debugPrint("appstate: ${appState.darkMode}");
-    debugPrint("cateLength: ${appState.categoryLenth}");
+    debugPrint("appstate: ${appState.isDarkMode}");
+    debugPrint("cateLength: ${appState.mapLength}");
   }
 
   // 持久化 用户信息
@@ -64,19 +66,64 @@ class Global {
     return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState);
   }
 
-  static Future<bool> addRssByCategoryName(String cate, RssSetting rss) {
-    var index = getCategoryIndex(cate);
-    appState.categories[index].rssSettings.add(rss);
-    return saveAppState();
+  static addRssByCategoryName(String cate, RssSetting rss) {
+    if (hadCategory(cate)) {
+      appState.categories[cate].add(rss);
+    }
+    saveAppState();
+  }
+
+  static List<RssSetting> getRssSettings(String cate) {
+    if (hadCategory(cate)) {
+      return appState.categories[cate];
+    }
+    return [];
+  }
+
+  static RssSetting getRssSetting(String cate, rssUrl) {
+    var index = getRssIndex(cate, rssUrl);
+    if (index != -1) {
+      return appState.categories[cate][index];
+    }
+    return null;
+  }
+
+  static setRssOpend(String cate, rssUrl, bool value) {
+    var index = getRssIndex(cate, rssUrl);
+    if (index != -1) {
+      appState.categories[cate][index].opened = value;
+    }
+    saveAppState();
+  }
+
+  static deleteRss(String cate, rssUrl) {
+    var index = getRssIndex(cate, rssUrl);
+    if (index != -1) {
+      appState.categories[cate].removeAt(index);
+    }
+    saveAppState();
+  }
+
+  static bool checkHadUrl(String cate, url) {
+    appState.categories[cate].map((value) {
+      if (value.url == url) {
+        return true;
+      }
+    });
+    return false;
   }
 
   // getCategoryIndex
-  static int getCategoryIndex(String cate) {
-    if (cate == null || cate.isEmpty) {
+  static bool hadCategory(String cate) {
+    return appState.categories.containsKey(cate);
+  }
+
+  static int getRssIndex(String cate, rssUrl) {
+    if (!hadCategory(cate)) {
       return -1;
     }
-    for (var i = 0; i < appState.categories.length; i++) {
-      if (appState.categories[i].cateName == cate) {
+    for (var i = 0; i < appState.categories[cate].length; i++) {
+      if (appState.categories[cate][i].url == rssUrl) {
         return i;
       }
     }

@@ -13,7 +13,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  List<Category> _categories = Global.appState.categories;
+  Map<String, List<RssSetting>> _categories = Global.appState.categories;
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -35,7 +35,7 @@ class _SettingPageState extends State<SettingPage> {
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          Navigator.pop(context);
+          ExtendedNavigator.rootNavigator.pushNamed(Routes.applicationPage);
         },
       ),
       actions: <Widget>[
@@ -62,7 +62,7 @@ class _SettingPageState extends State<SettingPage> {
                 Container(
                   height: duSetHeight(10),
                 ),
-                cateListWidget(_categories),
+                cateListWidget(),
               ],
             ),
           )
@@ -82,26 +82,32 @@ class _SettingPageState extends State<SettingPage> {
           );
   }
 
-  Widget cateListWidget(List<Category> categories) {
+  Widget cateListWidget() {
     return Container(
-      color: AppColors.primaryGreyBackground,
       child: Column(
-        children: categories.map((item) {
+        children: _categories.keys.map((key) {
           return Container(
-            height: duSetHeight(55),
-            color: AppColors.primaryWhiteBackground,
+            height: duSetHeight(50),
+            decoration: BoxDecoration(
+              color: AppColors.primaryWhiteBackground,
+              border: Border(
+                bottom: BorderSide(
+                  width: 3,
+                  color: AppColors.primaryGreyBackground,
+                ),
+              ),
+            ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 InkWell(
                   child: Container(
-                    padding: EdgeInsets.only(
-                        left: duSetWidth(20), right: duSetWidth(10)),
-                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          item.cateName,
+                          key,
                           style: TextStyle(
                             fontSize: duSetFontSize(20),
                           ),
@@ -114,20 +120,16 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           onPressed: () {
                             ExtendedNavigator.rootNavigator
-                                .pushCateDetail(item: item);
+                                .pushCateDetail(cateKey: key);
                           },
                         ),
                       ],
                     ),
                   ),
                   onTap: () {
-                    ExtendedNavigator.rootNavigator.pushCateDetail(item: item);
+                    ExtendedNavigator.rootNavigator
+                        .pushCateDetail(cateKey: key);
                   },
-                ),
-                Spacer(),
-                Container(
-                  height: 5,
-                  color: AppColors.primaryGreyBackground,
                 ),
               ],
             ),

@@ -19,13 +19,8 @@ class _AddCatePageState extends State<AddCatePage> {
       toastInfo(msg: '请输入分类名称');
       return;
     }
-    Category category = Category(
-      cateName: _cateController.value.text,
-      rssSettings: [],
-    );
-    print(category.cateName);
-    Global.appState.addCategory(category);
-    print(Global.appState.categoryLenth);
+    String category = _cateController.value.text;
+    Global.appState.categories[category] = [];
     Global.saveAppState();
     Navigator.pop(context);
   }

@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ducafecat.tech',
       debugShowCheckedModeBanner: false,
       builder: ExtendedNavigator<AppRouter>(
         initialRoute: Routes.indexPageRoute,

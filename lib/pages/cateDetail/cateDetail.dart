@@ -4,23 +4,26 @@ import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
+import 'package:flutter_rss_reader/global.dart';
 
 class CateDetail extends StatefulWidget {
-  final Category item;
+  final String cateKey;
 
-  const CateDetail({Key key, this.item}) : super(key: key);
+  const CateDetail({Key key, this.cateKey}) : super(key: key);
 
   @override
   _CateDetailState createState() => _CateDetailState();
 }
 
 class _CateDetailState extends State<CateDetail> {
+  List<RssSetting> _rssSettings;
+
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       title: Text(
-        widget.item.cateName,
+        widget.cateKey,
         style: TextStyle(
           color: AppColors.primaryText,
           fontFamily: AppColors.fontMontserrat,
@@ -35,7 +38,7 @@ class _CateDetailState extends State<CateDetail> {
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          Navigator.pop(context);
+          ExtendedNavigator.rootNavigator.pushNamed(Routes.settingPage);
         },
       ),
       actions: <Widget>[
@@ -46,7 +49,7 @@ class _CateDetailState extends State<CateDetail> {
           ),
           onPressed: () {
             ExtendedNavigator.rootNavigator
-                .pushAddRss(cateName: widget.item.cateName);
+                .pushAddRss(cateName: widget.cateKey);
           },
         ),
       ],
@@ -54,7 +57,8 @@ class _CateDetailState extends State<CateDetail> {
   }
 
   Widget _buildBody() {
-    return widget.item.rssSettings.length > 0
+    _rssSettings = Global.getRssSettings(widget.cateKey);
+    return _rssSettings.length > 0
         ? Container(
             color: AppColors.primaryGreyBackground,
             child: Column(
@@ -62,7 +66,7 @@ class _CateDetailState extends State<CateDetail> {
                 Container(
                   height: duSetHeight(10),
                 ),
-                _rssListWidgets(widget.item.rssSettings),
+                _rssListWidgets(_rssSettings),
               ],
             ),
           )
@@ -82,37 +86,62 @@ class _CateDetailState extends State<CateDetail> {
           );
   }
 
-  Widget _rssListWidgets(List<RssSetting> rssSetting) {
+  Widget _rssListWidgets(List<RssSetting> rssSettings) {
     return Container(
-        height: duSetHeight(45),
-        color: AppColors.primaryWhiteBackground,
-        child: Column(
-          children: rssSetting.map((item) {
-            return Container(
-              alignment: Alignment.center,
-              padding:
-                  EdgeInsets.only(left: duSetWidth(20), right: duSetWidth(10)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    item.rssName,
-                    style: TextStyle(
-                      fontSize: duSetFontSize(20),
-                    ),
-                  ),
-                ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: rssSettings.map((item) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
+            height: duSetHeight(45),
+            decoration: BoxDecoration(
+              color: AppColors.primaryWhiteBackground,
+              border: Border(
+                bottom: BorderSide(
+                  width: 1,
+                  color: AppColors.primaryGreyBackground,
+                ),
               ),
-            );
-          }).toList(),
-        ));
+            ),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  item.rssName,
+                  style: TextStyle(
+                    fontSize: duSetFontSize(16),
+                  ),
+                ),
+                Spacer(),
+                Switch(
+                  value: item.opened,
+                  onChanged: (value) {
+                    setState(() {
+                      item.opened = value;
+                      Global.setRssOpend(widget.cateKey, item.url, value);
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red[300],
+                  ),
+                  onPressed: () {
+                    Global.deleteRss(widget.cateKey, item.url);
+                    _rssSettings = Global.getRssSettings(widget.cateKey);
+                    print('delete done.');
+                  },
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.item.rssSettings != null) {
-      print('rssLength: ${widget.item.rssSettings.length}');
-    }
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBody(),

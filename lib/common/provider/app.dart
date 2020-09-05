@@ -5,31 +5,18 @@ part 'app.g.dart';
 
 @JsonSerializable(nullable: false)
 class AppState with ChangeNotifier {
-  bool _darkMode;
-  List<Category> _categories;
-  bool get darkMode => _darkMode;
-  int get categoryLenth => _categories.length;
-  List<Category> get categories => _categories;
+  bool darkMode;
+  Map<String, List<RssSetting>> categories;
+  get isDarkMode => darkMode;
+  get mapLength => categories.length;
   AppState({bool darkMode = false}) {
-    this._darkMode = darkMode;
-    _categories = [];
+    this.darkMode = darkMode;
+    categories = {};
   }
 
   //change darkmode
   switctDarkMode() {
-    _darkMode = !darkMode;
-    notifyListeners();
-  }
-
-  // update app data
-  updateCategories(List<Category> tCategories) {
-    _categories = tCategories;
-    notifyListeners();
-  }
-
-  //add category
-  addCategory(Category category) {
-    _categories.add(category);
+    darkMode = !darkMode;
     notifyListeners();
   }
 

@@ -1,12 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/apis/api.dart';
 import 'package:flutter_rss_reader/common/provider/app.dart';
+import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:dart_rss/dart_rss.dart';
 import 'package:flutter_rss_reader/global.dart';
-import 'package:http/http.dart' as http;
 
 class AddRss extends StatefulWidget {
   final String cateName;
@@ -68,6 +69,11 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
       toastInfo(msg: '请输入正确的RSS链接');
       return;
     }
+
+    if (!Global.checkHadUrl(widget.cateName, _nameController.text)) {
+      toastInfo(msg: 'RSS链接已存在当前分类');
+      return;
+    }
     controller.reset();
     _nameController.text = null;
     controller.forward();
@@ -81,14 +87,14 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
   }
 
   _addRss() {
-    print('category: ${widget.cateName}');
     _rssSetting = RssSetting(
       url: _urlController.value.text,
       rssName: _nameController.value.text,
       opened: _used,
     );
     Global.addRssByCategoryName(widget.cateName, _rssSetting);
-    Navigator.pop(context);
+    Global.saveAppState();
+    ExtendedNavigator.rootNavigator.pushCateDetail(cateKey: widget.cateName);
   }
 
   AppBar _buildAppBar() {
