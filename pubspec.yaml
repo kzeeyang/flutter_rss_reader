@@ -59,24 +59,20 @@ dependencies:
 
   # sha
   crypto: ^2.1.3
-
   # 状态管理
   provider: ^4.0.4
-
   # webView
   webview_flutter: ^0.3.20+2
-
   # loading
   loading_animations: ^2.1.0
-
   # share
   share: ^0.6.4
-
   # generate entity
   json_serializable: ^3.4.0
-
   #rss
   dart_rss: ^1.0.1
+  #flip
+  flip_card: ^0.4.4
 
 dev_dependencies:
   flutter_test:

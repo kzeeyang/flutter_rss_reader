@@ -134,7 +134,7 @@ Widget inputRSSURLEdit({
 }
 
 /// 输入框
-Widget inputTextEditWithIcon({
+Widget inputTextEditWithIconButton({
   @required TextEditingController controller,
   TextInputType keyboardType = TextInputType.text,
   String hintText,
@@ -142,6 +142,7 @@ Widget inputTextEditWithIcon({
   double marginTop = 15,
   bool autofocus = false,
   Widget iconButton,
+  double width,
 }) {
   return Container(
     height: duSetHeight(55),
@@ -152,26 +153,33 @@ Widget inputTextEditWithIcon({
     ),
     child: Row(
       children: <Widget>[
-        iconButton,
-        TextField(
-          autofocus: autofocus,
-          controller: controller,
-          keyboardType: keyboardType,
-          decoration: InputDecoration(
-            //hintText: hintText,
-            labelText: hintText,
-            contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 9),
-            border: InputBorder.none,
+        Container(
+          width: duSetWidth(55),
+          child: iconButton,
+        ),
+        Spacer(),
+        Container(
+          width: duSetWidth(width - 100),
+          child: TextField(
+            autofocus: autofocus,
+            controller: controller,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              //hintText: hintText,
+              labelText: hintText,
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 9),
+              border: InputBorder.none,
+            ),
+            style: TextStyle(
+              color: AppColors.primaryText,
+              fontFamily: "Avenir",
+              fontWeight: FontWeight.w400,
+              fontSize: duSetFontSize(18),
+            ),
+            maxLines: 1,
+            autocorrect: false, // 自动纠正
+            obscureText: isPassword, // 隐藏输入内容, 密码框
           ),
-          style: TextStyle(
-            color: AppColors.primaryText,
-            fontFamily: "Avenir",
-            fontWeight: FontWeight.w400,
-            fontSize: duSetFontSize(18),
-          ),
-          maxLines: 1,
-          autocorrect: false, // 自动纠正
-          obscureText: isPassword, // 隐藏输入内容, 密码框
         ),
       ],
     ),

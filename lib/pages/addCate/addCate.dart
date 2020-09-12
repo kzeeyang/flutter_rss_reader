@@ -4,6 +4,7 @@ import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
+import 'package:flip_card/flip_card.dart';
 
 class AddCatePage extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class AddCatePage extends StatefulWidget {
 class _AddCatePageState extends State<AddCatePage> {
   // 控制器
   final TextEditingController _cateController = TextEditingController();
+  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
   _addHandler() {
     if (!duCheckStringEmpty(_cateController.value.text)) {
@@ -66,6 +68,8 @@ class _AddCatePageState extends State<AddCatePage> {
   }
 
   Widget _buildBody() {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return Container(
       color: AppColors.primaryGreyBackground,
       child: Column(
@@ -73,15 +77,43 @@ class _AddCatePageState extends State<AddCatePage> {
           Container(
             height: duSetHeight(10),
           ),
-          inputTextEditWithIcon(
+          inputTextEditWithIconButton(
             controller: _cateController,
             hintText: "名称",
             marginTop: 0,
-            icon: Icon(
-              Icons.home,
-              size: duSetFontSize(30),
+            width: width,
+            iconButton: IconButton(
+              icon: Icon(
+                Icons.home,
+                size: duSetFontSize(26),
+              ),
+              onPressed: () {
+                cardKey.currentState.toggleCard();
+              },
             ),
             // autofocus: true,
+          ),
+          Divider(
+            height: 1,
+            color: AppColors.primaryGreyBackground,
+          ),
+          flipBtnCard(
+            key: cardKey,
+            width: width,
+            iconBtn: Container(
+              child: Column(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.threesixty,
+                      size: duSetFontSize(26),
+                    ),
+                    onPressed: () {},
+                  ),
+                  // Text(),
+                ],
+              ),
+            ),
           ),
         ],
       ),
