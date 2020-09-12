@@ -132,3 +132,48 @@ Widget inputRSSURLEdit({
     ),
   );
 }
+
+/// 输入框
+Widget inputTextEditWithIcon({
+  @required TextEditingController controller,
+  TextInputType keyboardType = TextInputType.text,
+  String hintText,
+  bool isPassword = false,
+  double marginTop = 15,
+  bool autofocus = false,
+  Widget iconButton,
+}) {
+  return Container(
+    height: duSetHeight(55),
+    margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+    decoration: BoxDecoration(
+      color: AppColors.primaryWhiteBackground,
+      borderRadius: Radii.k6pxRadius,
+    ),
+    child: Row(
+      children: <Widget>[
+        iconButton,
+        TextField(
+          autofocus: autofocus,
+          controller: controller,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+            //hintText: hintText,
+            labelText: hintText,
+            contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 9),
+            border: InputBorder.none,
+          ),
+          style: TextStyle(
+            color: AppColors.primaryText,
+            fontFamily: "Avenir",
+            fontWeight: FontWeight.w400,
+            fontSize: duSetFontSize(18),
+          ),
+          maxLines: 1,
+          autocorrect: false, // 自动纠正
+          obscureText: isPassword, // 隐藏输入内容, 密码框
+        ),
+      ],
+    ),
+  );
+}

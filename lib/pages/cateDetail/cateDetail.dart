@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
+import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 
 class CateDetail extends StatefulWidget {
@@ -38,7 +41,7 @@ class _CateDetailState extends State<CateDetail> {
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          ExtendedNavigator.rootNavigator.pushNamed(Routes.settingPage);
+          ExtendedNavigator.rootNavigator.popAndPushNamed(Routes.settingPage);
         },
       ),
       actions: <Widget>[
@@ -59,17 +62,7 @@ class _CateDetailState extends State<CateDetail> {
   Widget _buildBody() {
     _rssSettings = Global.getRssSettings(widget.cateKey);
     return _rssSettings.length > 0
-        ? Container(
-            color: AppColors.primaryGreyBackground,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: duSetHeight(10),
-                ),
-                _rssListWidgets(_rssSettings),
-              ],
-            ),
-          )
+        ? _rssListWidgets()
         : Container(
             color: AppColors.primaryGreyBackground,
             child: Column(
@@ -78,7 +71,7 @@ class _CateDetailState extends State<CateDetail> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('暂无分类'),
+                    Text('暂无数据'),
                   ],
                 ),
               ],
@@ -86,65 +79,98 @@ class _CateDetailState extends State<CateDetail> {
           );
   }
 
-  Widget _rssListWidgets(List<RssSetting> rssSettings) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: rssSettings.map((item) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
-            height: duSetHeight(45),
-            decoration: BoxDecoration(
-              color: AppColors.primaryWhiteBackground,
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: AppColors.primaryGreyBackground,
-                ),
+  Widget _rssListWidgets() {
+    return ListView.builder(
+      itemCount: _rssSettings.length,
+      itemBuilder: (context, index) {
+        RssSetting item = _rssSettings[index];
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
+          height: duSetHeight(45),
+          decoration: BoxDecoration(
+            color: AppColors.primaryWhiteBackground,
+            border: Border(
+              bottom: BorderSide(
+                width: 1,
+                color: AppColors.primaryGreyBackground,
               ),
             ),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  item.rssName,
-                  style: TextStyle(
-                    fontSize: duSetFontSize(16),
-                  ),
+          ),
+          child: Row(
+            children: <Widget>[
+              Text(
+                item.rssName,
+                style: TextStyle(
+                  fontSize: duSetFontSize(16),
                 ),
-                Spacer(),
-                Switch(
-                  value: item.opened,
-                  onChanged: (value) {
-                    setState(() {
-                      item.opened = value;
-                      Global.setRssOpend(widget.cateKey, item.url, value);
-                    });
-                  },
+              ),
+              Spacer(),
+              Switch(
+                value: item.opened,
+                onChanged: (value) {
+                  setState(() {
+                    _rssSettings[index].opened = value;
+                    Global.setRssOpend(widget.cateKey, _rssSettings[index].url,
+                        item.rssName, value);
+                  });
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.red[300],
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.red[300],
-                  ),
-                  onPressed: () {
-                    Global.deleteRss(widget.cateKey, item.url);
-                    _rssSettings = Global.getRssSettings(widget.cateKey);
-                    print('delete done.');
-                  },
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+                onPressed: () {
+                  _rssSettings.removeAt(index);
+                  toastInfo(msg: '已删除RSS: ' + item.rssName);
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomTip(double width) {
+    return Container(
+      height: duSetHeight(50),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: duSetWidth(5),
+          horizontal: duSetHeight(60),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(duSetWidth(25)),
+            color: Colors.red[400],
+          ),
+          child: FlatButton.icon(
+            icon: Icon(Icons.delete_outline),
+            label: Text('删除分类'),
+            onPressed: () {
+              toastInfo(msg: '已删除分类: ' + widget.cateKey);
+              Global.deleteCategory(widget.cateKey);
+              ExtendedNavigator.rootNavigator
+                  .popAndPushNamed(Routes.settingPage);
+            },
+            splashColor: Colors.blueGrey,
+            textColor: AppColors.primaryElementText,
+          ),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBody(),
+      bottomNavigationBar: _buildBottomTip(width),
     );
   }
 }

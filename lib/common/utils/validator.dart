@@ -1,3 +1,5 @@
+import 'package:flutter_rss_reader/common/provider/app.dart';
+
 /// 检查邮箱格式
 bool duIsEmail(String input) {
   if (input == null || input.isEmpty) return false;
@@ -24,4 +26,19 @@ bool duIsURL(String input) {
 
   String regexEmail = "^https?";
   return RegExp(regexEmail).hasMatch(input);
+}
+
+bool checkHadUrl(List<RssSetting> rsses, String url) {
+  var had = false;
+  if (rsses.length == 0) {
+    return had;
+  }
+
+  rsses.forEach((element) {
+    if (element.url == url) {
+      had = true;
+      return;
+    }
+  });
+  return had;
 }

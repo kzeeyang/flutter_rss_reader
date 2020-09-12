@@ -80,37 +80,35 @@ class Global {
     return [];
   }
 
-  static RssSetting getRssSetting(String cate, rssUrl) {
-    var index = getRssIndex(cate, rssUrl);
+  static RssSetting getRssSetting(String cate, rssUrl, rssName) {
+    var index = getRssIndex(cate, rssUrl, rssName);
     if (index != -1) {
       return appState.categories[cate][index];
     }
     return null;
   }
 
-  static setRssOpend(String cate, rssUrl, bool value) {
-    var index = getRssIndex(cate, rssUrl);
+  static setRssOpend(String cate, rssUrl, rssName, bool value) {
+    var index = getRssIndex(cate, rssUrl, rssName);
     if (index != -1) {
       appState.categories[cate][index].opened = value;
     }
     saveAppState();
   }
 
-  static deleteRss(String cate, rssUrl) {
-    var index = getRssIndex(cate, rssUrl);
+  static deleteRss(String cate, rssUrl, rssName) {
+    var index = getRssIndex(cate, rssUrl, rssName);
     if (index != -1) {
       appState.categories[cate].removeAt(index);
     }
     saveAppState();
   }
 
-  static bool checkHadUrl(String cate, url) {
-    appState.categories[cate].map((value) {
-      if (value.url == url) {
-        return true;
-      }
-    });
-    return false;
+  static deleteCategory(String cate) {
+    if (hadCategory(cate)) {
+      appState.categories.remove(cate);
+    }
+    saveAppState();
   }
 
   // getCategoryIndex
@@ -118,12 +116,13 @@ class Global {
     return appState.categories.containsKey(cate);
   }
 
-  static int getRssIndex(String cate, rssUrl) {
+  static int getRssIndex(String cate, rssUrl, rssName) {
     if (!hadCategory(cate)) {
       return -1;
     }
     for (var i = 0; i < appState.categories[cate].length; i++) {
-      if (appState.categories[cate][i].url == rssUrl) {
+      if (appState.categories[cate][i].url == rssUrl &&
+          appState.categories[cate][i].rssName == rssName) {
         return i;
       }
     }

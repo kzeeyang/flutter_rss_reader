@@ -70,7 +70,8 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
       return;
     }
 
-    if (!Global.checkHadUrl(widget.cateName, _nameController.text)) {
+    if (checkHadUrl(
+        Global.appState.categories[widget.cateName], _urlController.text)) {
       toastInfo(msg: 'RSS链接已存在当前分类');
       return;
     }
@@ -94,7 +95,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
     );
     Global.addRssByCategoryName(widget.cateName, _rssSetting);
     Global.saveAppState();
-    ExtendedNavigator.rootNavigator.pushCateDetail(cateKey: widget.cateName);
+    Navigator.pop(context);
   }
 
   AppBar _buildAppBar() {

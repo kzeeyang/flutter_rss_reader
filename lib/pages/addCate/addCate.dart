@@ -19,7 +19,12 @@ class _AddCatePageState extends State<AddCatePage> {
       toastInfo(msg: '请输入分类名称');
       return;
     }
+
     String category = _cateController.value.text;
+    if (Global.hadCategory(category)) {
+      toastInfo(msg: '已存在相同名称');
+      return;
+    }
     Global.appState.categories[category] = [];
     Global.saveAppState();
     Navigator.pop(context);
@@ -68,10 +73,14 @@ class _AddCatePageState extends State<AddCatePage> {
           Container(
             height: duSetHeight(10),
           ),
-          inputTextEdit(
+          inputTextEditWithIcon(
             controller: _cateController,
             hintText: "名称",
             marginTop: 0,
+            icon: Icon(
+              Icons.home,
+              size: duSetFontSize(30),
+            ),
             // autofocus: true,
           ),
         ],

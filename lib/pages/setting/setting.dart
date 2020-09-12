@@ -13,7 +13,13 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  Map<String, List<RssSetting>> _categories = Global.appState.categories;
+  List<String> _categories;
+
+  @override
+  initState() {
+    super.initState();
+    _categories = Global.appState.categories.keys.toList();
+  }
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -35,7 +41,7 @@ class _SettingPageState extends State<SettingPage> {
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          ExtendedNavigator.rootNavigator.pushNamed(Routes.applicationPage);
+          Navigator.pop(context);
         },
       ),
       actions: <Widget>[
@@ -54,18 +60,9 @@ class _SettingPageState extends State<SettingPage> {
 
   // 内容页
   Widget _buildCateView() {
+    _categories = Global.appState.categories.keys.toList();
     return _categories.length > 0
-        ? Container(
-            color: AppColors.primaryGreyBackground,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: duSetHeight(10),
-                ),
-                cateListWidget(),
-              ],
-            ),
-          )
+        ? cateListWidget()
         : Container(
             color: AppColors.primaryGreyBackground,
             child: Column(
@@ -83,59 +80,60 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget cateListWidget() {
-    return Container(
-      child: Column(
-        children: _categories.keys.map((key) {
-          return Container(
-            height: duSetHeight(50),
-            decoration: BoxDecoration(
-              color: AppColors.primaryWhiteBackground,
-              border: Border(
-                bottom: BorderSide(
-                  width: 3,
-                  color: AppColors.primaryGreyBackground,
-                ),
+    return ListView.builder(
+      itemCount: _categories.length,
+      itemBuilder: (context, index) {
+        String key = _categories[index];
+        return Container(
+          height: duSetHeight(50),
+          decoration: BoxDecoration(
+            color: AppColors.primaryWhiteBackground,
+            border: Border(
+              bottom: BorderSide(
+                width: 1,
+                color: AppColors.primaryGreyBackground,
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          key,
-                          style: TextStyle(
-                            fontSize: duSetFontSize(20),
-                          ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        key,
+                        style: TextStyle(
+                          fontSize: duSetFontSize(20),
                         ),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(
-                            Icons.chevron_right,
-                            color: AppColors.primaryText,
-                          ),
-                          onPressed: () {
-                            ExtendedNavigator.rootNavigator
-                                .pushCateDetail(cateKey: key);
-                          },
+                      ),
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.chevron_right,
+                          color: AppColors.primaryText,
                         ),
-                      ],
-                    ),
+                        onPressed: () {
+                          ExtendedNavigator.rootNavigator
+                              .pushCateDetail(cateKey: key);
+                        },
+                      ),
+                    ],
                   ),
-                  onTap: () {
-                    ExtendedNavigator.rootNavigator
-                        .pushCateDetail(cateKey: key);
-                  },
                 ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
+                onTap: () {
+                  ExtendedNavigator.rootNavigator
+                      .pushCateDetail(cateKey: key)
+                      .whenComplete(() => Navigator.pop(context));
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -143,7 +141,6 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildBottomTip(double width) {
     return Container(
       height: duSetHeight(50),
-      color: AppColors.primaryGreyBackground,
       child: Padding(
         padding: EdgeInsets.symmetric(
           vertical: duSetWidth(5),
