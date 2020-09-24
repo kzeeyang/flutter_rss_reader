@@ -58,74 +58,11 @@ class Global {
       }
     }
     debugPrint("appstate: ${appState.isDarkMode}");
-    debugPrint("cateLength: ${appState.mapLength}");
+    debugPrint("cateLength: ${appState.category.length}");
   }
 
   // 持久化 用户信息
   static Future<bool> saveAppState() {
     return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState);
-  }
-
-  static addRssByCategoryName(String cate, RssSetting rss) {
-    if (hadCategory(cate)) {
-      appState.categories[cate].add(rss);
-    }
-    saveAppState();
-  }
-
-  static List<RssSetting> getRssSettings(String cate) {
-    if (hadCategory(cate)) {
-      return appState.categories[cate];
-    }
-    return [];
-  }
-
-  static RssSetting getRssSetting(String cate, rssUrl, rssName) {
-    var index = getRssIndex(cate, rssUrl, rssName);
-    if (index != -1) {
-      return appState.categories[cate][index];
-    }
-    return null;
-  }
-
-  static setRssOpend(String cate, rssUrl, rssName, bool value) {
-    var index = getRssIndex(cate, rssUrl, rssName);
-    if (index != -1) {
-      appState.categories[cate][index].opened = value;
-    }
-    saveAppState();
-  }
-
-  static deleteRss(String cate, rssUrl, rssName) {
-    var index = getRssIndex(cate, rssUrl, rssName);
-    if (index != -1) {
-      appState.categories[cate].removeAt(index);
-    }
-    saveAppState();
-  }
-
-  static deleteCategory(String cate) {
-    if (hadCategory(cate)) {
-      appState.categories.remove(cate);
-    }
-    saveAppState();
-  }
-
-  // getCategoryIndex
-  static bool hadCategory(String cate) {
-    return appState.categories.containsKey(cate);
-  }
-
-  static int getRssIndex(String cate, rssUrl, rssName) {
-    if (!hadCategory(cate)) {
-      return -1;
-    }
-    for (var i = 0; i < appState.categories[cate].length; i++) {
-      if (appState.categories[cate][i].url == rssUrl &&
-          appState.categories[cate][i].rssName == rssName) {
-        return i;
-      }
-    }
-    return -1;
   }
 }

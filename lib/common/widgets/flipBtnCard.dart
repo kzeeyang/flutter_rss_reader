@@ -8,10 +8,11 @@ Widget flipBtnCard({
   GlobalKey<FlipCardState> key,
   double width,
   Widget iconBtn,
+  Widget textWgt,
 }) {
   return FlipCard(
     key: key,
-    flipOnTouch: false,
+    // flipOnTouch: false,
     front: Container(
       height: duSetHeight(width / 5),
       width: duSetWidth(width / 5),
@@ -20,11 +21,14 @@ Widget flipBtnCard({
     back: Container(
       height: duSetHeight(width / 5),
       width: duSetWidth(width / 5),
-      color: AppColors.primaryWhiteBackground,
+      decoration: BoxDecoration(
+        color: AppColors.primaryWhiteBackground,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           iconBtn,
+          textWgt,
         ],
       ),
     ),

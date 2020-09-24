@@ -10,9 +10,9 @@ import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 
 class CateDetail extends StatefulWidget {
-  final String cateKey;
+  final String cateName;
 
-  const CateDetail({Key key, this.cateKey}) : super(key: key);
+  const CateDetail({Key key, this.cateName}) : super(key: key);
 
   @override
   _CateDetailState createState() => _CateDetailState();
@@ -26,7 +26,7 @@ class _CateDetailState extends State<CateDetail> {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       title: Text(
-        widget.cateKey,
+        widget.cateName,
         style: TextStyle(
           color: AppColors.primaryText,
           fontFamily: AppColors.fontMontserrat,
@@ -41,7 +41,7 @@ class _CateDetailState extends State<CateDetail> {
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          ExtendedNavigator.rootNavigator.popAndPushNamed(Routes.settingPage);
+          ExtendedNavigator.rootNavigator.pop();
         },
       ),
       actions: <Widget>[
@@ -52,7 +52,7 @@ class _CateDetailState extends State<CateDetail> {
           ),
           onPressed: () {
             ExtendedNavigator.rootNavigator
-                .pushAddRss(cateName: widget.cateKey);
+                .pushAddRss(cateName: widget.cateName);
           },
         ),
       ],
@@ -60,7 +60,7 @@ class _CateDetailState extends State<CateDetail> {
   }
 
   Widget _buildBody() {
-    _rssSettings = Global.getRssSettings(widget.cateKey);
+    _rssSettings = Global.appState.rssList(widget.cateName);
     return _rssSettings.length > 0
         ? _rssListWidgets()
         : Container(
@@ -110,8 +110,9 @@ class _CateDetailState extends State<CateDetail> {
                 onChanged: (value) {
                   setState(() {
                     _rssSettings[index].opened = value;
-                    Global.setRssOpend(widget.cateKey, _rssSettings[index].url,
-                        item.rssName, value);
+                    Global.appState.changeRssOpen(widget.cateName,
+                        _rssSettings[index].url, item.rssName, value);
+                    Global.saveAppState();
                   });
                 },
               ),
@@ -150,10 +151,10 @@ class _CateDetailState extends State<CateDetail> {
             icon: Icon(Icons.delete_outline),
             label: Text('删除分类'),
             onPressed: () {
-              toastInfo(msg: '已删除分类: ' + widget.cateKey);
-              Global.deleteCategory(widget.cateKey);
-              ExtendedNavigator.rootNavigator
-                  .popAndPushNamed(Routes.settingPage);
+              toastInfo(msg: '已删除分类: ' + widget.cateName);
+              ExtendedNavigator.rootNavigator.pop();
+              Global.appState.deleteCategory(widget.cateName);
+              Global.saveAppState();
             },
             splashColor: Colors.blueGrey,
             textColor: AppColors.primaryElementText,

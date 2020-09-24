@@ -70,11 +70,6 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
       return;
     }
 
-    if (checkHadUrl(
-        Global.appState.categories[widget.cateName], _urlController.text)) {
-      toastInfo(msg: 'RSS链接已存在当前分类');
-      return;
-    }
     controller.reset();
     _nameController.text = null;
     controller.forward();
@@ -85,6 +80,12 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
     );
     _nameController.text = channel.title;
     //controller.stop();
+    if (Global.appState.rssIndex(
+            widget.cateName, _urlController.text, _nameController.text) !=
+        -1) {
+      toastInfo(msg: 'RSS链接已存在当前分类');
+      return;
+    }
   }
 
   _addRss() {
@@ -93,7 +94,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
       rssName: _nameController.value.text,
       opened: _used,
     );
-    Global.addRssByCategoryName(widget.cateName, _rssSetting);
+    Global.appState.addRss(widget.cateName, _rssSetting);
     Global.saveAppState();
     Navigator.pop(context);
   }

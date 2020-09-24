@@ -143,6 +143,8 @@ Widget inputTextEditWithIconButton({
   bool autofocus = false,
   Widget iconButton,
   double width,
+  Widget rotationTransition,
+  Function onChanged,
 }) {
   return Container(
     height: duSetHeight(55),
@@ -155,6 +157,7 @@ Widget inputTextEditWithIconButton({
       children: <Widget>[
         Container(
           width: duSetWidth(55),
+          alignment: Alignment.center,
           child: iconButton,
         ),
         Spacer(),
@@ -167,8 +170,9 @@ Widget inputTextEditWithIconButton({
             decoration: InputDecoration(
               //hintText: hintText,
               labelText: hintText,
-              contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 9),
+              contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 9),
               border: InputBorder.none,
+              suffixIcon: rotationTransition,
             ),
             style: TextStyle(
               color: AppColors.primaryText,
@@ -179,6 +183,7 @@ Widget inputTextEditWithIconButton({
             maxLines: 1,
             autocorrect: false, // 自动纠正
             obscureText: isPassword, // 隐藏输入内容, 密码框
+            onChanged: onChanged,
           ),
         ),
       ],

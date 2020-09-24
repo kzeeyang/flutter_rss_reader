@@ -6,3 +6,5 @@ export 'app.dart';
 export 'input.dart';
 export 'image.dart';
 export 'flipBtnCard.dart';
+export 'container.dart';
+export 'reward.dart';

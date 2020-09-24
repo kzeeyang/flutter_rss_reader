@@ -95,7 +95,7 @@ class AppRouter extends RouterBase {
         final typedArgs = args as CateDetailArguments ?? CateDetailArguments();
         return MaterialPageRoute<dynamic>(
           builder: (context) =>
-              CateDetail(key: typedArgs.key, cateKey: typedArgs.cateKey),
+              CateDetail(key: typedArgs.key, cateName: typedArgs.cateName),
           settings: settings,
         );
       case Routes.addRss:
@@ -133,8 +133,8 @@ class WelcomePageArguments {
 //CateDetail arguments holder class
 class CateDetailArguments {
   final Key key;
-  final String cateKey;
-  CateDetailArguments({this.key, this.cateKey});
+  final String cateName;
+  CateDetailArguments({this.key, this.cateName});
 }
 
 //AddRss arguments holder class
@@ -175,11 +175,11 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
 
   Future pushCateDetail({
     Key key,
-    String cateKey,
+    String cateName,
   }) =>
       pushNamed(
         Routes.cateDetail,
-        arguments: CateDetailArguments(key: key, cateKey: cateKey),
+        arguments: CateDetailArguments(key: key, cateName: cateName),
       );
 
   Future pushAddRss({

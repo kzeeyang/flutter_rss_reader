@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 
 //这个类是我通过文件操作的方式，以及对String做了各种操作，把系统的Icon信息提取出来
 //有一个本地的json文件也是这么生成的，有需要可以直接拿去使用，非常方便
@@ -15,12 +16,36 @@ class IconUtil {
 
   IconUtil._internal();
 
-
   List<IconData> get icons => _icons;
-
 
   List<String> get iconNames => _iconNames;
 
+  IconData getIconDataForCategory(String iconName) {
+    int index = _iconNames.indexOf(iconName);
+    if (index != -1) {
+      return _icons[index];
+    }
+    index = Random().nextInt(_iconNames.length - 1);
+    return _icons[index];
+  }
+
+  IconData getIconDataForList(String iconName) {
+    int index = _iconNames.indexOf(iconName);
+    if (index != -1) {
+      return _icons[index];
+    }
+    return null;
+  }
+
+  List<String> searchIcons(String name) {
+    List<String> iconData = [];
+    _iconNames.forEach((item) {
+      if (item.contains(name)) {
+        iconData.add(item);
+      }
+    });
+    return iconData;
+  }
 
   List<IconData> _icons = [
     Icons.threesixty,
