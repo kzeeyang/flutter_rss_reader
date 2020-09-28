@@ -15,6 +15,7 @@ import 'package:flutter_rss_reader/pages/setting/setting.dart';
 import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
 import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
+import 'package:flutter_rss_reader/pages/photo/photo.dart';
 
 abstract class Routes {
   static const indexPageRoute = '/';
@@ -25,6 +26,7 @@ abstract class Routes {
   static const addCatePage = '/add-cate-page';
   static const cateDetail = '/cate-detail';
   static const addRss = '/add-rss';
+  static const photoViewScreen = '/photo-view-screen';
   static const all = {
     indexPageRoute,
     welcomePageRoute,
@@ -34,6 +36,7 @@ abstract class Routes {
     addCatePage,
     cateDetail,
     addRss,
+    photoViewScreen,
   };
 }
 
@@ -108,6 +111,22 @@ class AppRouter extends RouterBase {
               AddRss(key: typedArgs.key, cateName: typedArgs.cateName),
           settings: settings,
         );
+      case Routes.photoViewScreen:
+        if (hasInvalidArgs<PhotoViewScreenArguments>(args)) {
+          return misTypedArgsRoute<PhotoViewScreenArguments>(args);
+        }
+        final typedArgs =
+            args as PhotoViewScreenArguments ?? PhotoViewScreenArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => PhotoViewScreen(
+              imageProvider: typedArgs.imageProvider,
+              loadingChild: typedArgs.loadingChild,
+              backgroundDecoration: typedArgs.backgroundDecoration,
+              minScale: typedArgs.minScale,
+              maxScale: typedArgs.maxScale,
+              heroTag: typedArgs.heroTag),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -142,6 +161,23 @@ class AddRssArguments {
   final Key key;
   final String cateName;
   AddRssArguments({this.key, this.cateName});
+}
+
+//PhotoViewScreen arguments holder class
+class PhotoViewScreenArguments {
+  final ImageProvider<dynamic> imageProvider;
+  final Widget loadingChild;
+  final Decoration backgroundDecoration;
+  final dynamic minScale;
+  final dynamic maxScale;
+  final String heroTag;
+  PhotoViewScreenArguments(
+      {this.imageProvider,
+      this.loadingChild,
+      this.backgroundDecoration,
+      this.minScale,
+      this.maxScale,
+      this.heroTag});
 }
 
 // *************************************************************************
@@ -189,5 +225,24 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
       pushNamed(
         Routes.addRss,
         arguments: AddRssArguments(key: key, cateName: cateName),
+      );
+
+  Future pushPhotoViewScreen({
+    ImageProvider<dynamic> imageProvider,
+    Widget loadingChild,
+    Decoration backgroundDecoration,
+    dynamic minScale,
+    dynamic maxScale,
+    String heroTag,
+  }) =>
+      pushNamed(
+        Routes.photoViewScreen,
+        arguments: PhotoViewScreenArguments(
+            imageProvider: imageProvider,
+            loadingChild: loadingChild,
+            backgroundDecoration: backgroundDecoration,
+            minScale: minScale,
+            maxScale: maxScale,
+            heroTag: heroTag),
       );
 }

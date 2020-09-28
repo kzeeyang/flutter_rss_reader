@@ -10,6 +10,7 @@ import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/setting/paddingSpace.dart';
 
 import 'cateList.dart';
+import '../../common/widgets/inputDialog.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   ScrollController _scrollController = new ScrollController();
+  String _choice = 'Nothing';
 
   @override
   initState() {
@@ -103,7 +105,9 @@ class _SettingPageState extends State<SettingPage> {
                     "导入JSON",
                     style: TextStyle(color: AppColors.primaryElementText),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    inputDialog(context);
+                  },
                 ),
               ),
               Container(

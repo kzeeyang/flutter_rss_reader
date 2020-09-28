@@ -6,6 +6,7 @@ import 'package:flutter_rss_reader/pages/application/application.dart';
 import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
 import 'package:flutter_rss_reader/pages/index/index.dart';
 import 'package:flutter_rss_reader/pages/main/main.dart';
+import 'package:flutter_rss_reader/pages/photo/photo.dart';
 import 'package:flutter_rss_reader/pages/setting/setting.dart';
 import 'package:flutter_rss_reader/pages/welcome/welcome.dart';
 
@@ -34,6 +35,8 @@ class $AppRouter {
   CateDetail cateDetail;
 
   AddRss addRss;
+
+  PhotoViewScreen photoViewScreen;
 
   // @CustomRoute(transitionsBuilder: zoomInTransition)
   // DetailsPage detailsPageRoute;

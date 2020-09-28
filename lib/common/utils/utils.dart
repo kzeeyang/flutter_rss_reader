@@ -11,3 +11,5 @@ export 'http.dart';
 export 'net_cache.dart';
 export 'httpRss.dart';
 export 'icon_utils.dart';
+export 'permission.dart';
+export 'saveImage.dart';

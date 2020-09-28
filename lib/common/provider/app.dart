@@ -110,9 +110,8 @@ class AppState with ChangeNotifier {
   Map<String, dynamic> categoryToJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.category != null) {
-      this.category.forEach((key, value) {
-        data[key] = value.toJson();
-      });
+      final listData = this.category.values.toList();
+      data['category'] = listData.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -8,3 +8,4 @@ export 'image.dart';
 export 'flipBtnCard.dart';
 export 'container.dart';
 export 'reward.dart';
+export 'inputDialog.dart';

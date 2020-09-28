@@ -8,11 +8,12 @@ Future<bool> toastInfo({
   @required String msg,
   Color backgroundColor = Colors.black,
   Color textColor = Colors.white,
+  ToastGravity toastGravity = ToastGravity.TOP,
 }) async {
   return await Fluttertoast.showToast(
     msg: msg,
     toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.TOP,
+    gravity: toastGravity,
     timeInSecForIos: 1,
     backgroundColor: backgroundColor,
     textColor: textColor,

@@ -104,6 +104,11 @@ class _AddCatePageState extends State<AddCatePage> {
             onPressed: () {
               setState(() {
                 _searchIconController = !_searchIconController;
+                if (_searchIconController) {
+                  toastInfo(msg: '已切换图标搜索');
+                } else {
+                  toastInfo(msg: '已切换输入分类名称');
+                }
               });
             },
           ),
