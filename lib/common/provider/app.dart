@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class AppState with ChangeNotifier {
@@ -85,11 +87,24 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
+  void addByJson(String jsonData) {
+    final postJsonConverted = json.decode(jsonData);
+    if (postJsonConverted['category'] != null) {
+      if (category == null) {
+        category = new Map<String, Category>();
+      }
+      postJsonConverted['category'].forEach((v) {
+        Category data = Category.fromJson(v);
+        category[data.cateName] = data;
+      });
+    }
+  }
+
   AppState.fromJson(Map<String, dynamic> json) {
     darkMode = json['darkMode'];
-    if (json['categories'] != null) {
+    if (json['category'] != null) {
       category = new Map<String, Category>();
-      json['categories'].forEach((v) {
+      json['category'].forEach((v) {
         Category data = Category.fromJson(v);
         category[data.cateName] = data;
       });

@@ -81,6 +81,8 @@ dependencies:
   image_gallery_saver: ^1.2.2
   #权限申请
   permission_handler: ^5.0.1+1
+  #存储位置
+  path_provider: ^1.6.18
 
 dev_dependencies:
   flutter_test:

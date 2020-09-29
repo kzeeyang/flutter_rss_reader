@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/reward.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/setting/paddingSpace.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'cateList.dart';
 import '../../common/widgets/inputDialog.dart';
@@ -102,7 +106,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 child: FlatButton(
                   child: Text(
-                    "导入JSON",
+                    "导入分类",
                     style: TextStyle(color: AppColors.primaryElementText),
                   ),
                   onPressed: () {
@@ -121,12 +125,18 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 child: FlatButton(
                   child: Text(
-                    "导出JSON",
+                    "导出分类",
                     style: TextStyle(color: AppColors.primaryElementText),
                   ),
                   onPressed: () {
                     final jsonDate = Global.appState.categoryToJson();
                     print('${jsonDate.toString()}');
+                    requestPermission(Permission.storage).then((state) async {
+                      print('state: $state');
+                      if (state) {
+                        saveFile(jsonDate.toString());
+                      }
+                    });
                   },
                 ),
               ),

@@ -10,6 +10,7 @@ void saveImg(ByteData imgData) async {
 
   if (result != "") {
     String path = result.toString().substring(7, result.toString().length - 18);
+    print('$path');
     toastInfo(
       msg: '已保存图片至 $path 文件夹',
       toastGravity: ToastGravity.BOTTOM,
