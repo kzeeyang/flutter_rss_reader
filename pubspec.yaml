@@ -83,6 +83,10 @@ dependencies:
   permission_handler: ^5.0.1+1
   #存储位置
   path_provider: ^1.6.18
+  #环形列表
+  circle_list: ^1.0.2
+  #形状裁剪
+  flutter_custom_clippers: ^1.1.0
 
 dev_dependencies:
   flutter_test:

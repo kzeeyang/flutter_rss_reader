@@ -134,6 +134,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
+  circle_list:
+    dependency: "direct main"
+    description:
+      name: circle_list
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.4"
   cli_util:
     dependency: transitive
     description:
@@ -272,6 +279,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.4.1"
+  flutter_custom_clippers:
+    dependency: "direct main"
+    description:
+      name: flutter_custom_clippers
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.2"
   flutter_easyrefresh:
     dependency: "direct main"
     description:

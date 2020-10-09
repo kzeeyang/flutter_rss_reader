@@ -14,3 +14,4 @@ export 'icon_utils.dart';
 export 'permission.dart';
 export 'saveImage.dart';
 export 'saveFile.dart';
+export 'floating_border.dart';

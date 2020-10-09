@@ -1,10 +1,16 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:circle_list/circle_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
+import 'package:flutter_rss_reader/common/utils/full_screen_dialog_util.dart';
 import 'package:flutter_rss_reader/common/utils/screen.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/colors.dart';
 import 'package:flutter_rss_reader/common/widgets/app.dart';
+import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/drawer/drawerPage.dart';
 
 class ApplicationPage extends StatefulWidget {
@@ -14,101 +20,36 @@ class ApplicationPage extends StatefulWidget {
 
 class _ApplicationPageState extends State<ApplicationPage>
     with SingleTickerProviderStateMixin {
-  int _page = 0;
-  // tab 页标题
-  final List<String> _tabTitles = [
-    'Welcome',
-    'Cagegory',
-    'Bookmarks',
-    'Account'
-  ];
-  // 页控制器
-  PageController _pageController;
+  List<String> cateList;
+  int cateLength;
+  IconUtil _iconUtil;
 
-  final List<BottomNavigationBarItem> _bottomTabs = <BottomNavigationBarItem>[
-    new BottomNavigationBarItem(
-      icon: Icon(
-        Iconfont.home,
-        color: AppColors.tabBarElement,
-      ),
-      activeIcon: Icon(
-        Iconfont.home,
-        color: AppColors.secondaryElementText,
-      ),
-      title: Text('main'),
-      backgroundColor: AppColors.primaryGreyBackground,
-    ),
-    new BottomNavigationBarItem(
-      icon: Icon(
-        Iconfont.grid,
-        color: AppColors.tabBarElement,
-      ),
-      activeIcon: Icon(
-        Iconfont.grid,
-        color: AppColors.secondaryElementText,
-      ),
-      title: Text('category'),
-      backgroundColor: AppColors.primaryGreyBackground,
-    ),
-    new BottomNavigationBarItem(
-      icon: Icon(
-        Iconfont.tag,
-        color: AppColors.tabBarElement,
-      ),
-      activeIcon: Icon(
-        Iconfont.tag,
-        color: AppColors.secondaryElementText,
-      ),
-      title: Text('tag'),
-      backgroundColor: AppColors.primaryGreyBackground,
-    ),
-    new BottomNavigationBarItem(
-      icon: Icon(
-        Iconfont.me,
-        color: AppColors.tabBarElement,
-      ),
-      activeIcon: Icon(
-        Iconfont.me,
-        color: AppColors.secondaryElementText,
-      ),
-      title: Text('my'),
-      backgroundColor: AppColors.primaryGreyBackground,
-    ),
-  ];
-
-  // tab栏动画
-  void _handleNavBarTap(int index) {
-    _pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 200), curve: Curves.ease);
-  }
-
-  // tab栏页码切换
-  void _handlePageChanged(int page) {
-    setState(() {
-      this._page = page;
-    });
-  }
+  AnimationController _controller;
+  Animation _animation;
 
   @override
   void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _animation = new Tween(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     super.initState();
-    _pageController = new PageController(initialPage: this._page);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-// 顶部导航
+  // 顶部导航
   Widget _buildAppBar() {
     return AppBar(
       // context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text(
-        _tabTitles[_page],
+        'Home',
         style: TextStyle(
           color: AppColors.primaryText,
           fontFamily: AppColors.fontMontserrat,
@@ -131,25 +72,81 @@ class _ApplicationPageState extends State<ApplicationPage>
     );
   }
 
-  // 底部导航
-  Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      items: _bottomTabs,
-      currentIndex: _page,
-      // fixedColor: AppColors.primaryElement,
-      type: BottomNavigationBarType.fixed,
-      onTap: _handleNavBarTap,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-    );
-  }
+  // // 底部导航
+  // Widget _buildBottomNavigationBar() {
+  //   return BottomNavigationBar(
+  //     items: _bottomTabs,
+  //     currentIndex: _page,
+  //     // fixedColor: AppColors.primaryElement,
+  //     type: BottomNavigationBarType.fixed,
+  //     onTap: _handleNavBarTap,
+  //     showSelectedLabels: false,
+  //     showUnselectedLabels: false,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
+    cateList = Global.appState.category.keys.toList();
+    cateLength = cateList.length;
+    _iconUtil = IconUtil.getInstance();
     return Scaffold(
       appBar: _buildAppBar(),
-      drawer: DrawerPage(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      body: Center(
+        child: CircleList(
+          outerCircleColor: Colors.blue[600],
+          innerCircleColor: Colors.white24,
+          origin: Offset(0, 0),
+          children: List.generate(cateLength, (index) {
+            return Icon(
+              _iconUtil.getIconDataForCategory(
+                Global.appState.categoryIconName(cateList[index]),
+              ),
+              color: Colors.white,
+              size: duSetFontSize(30),
+            );
+          }),
+        ),
+      ),
+      // drawer: DrawerPage(),
+      // bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: GestureDetector(
+        onLongPress: () {},
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (ctx, child) {
+            return Transform.translate(
+              offset: Offset(0, (_animation.value) * 56),
+              child: Transform.scale(scale: 1 - _animation.value, child: child),
+            );
+          },
+          child: Transform.rotate(
+            angle: -pi / 2,
+            child: FloatingActionButton(
+              onPressed: () async {
+                FullScreenDialog.getInstance().showDialog(
+                    context,
+                    Container(
+                      child: Text('test'),
+                    ));
+                _controller.forward();
+              },
+              child: Transform.rotate(
+                angle: pi / 2,
+                child: Icon(
+                  Icons.add,
+                  size: 25,
+                  color: Colors.white,
+                ),
+              ),
+              // backgroundColor: Theme.of(context).primaryColor,
+              shape: FloatingBorder(),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
