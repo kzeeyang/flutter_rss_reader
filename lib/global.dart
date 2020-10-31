@@ -6,6 +6,7 @@ import 'package:flutter_rss_reader/common/entitys/entitys.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 /// 全局配置
 class Global {

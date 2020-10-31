@@ -32,7 +32,7 @@ dependencies:
   # 日期格式
   intl: ^0.16.1
 
-    # 屏幕适配
+  # 屏幕适配
   flutter_screenutil: ^1.0.2
 
   # ui
@@ -87,6 +87,8 @@ dependencies:
   circle_list: ^1.0.2
   #形状裁剪
   flutter_custom_clippers: ^1.1.0
+  #上滑抽屉
+  sliding_up_panel: ^0.3.6
 
 dev_dependencies:
   flutter_test:

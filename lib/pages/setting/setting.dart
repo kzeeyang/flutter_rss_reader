@@ -25,6 +25,8 @@ class _SettingPageState extends State<SettingPage> {
   ScrollController _scrollController = new ScrollController();
   String _choice = 'Nothing';
 
+  final Duration paddindDuration = Duration(milliseconds: 1000);
+
   @override
   initState() {
     super.initState();
@@ -84,19 +86,21 @@ class _SettingPageState extends State<SettingPage> {
     final width = size.width;
     return Container(
       height: duSetHeight(50),
+      alignment: Alignment.center,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: duSetWidth(5),
-          horizontal: duSetHeight(50),
+          vertical: 7,
+          horizontal: 50,
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(duSetWidth(25)),
+            borderRadius: BorderRadius.circular(25),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: duSetWidth(width / 2) - 75,
+                width: width / 2 - 75,
                 decoration: BoxDecoration(
                   color: Colors.green[400],
                   borderRadius: BorderRadius.only(
@@ -115,7 +119,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               ),
               Container(
-                width: duSetWidth(width / 2) - 75,
+                width: width / 2 - 75,
                 decoration: BoxDecoration(
                   color: Colors.blueAccent,
                   borderRadius: BorderRadius.only(
@@ -156,7 +160,7 @@ class _SettingPageState extends State<SettingPage> {
           if (length <= 12) {
             _scrollController.animateTo(
               0,
-              duration: Duration(milliseconds: 1500),
+              duration: paddindDuration,
               curve: Curves.ease,
             );
           } else {
@@ -167,7 +171,7 @@ class _SettingPageState extends State<SettingPage> {
             if (offset > padding) {
               _scrollController.animateTo(
                 padding,
-                duration: Duration(milliseconds: 1500),
+                duration: paddindDuration,
                 curve: Curves.ease,
               );
             }

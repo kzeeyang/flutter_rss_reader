@@ -1,17 +1,32 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rss_reader/common/widgets/widgets.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppState with ChangeNotifier {
   bool darkMode;
+  // String appBarTitle;
+  Category showCategory;
   Map<String, Category> category;
+
+  // 上滑是否开启
+  bool panelOpen;
 
   get isDarkMode => darkMode;
   get categoryList => category.keys;
+  get categoryLength => category.keys.length;
 
-  AppState({bool darkMode = false}) {
+  AppState({
+    bool darkMode = false,
+    bool panelOpen = false,
+  }) {
     this.darkMode = darkMode;
-    category = {};
+    // appBarTitle = "";
+    this.showCategory = null;
+    this.category = {};
+
+    this.panelOpen = panelOpen;
   }
 
   List<RssSetting> rssList(String catename) {
@@ -27,12 +42,49 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
+  void changePanelOpen(bool open) {
+    panelOpen = open;
+    notifyListeners();
+  }
+
+  void changeShowCategory(String catename) {
+    if (hadCategory(catename)) {
+      showCategory = category[catename];
+    } else {
+      if (category.keys.toList().length == 0) {
+        showCategory = null;
+      } else {
+        showCategory = category[0];
+      }
+    }
+
+    // if (showCategory != null || showCategory.cateName != "") {
+    //   appBarTitle = showCategory.cateName;
+    // } else {
+    //   appBarTitle = "";
+    // }
+
+    notifyListeners();
+  }
+
+  bool showRssOpened(int index) {
+    return this.showCategory.rssSettings[index].opened;
+  }
+
+  void changeShowRssOpened(int index) {
+    this.showCategory.rssSettings[index].opened =
+        !this.showCategory.rssSettings[index].opened;
+    notifyListeners();
+  }
+
   void addCategory(String catename, String iconName) {
     category[catename] = Category(
       cateName: catename,
       iconName: iconName,
       rssSettings: [],
     );
+
+    changeShowCategory(catename);
     notifyListeners();
   }
 
@@ -40,6 +92,7 @@ class AppState with ChangeNotifier {
     if (hadCategory(catename)) {
       category.remove(catename);
     }
+    changeShowCategory(catename);
     notifyListeners();
   }
 
@@ -53,6 +106,7 @@ class AppState with ChangeNotifier {
 
   void addRss(String catename, RssSetting rssSetting) {
     category[catename].rssSettings.add(rssSetting);
+    changeShowCategory(catename);
     notifyListeners();
   }
 
@@ -60,16 +114,18 @@ class AppState with ChangeNotifier {
     int index = rssIndex(catename, url, rssname);
     if (index != -1) {
       category[catename].rssSettings.removeAt(index);
-      notifyListeners();
     }
+    changeShowCategory(catename);
+    notifyListeners();
   }
 
   void changeRssOpen(String catename, String url, String rssname, bool open) {
     int index = rssIndex(catename, url, rssname);
     if (index != -1) {
       category[catename].rssSettings[index].opened = open;
-      notifyListeners();
     }
+    changeShowCategory(catename);
+    notifyListeners();
   }
 
   int rssIndex(String catename, url, rssname) {
@@ -95,7 +151,14 @@ class AppState with ChangeNotifier {
       }
       postJsonConverted['category'].forEach((v) {
         Category data = Category.fromJson(v);
+        if (category.keys.toList().length >= 12) {
+          return;
+        }
         category[data.cateName] = data;
+        if (this.showCategory == null ||
+            this.showCategory.cateName == data.cateName) {
+          this.showCategory = data;
+        }
       });
     }
   }

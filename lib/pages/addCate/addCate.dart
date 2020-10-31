@@ -40,6 +40,10 @@ class _AddCatePageState extends State<AddCatePage> {
       toastInfo(msg: '已存在相同名称');
       return;
     }
+    if (Global.appState.categoryLength >= 12) {
+      toastInfo(msg: '分类数量不能超过12个');
+      return;
+    }
     Global.appState.addCategory(catename, iconName);
     Global.saveAppState();
     Navigator.pop(context);
