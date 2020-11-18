@@ -6,7 +6,6 @@ import 'package:flutter_rss_reader/common/entitys/entitys.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 /// 全局配置
 class Global {
@@ -16,7 +15,7 @@ class Global {
   );
 
   /// 是否第一次打开
-  static bool isFirstOpen = false;
+  static bool isFirstOpen = true;
 
   /// 是否离线登录
   static bool isOfflineLogin = false;
@@ -26,9 +25,6 @@ class Global {
 
   /// 是否 release
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
-
-  ///全局
-  // static AppEntity appState = AppEntity();
 
   /// init
   static Future init() async {
@@ -64,6 +60,6 @@ class Global {
 
   // 持久化 用户信息
   static Future<bool> saveAppState() {
-    return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState);
+    return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState.toJson());
   }
 }

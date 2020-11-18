@@ -134,9 +134,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                   onPressed: () {
                     final jsonDate = Global.appState.categoryToJson();
-                    print('${jsonDate.toString()}');
+                    debugPrint('${jsonDate.toString()}');
                     requestPermission(Permission.storage).then((state) async {
-                      print('state: $state');
                       if (state) {
                         saveFile(jsonDate.toString());
                       }

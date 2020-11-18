@@ -1,12 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/apis/api.dart';
-import 'package:flutter_rss_reader/common/provider/app.dart';
-import 'package:flutter_rss_reader/common/router/router.gr.dart';
+import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
-import 'package:dart_rss/dart_rss.dart';
 import 'package:flutter_rss_reader/global.dart';
 
 class AddRss extends StatefulWidget {
@@ -23,6 +20,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   bool _used = true;
+  String _iconUrl = "";
 
   AnimationController controller;
   RssSetting _rssSetting;
@@ -73,13 +71,14 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
     controller.reset();
     _nameController.text = null;
     controller.forward();
-    RssFeed channel = await Rss.testConn(
+    RssSetting rss = await Rss.testConn(
       _urlController.value.text,
       context: context,
       cacheDisk: true,
     );
-    _nameController.text = channel.title;
-    //controller.stop();
+    _nameController.text = rss.rssName;
+    _iconUrl = rss.iconUrl;
+    debugPrint('iconUrl: $_iconUrl');
     if (Global.appState.rssIndex(
             widget.cateName, _urlController.text, _nameController.text) !=
         -1) {
@@ -89,9 +88,18 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
   }
 
   _addRss() {
+    if (!duIsURL(_urlController.text)) {
+      toastInfo(msg: '请输入正确的RSS链接');
+      return;
+    }
+    if (_nameController.text.isEmpty) {
+      toastInfo(msg: '请输入RSS名称');
+      return;
+    }
     _rssSetting = RssSetting(
       url: _urlController.value.text,
       rssName: _nameController.value.text,
+      iconUrl: _iconUrl,
       opened: _used,
     );
     Global.appState.addRss(widget.cateName, _rssSetting);

@@ -80,12 +80,14 @@ class _CateDetailState extends State<CateDetail> {
   }
 
   Widget _rssListWidgets() {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return ListView.builder(
       itemCount: _rssSettings.length,
       itemBuilder: (context, index) {
         RssSetting item = _rssSettings[index];
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: duSetWidth(20)),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           height: duSetHeight(45),
           decoration: BoxDecoration(
             color: AppColors.primaryWhiteBackground,
@@ -98,10 +100,24 @@ class _CateDetailState extends State<CateDetail> {
           ),
           child: Row(
             children: <Widget>[
-              Text(
-                item.rssName,
-                style: TextStyle(
-                  fontSize: duSetFontSize(16),
+              RssIcon(
+                item,
+                // onTap: () {
+                //   Global.appState.changeRssOpen(
+                //       widget.cateName, item.url, item.rssName, !item.opened);
+                //   Global.saveAppState();
+                // },
+              ),
+              Container(
+                width: width * 0.6 - 45,
+                padding: EdgeInsets.only(left: 5),
+                child: Text(
+                  item.rssName,
+                  style: TextStyle(
+                    fontSize: duSetFontSize(16),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Spacer(),

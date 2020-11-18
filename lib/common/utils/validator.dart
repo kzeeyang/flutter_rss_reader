@@ -1,4 +1,4 @@
-import 'package:flutter_rss_reader/common/provider/app.dart';
+import 'package:flutter_rss_reader/common/provider/provider.dart';
 
 /// 检查邮箱格式
 bool duIsEmail(String input) {

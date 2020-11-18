@@ -45,3 +45,13 @@ class AppColors {
   /// Avenir
   static const String fontAvenir = 'Avenir';
 }
+
+class AppValue {
+  static const double horizontalPadding = 10.0;
+  static const double verticalPadding = 5.0;
+
+  static const double titleSize = 18.0;
+  static const FontWeight titleWeight = FontWeight.w400;
+  static const double fontSize = 16.0;
+  static const double dateSize = 14.0;
+}

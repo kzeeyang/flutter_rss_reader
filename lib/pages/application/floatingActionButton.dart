@@ -1,11 +1,12 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rss_reader/common/provider/app.dart';
 import 'package:flutter_rss_reader/common/utils/full_screen_dialog_util.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_rss_reader/common/router/router.gr.dart';
 
 import 'bottomCircleWidget.dart';
 
@@ -43,31 +44,37 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
   }
 
   Widget hexagonButton() {
-    return Transform.rotate(
-      angle: -pi / 2,
-      child: FloatingActionButton(
-        onPressed: () {
-          FullScreenDialog.getInstance().showDialog(
-            context,
-            BottomCircleWidget(
-              onExit: () {
-                _controller.reverse();
-              },
+    return GestureDetector(
+      child: Transform.rotate(
+        angle: -pi / 2,
+        child: FloatingActionButton(
+          onPressed: () {
+            FullScreenDialog.getInstance().showDialog(
+              context,
+              BottomCircleWidget(
+                onExit: () {
+                  _controller.reverse();
+                },
+              ),
+            );
+            _controller.forward();
+          },
+          child: Transform.rotate(
+            angle: pi / 2,
+            child: Icon(
+              _iconUtil.getIconDataForCategory(
+                  Global.appState.showCategory.iconName),
+              size: 25,
+              color: Colors.white,
             ),
-          );
-          _controller.forward();
-        },
-        child: Transform.rotate(
-          angle: pi / 2,
-          child: Icon(
-            _iconUtil
-                .getIconDataForCategory(Global.appState.showCategory.iconName),
-            size: 25,
-            color: Colors.white,
           ),
+          shape: FloatingBorder(),
         ),
-        shape: FloatingBorder(),
       ),
+      onLongPress: () {
+        ExtendedNavigator.rootNavigator
+            .pushCateDetail(cateName: Global.appState.showCategory.cateName);
+      },
     );
   }
 
@@ -101,7 +108,6 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
             ),
           ),
         ),
-
         //拖动结束后的Widget
         onDraggableCanceled: (Velocity velocity, Offset offset) {
           // 计算组件可移动范围  更新位置信息

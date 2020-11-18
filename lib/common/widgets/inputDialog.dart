@@ -37,7 +37,6 @@ void inputDialog(BuildContext context) {
           FlatButton(
             child: Text('确定'),
             onPressed: () async {
-              // print(textController.value.text);
               await client
                   .get(textController.text, context: null)
                   .then((response) {

@@ -50,10 +50,15 @@ Widget cateList(BuildContext context) {
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      key,
-                      style: TextStyle(
-                        fontSize: duSetFontSize(20),
+                    Container(
+                      width: width * 0.7,
+                      child: Text(
+                        key,
+                        style: TextStyle(
+                          fontSize: duSetFontSize(20),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Spacer(),

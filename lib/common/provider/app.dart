@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rss_reader/common/widgets/widgets.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_rss_reader/common/provider/provider.dart';
+import 'package:flutter_rss_reader/global.dart';
 
 class AppState with ChangeNotifier {
   bool darkMode;
   // String appBarTitle;
-  Category showCategory;
   Map<String, Category> category;
+  Category showCategory;
+  List<MRssItem> mRssItems;
 
   // 上滑是否开启
   bool panelOpen;
@@ -25,6 +26,7 @@ class AppState with ChangeNotifier {
     // appBarTitle = "";
     this.showCategory = null;
     this.category = {};
+    this.mRssItems = [];
 
     this.panelOpen = panelOpen;
   }
@@ -39,22 +41,35 @@ class AppState with ChangeNotifier {
   //change darkmode
   void switctDarkMode() {
     darkMode = !darkMode;
-    notifyListeners();
+    save();
   }
 
   void changePanelOpen(bool open) {
     panelOpen = open;
     notifyListeners();
+    save();
+  }
+
+  RssSetting getShowCategoryRssSetting(String name) {
+    RssSetting rssSetting;
+    print('app: ${this.showCategory.cateName}');
+    for (var i = 0; i < this.showCategory.rssSettings.length; i++) {
+      print('$name : ${this.showCategory.rssSettings[i].rssName}');
+      if (this.showCategory.rssSettings[i].rssName == name) {
+        rssSetting = this.showCategory.rssSettings[i];
+      }
+    }
+    return rssSetting;
   }
 
   void changeShowCategory(String catename) {
     if (hadCategory(catename)) {
       showCategory = category[catename];
     } else {
-      if (category.keys.toList().length == 0) {
+      if (category.isEmpty) {
         showCategory = null;
       } else {
-        showCategory = category[0];
+        showCategory = category.values.toList().first;
       }
     }
 
@@ -65,6 +80,7 @@ class AppState with ChangeNotifier {
     // }
 
     notifyListeners();
+    save();
   }
 
   bool showRssOpened(int index) {
@@ -75,6 +91,7 @@ class AppState with ChangeNotifier {
     this.showCategory.rssSettings[index].opened =
         !this.showCategory.rssSettings[index].opened;
     notifyListeners();
+    save();
   }
 
   void addCategory(String catename, String iconName) {
@@ -83,17 +100,24 @@ class AppState with ChangeNotifier {
       iconName: iconName,
       rssSettings: [],
     );
-
+    if (showCategory != null) {
+      return;
+    }
     changeShowCategory(catename);
     notifyListeners();
+    save();
   }
 
   void deleteCategory(String catename) {
     if (hadCategory(catename)) {
       category.remove(catename);
     }
-    changeShowCategory(catename);
+    if (showCategory.cateName == catename) {
+      changeShowCategory(catename);
+    }
+
     notifyListeners();
+    save();
   }
 
   String categoryIconName(String catename) {
@@ -108,6 +132,7 @@ class AppState with ChangeNotifier {
     category[catename].rssSettings.add(rssSetting);
     changeShowCategory(catename);
     notifyListeners();
+    save();
   }
 
   void deleteRss(String catename, String url, String rssname) {
@@ -115,8 +140,12 @@ class AppState with ChangeNotifier {
     if (index != -1) {
       category[catename].rssSettings.removeAt(index);
     }
-    changeShowCategory(catename);
+    if (catename == this.showCategory.cateName) {
+      changeShowCategory("");
+    }
+
     notifyListeners();
+    save();
   }
 
   void changeRssOpen(String catename, String url, String rssname, bool open) {
@@ -124,8 +153,12 @@ class AppState with ChangeNotifier {
     if (index != -1) {
       category[catename].rssSettings[index].opened = open;
     }
-    changeShowCategory(catename);
+    if (this.showCategory == null) {
+      changeShowCategory(catename);
+    }
+
     notifyListeners();
+    save();
   }
 
   int rssIndex(String catename, url, rssname) {
@@ -143,6 +176,10 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
+  void save() {
+    Global.saveAppState();
+  }
+
   void addByJson(String jsonData) {
     final postJsonConverted = json.decode(jsonData);
     if (postJsonConverted['category'] != null) {
@@ -154,17 +191,26 @@ class AppState with ChangeNotifier {
         if (category.keys.toList().length >= 12) {
           return;
         }
+
         category[data.cateName] = data;
-        if (this.showCategory == null ||
+
+        if (this.showCategory != null &&
             this.showCategory.cateName == data.cateName) {
-          this.showCategory = data;
+          changeShowCategory(data.cateName);
         }
       });
     }
+
+    if (this.showCategory == null) {
+      changeShowCategory('');
+    }
+    notifyListeners();
+    save();
   }
 
   AppState.fromJson(Map<String, dynamic> json) {
     darkMode = json['darkMode'];
+    showCategory = Category.fromJson(json['showCategory']);
     if (json['category'] != null) {
       category = new Map<String, Category>();
       json['category'].forEach((v) {
@@ -177,6 +223,7 @@ class AppState with ChangeNotifier {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['darkMode'] = this.darkMode;
+    data['showCategory'] = this.showCategory.toJson();
     if (this.category != null) {
       this.category.forEach((key, value) {
         data[key] = value.toJson();
@@ -191,57 +238,6 @@ class AppState with ChangeNotifier {
       final listData = this.category.values.toList();
       data['category'] = listData.map((v) => v.toJson()).toList();
     }
-    return data;
-  }
-}
-
-class Category {
-  String iconName;
-  String cateName;
-  List<RssSetting> rssSettings;
-
-  Category({this.iconName, this.cateName, this.rssSettings});
-
-  Category.fromJson(Map<String, dynamic> json) {
-    iconName = json['iconName'];
-    cateName = json['cateName'];
-    if (json['rssSettings'] != null) {
-      rssSettings = new List<RssSetting>();
-      json['rssSettings'].forEach((v) {
-        rssSettings.add(new RssSetting.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['iconName'] = this.iconName;
-    data['cateName'] = this.cateName;
-    if (this.rssSettings != null) {
-      data['rssSettings'] = this.rssSettings.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class RssSetting {
-  String rssName;
-  String url;
-  bool opened;
-
-  RssSetting({this.rssName, this.url, this.opened});
-
-  RssSetting.fromJson(Map<String, dynamic> json) {
-    rssName = json['rssName'];
-    url = json['url'];
-    opened = json['opened'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rssName'] = this.rssName;
-    data['url'] = this.url;
-    data['opened'] = this.opened;
     return data;
   }
 }
