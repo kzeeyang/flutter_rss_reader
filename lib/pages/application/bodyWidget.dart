@@ -87,7 +87,10 @@ class _BodyWidgetState extends State<BodyWidget> {
   Widget _panelBody() {
     // _loadRss();
     print('mRssItem length: ${Global.appState.mRssItems.length}');
-    return _listItemBuilder();
+    return ListView.builder(
+      itemCount: Global.appState.mRssItems.length,
+      itemBuilder: _listItemBuilder,
+    );
     // return Container(
     //   child: IconButton(
     //     icon: Icon(Icons.refresh),
@@ -96,7 +99,7 @@ class _BodyWidgetState extends State<BodyWidget> {
     // );
   }
 
-  Widget _listItemBuilder() {
+  Widget _listItemBuilder(BuildContext context, int index) {
     Global.appState.mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
     return Column(
       // children: rsses.map((rss) {

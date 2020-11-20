@@ -56,11 +56,20 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  void addMRssItems(List<MRssItem> items) {
-    if (this.mRssItems == null) {
-      this.mRssItems = List();
+  Future<void> reloadMRssItems() async {
+    clearMRssItems();
+    for (var i = 0; i < showCategory.rssSettings.length; i++) {
+      print('channels: ${showCategory.rssSettings[i].rssName}');
+      if (!showCategory.rssSettings[i].opened) {
+        continue;
+      }
+      if (showCategory.rssSettings[i].url.isNotEmpty) {
+        var mRssItems = await Rss.getMRssItems(showCategory.rssSettings[i].url,
+            showCategory.rssSettings[i].iconUrl,
+            context: null);
+        Global.appState.mRssItems.addAll(mRssItems);
+      }
     }
-    this.mRssItems.addAll(items);
     notifyListeners();
   }
 
@@ -104,17 +113,7 @@ class AppState with ChangeNotifier {
     //   appBarTitle = "";
     // }
 
-    clearMRssItems();
-    for (var i = 0; i < showCategory.rssSettings.length; i++) {
-      print('channels: ${showCategory.rssSettings[i].rssName}');
-      if (showCategory.rssSettings[i].url.isNotEmpty) {
-        var mRssItems = await Rss.getMRssItems(showCategory.rssSettings[i].url,
-            showCategory.rssSettings[i].iconUrl,
-            context: null);
-        Global.appState.mRssItems.addAll(mRssItems);
-      }
-    }
-
+    reloadMRssItems();
     notifyListeners();
     save();
   }
@@ -126,6 +125,7 @@ class AppState with ChangeNotifier {
   void changeShowRssOpened(int index) {
     this.showCategory.rssSettings[index].opened =
         !this.showCategory.rssSettings[index].opened;
+    reloadMRssItems();
     notifyListeners();
     save();
   }
