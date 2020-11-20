@@ -59,7 +59,6 @@ class _ApplicationPageState extends State<ApplicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print('shwoCategory: ${showCategory.cateName}');
     return Scaffold(
       appBar: _buildAppBar(),
       body: Global.appState.showCategory == null

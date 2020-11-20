@@ -103,4 +103,50 @@ class Rss {
     });
     return channel;
   }
+
+  static Future<List<MRssItem>> getMRssItems(
+    String url,
+    String rssIcon, {
+    @required BuildContext context,
+    bool cacheDisk = false,
+  }) async {
+    print('getMRssItems: $url');
+    var response = await client.get(url, context: context);
+    List<MRssItem> mRssItems = List();
+
+    if (url.endsWith('.xml')) {
+      var atomFeed = AtomFeed.parse(response);
+      atomFeed.items.forEach((item) {
+        MRssItem mRssItem = new MRssItem();
+        mRssItem.rssName = atomFeed.title;
+        mRssItem.rssIcon = rssIcon;
+        mRssItem.title = item.title;
+        mRssItem.pubDate = item.updated;
+        mRssItem.author = item.authors.first.name;
+        mRssItem.description = item.content;
+        mRssItem.link = item.links.first.href;
+        mRssItem.media = item.media;
+
+        mRssItems.add(mRssItem);
+      });
+    } else {
+      var rssFeed = new RssFeed.parse(response);
+      rssFeed.items.forEach((item) {
+        // print('${item.title}');
+        MRssItem mRssItem = new MRssItem();
+        mRssItem.rssName = rssFeed.title;
+        mRssItem.rssIcon = rssIcon;
+        mRssItem.title = item.title;
+        mRssItem.pubDate = item.pubDate;
+        mRssItem.author = item.author;
+        mRssItem.description = item.description;
+        mRssItem.link = item.link;
+        mRssItem.media = item.media;
+        // print('${mRssItem.title}');
+
+        mRssItems.add(mRssItem);
+      });
+    }
+    return mRssItems;
+  }
 }

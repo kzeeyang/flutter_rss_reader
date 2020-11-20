@@ -21,7 +21,6 @@ class BodyWidget extends StatefulWidget {
 
 class _BodyWidgetState extends State<BodyWidget> {
   EasyRefreshController _refreshController;
-  List<MRssItem> mRssItems = [];
   @override
   void initState() {
     super.initState();
@@ -37,47 +36,18 @@ class _BodyWidgetState extends State<BodyWidget> {
 
   _loadRss() async {
     List<RssSetting> channels = Global.appState.showCategory.rssSettings;
-    mRssItems = [];
-
+    // _mRssItems = [];
+    Global.appState.mRssItems.clear();
+    print('channels length: ${channels.length}');
     for (var i = 0; i < channels.length; i++) {
-      print('${channels[i].rssName}');
-      if (channels[i].url.endsWith('.xml')) {
-        AtomFeed atom = await Rss.getAtom(channels[i].url, context: null);
-      } else {
-        RssFeed rss;
-        Future(() async {
-          rss = await Rss.getRss(channels[i].url, context: null);
-          // print('rssitemlength: ${rss.items.length}');
-          // rss.items.map((item) {
-          //   print('${item.title}');
-          //   MRssItem mRssItem;
-          //   mRssItem.rssName = channels[i].rssName;
-          //   mRssItem.rssIcon = channels[i].iconUrl;
-          //   mRssItem.title = item.title;
-          //   mRssItem.pubDate = item.pubDate;
-          //   mRssItem.author = item.author;
-          //   mRssItem.description = item.description;
-          //   mRssItem.link = item.link;
-          //   mRssItem.media = item.media;
-          //   mRssItems.add(mRssItem);
-          // });
-          for (var j = 0; j < rss.items.length; j++) {
-            MRssItem mRssItem = new MRssItem(
-              rssName: channels[i].rssName,
-              rssIcon: channels[i].iconUrl,
-              title: rss.items[j].title,
-              pubDate: rss.items[j].pubDate,
-              author: rss.items[j].author,
-              description: rss.items[j].description,
-              link: rss.items[j].link,
-              media: rss.items[j].media,
-            );
-            Global.appState.mRssItems.add(mRssItem);
-          }
-        });
+      print('channels: ${channels[i].rssName}');
+      if (channels[i].url.isNotEmpty) {
+        var mRssItems = await Rss.getMRssItems(
+            channels[i].url, channels[i].iconUrl,
+            context: context);
+        Global.appState.mRssItems.addAll(mRssItems);
       }
     }
-
     if (mounted) {
       setState(() {});
     }
@@ -115,12 +85,9 @@ class _BodyWidgetState extends State<BodyWidget> {
   }
 
   Widget _panelBody() {
-    _loadRss();
+    // _loadRss();
     print('mRssItem length: ${Global.appState.mRssItems.length}');
-    return ListView.builder(
-      itemCount: Global.appState.mRssItems.length,
-      itemBuilder: _listItemBuilder,
-    );
+    return _listItemBuilder();
     // return Container(
     //   child: IconButton(
     //     icon: Icon(Icons.refresh),
@@ -129,7 +96,8 @@ class _BodyWidgetState extends State<BodyWidget> {
     // );
   }
 
-  Widget _listItemBuilder(BuildContext context, int index) {
+  Widget _listItemBuilder() {
+    Global.appState.mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
     return Column(
       // children: rsses.map((rss) {
       //   RssSetting rssSetting =
@@ -143,20 +111,14 @@ class _BodyWidgetState extends State<BodyWidget> {
             horizontal: AppValue.horizontalPadding,
             vertical: AppValue.verticalPadding,
           ),
-          child: Column(
-            children: [
-              ItemHeader(context, mRssitem),
-              Container(
-                child: ExpansionText(
-                  text: mRssitem.description,
-                  minLines: 5,
-                  textStyle: TextStyle(
-                    fontSize: AppValue.fontSize,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: Global.appState.mRssItemIsShow(mRssitem.rssName)
+              ? Column(
+                  children: [
+                    ItemHeader(context, mRssitem),
+                    ItemBody(mRssitem),
+                  ],
+                )
+              : null,
         );
       }).toList(),
     );

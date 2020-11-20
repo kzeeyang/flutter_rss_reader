@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rss_reader/common/apis/api.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/global.dart';
 
@@ -26,7 +27,7 @@ class AppState with ChangeNotifier {
     // appBarTitle = "";
     this.showCategory = null;
     this.category = {};
-    this.mRssItems = [];
+    this.mRssItems = List();
 
     this.panelOpen = panelOpen;
   }
@@ -50,11 +51,35 @@ class AppState with ChangeNotifier {
     save();
   }
 
+  void clearMRssItems() {
+    this.mRssItems.clear();
+    notifyListeners();
+  }
+
+  void addMRssItems(List<MRssItem> items) {
+    if (this.mRssItems == null) {
+      this.mRssItems = List();
+    }
+    this.mRssItems.addAll(items);
+    notifyListeners();
+  }
+
+  bool mRssItemIsShow(String rssname) {
+    bool opend = false;
+    for (var i = 0; i < this.showCategory.rssSettings.length; i++) {
+      if (rssname == this.showCategory.rssSettings[i].rssName) {
+        opend = this.showCategory.rssSettings[i].opened;
+        break;
+      }
+    }
+    return opend;
+  }
+
   RssSetting getShowCategoryRssSetting(String name) {
     RssSetting rssSetting;
-    print('app: ${this.showCategory.cateName}');
+    // print('app: ${this.showCategory.cateName}');
     for (var i = 0; i < this.showCategory.rssSettings.length; i++) {
-      print('$name : ${this.showCategory.rssSettings[i].rssName}');
+      // print('$name : ${this.showCategory.rssSettings[i].rssName}');
       if (this.showCategory.rssSettings[i].rssName == name) {
         rssSetting = this.showCategory.rssSettings[i];
       }
@@ -62,7 +87,7 @@ class AppState with ChangeNotifier {
     return rssSetting;
   }
 
-  void changeShowCategory(String catename) {
+  Future<void> changeShowCategory(String catename) async {
     if (hadCategory(catename)) {
       showCategory = category[catename];
     } else {
@@ -78,6 +103,17 @@ class AppState with ChangeNotifier {
     // } else {
     //   appBarTitle = "";
     // }
+
+    clearMRssItems();
+    for (var i = 0; i < showCategory.rssSettings.length; i++) {
+      print('channels: ${showCategory.rssSettings[i].rssName}');
+      if (showCategory.rssSettings[i].url.isNotEmpty) {
+        var mRssItems = await Rss.getMRssItems(showCategory.rssSettings[i].url,
+            showCategory.rssSettings[i].iconUrl,
+            context: null);
+        Global.appState.mRssItems.addAll(mRssItems);
+      }
+    }
 
     notifyListeners();
     save();
@@ -130,7 +166,10 @@ class AppState with ChangeNotifier {
 
   void addRss(String catename, RssSetting rssSetting) {
     category[catename].rssSettings.add(rssSetting);
-    changeShowCategory(catename);
+    if (showCategory.cateName == catename) {
+      changeShowCategory(catename);
+    }
+
     notifyListeners();
     save();
   }

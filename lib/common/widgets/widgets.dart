@@ -11,4 +11,5 @@ export 'reward.dart';
 export 'inputDialog.dart';
 export 'rssIcon.dart';
 export 'itemHeader.dart';
+export 'itemBody.dart';
 export 'ExpansionText.dart';
