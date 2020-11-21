@@ -91,6 +91,8 @@ dependencies:
   sliding_up_panel: ^0.3.6
   #format datetime
   common_utils: ^1.2.1
+  #html
+  html: ^0.14.0
 
 dev_dependencies:
   flutter_test:

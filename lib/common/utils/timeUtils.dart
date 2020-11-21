@@ -1,10 +1,11 @@
 import 'package:common_utils/common_utils.dart';
 
 String timeUtils(DateTime date) {
-  if (date.year != DateTime.now().year) {
+  DateTime utcDate = DateTime.now().add(Duration(hours: 8));
+  if (date.year != utcDate.year) {
     return DateUtil.formatDate(date, format: "yyyy/MM/dd");
   }
-  Duration duration = DateTime.now().difference(date);
+  Duration duration = utcDate.difference(date);
   if (duration.inDays > 9) {
     return DateUtil.formatDate(date, format: "MM/dd");
   } else if (duration.inDays > 0) {

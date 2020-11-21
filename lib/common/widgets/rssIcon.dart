@@ -19,7 +19,7 @@ Widget RssIcon(
       image: rss.iconUrl != null
           ? DecorationImage(
               image: NetworkImage(rss.iconUrl),
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               colorFilter: rss.opened
                   ? null
                   : ColorFilter.mode(Colors.black54, BlendMode.hardLight),
