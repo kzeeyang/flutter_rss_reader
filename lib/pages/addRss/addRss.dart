@@ -78,7 +78,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
     );
     _nameController.text = rss.rssName;
     _iconUrl = rss.iconUrl;
-    debugPrint('iconUrl: $_iconUrl');
+    // debugPrint('iconUrl: $_iconUrl');
     if (Global.appState.rssIndex(
             widget.cateName, _urlController.text, _nameController.text) !=
         -1) {

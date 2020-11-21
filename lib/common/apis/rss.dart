@@ -18,7 +18,7 @@ class Rss {
       RssSetting rssSetting;
       String iconUrl = "";
       String host = urlHost(url);
-      if (url.endsWith('.xml')) {
+      if (url.endsWith('.xml') || url.endsWith('.atom')) {
         var feed = AtomFeed.parse(response);
         if (feed.logo == null || feed.logo == '') {
           iconUrl = host + icon;
