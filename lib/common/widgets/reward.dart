@@ -6,8 +6,9 @@ import 'package:flutter_rss_reader/common/router/router.gr.dart';
 
 Widget rewardWidget() {
   final rewardPic = "assets/images/微信图片_20200602112022.jpg";
+  final double extentHeight = 260.0;
   return SliverFixedExtentList(
-    itemExtent: 230,
+    itemExtent: extentHeight,
     delegate: new SliverChildBuilderDelegate(
       (BuildContext context, int index) {
         //创建列表项
@@ -19,6 +20,15 @@ Widget rewardWidget() {
                 height: 30,
                 child: Text(
                   "这是一个赞赏码😉",
+                  style: TextStyle(
+                    fontSize: duSetFontSize(16),
+                  ),
+                ),
+              ),
+              Container(
+                height: 30,
+                child: Text(
+                  "CREATED BY Trevor、",
                   style: TextStyle(
                     fontSize: duSetFontSize(16),
                   ),

@@ -34,7 +34,9 @@ class _ApplicationPageState extends State<ApplicationPage> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text(
-        'Home',
+        Global.appState.showCategory == null
+            ? "Home".toUpperCase()
+            : Global.appState.showCategory.cateName.toUpperCase(),
         style: TextStyle(
           color: AppColors.primaryText,
           fontFamily: AppColors.fontMontserrat,

@@ -21,9 +21,9 @@ class ExpansionText extends StatefulWidget {
   const ExpansionText({
     Key key,
     this.text = '',
-    this.minLines,
+    this.minLines = 5,
     this.textStyle,
-    this.maxLines,
+    this.maxLines = 50,
     this.expandKeyColor = Colors.blue,
     this.shrinkText = '展开',
     this.expandText = '收起',
@@ -63,8 +63,32 @@ class _ExpansionTextState extends State<ExpansionText> {
     }
   }
 
+  bool isMaxExpansion() {
+    TextPainter _textPainter = TextPainter(
+      maxLines: widget.maxLines,
+      text: TextSpan(
+        text: widget.text,
+        style: widget.textStyle,
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(
+        maxWidth:
+            MediaQuery.of(context).size.width - AppValue.horizontalPadding * 4,
+      );
+    if (_textPainter.didExceedMaxLines) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    const StrutStyle strutStyle = StrutStyle(
+      forceStrutHeight: true,
+      height: 1.2,
+      leading: 0.9,
+    );
     if (isExpansion()) {
       return Container(
         padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -74,7 +98,8 @@ class _ExpansionTextState extends State<ExpansionText> {
             Text(
               widget.text,
               maxLines: _isExpand ? widget.maxLines : widget.minLines,
-              overflow: _isExpand ? null : TextOverflow.ellipsis,
+              overflow: isMaxExpansion() ? TextOverflow.ellipsis : null,
+              strutStyle: strutStyle,
               style: widget.textStyle,
             ),
             Row(
@@ -108,6 +133,7 @@ class _ExpansionTextState extends State<ExpansionText> {
               widget.text,
               maxLines: _isExpand ? widget.maxLines : widget.minLines,
               overflow: _isExpand ? null : TextOverflow.ellipsis,
+              strutStyle: strutStyle,
               style: widget.textStyle,
             ),
           ],

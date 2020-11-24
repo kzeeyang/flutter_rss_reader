@@ -50,6 +50,10 @@ class AppValue {
   static const double horizontalPadding = 10.0;
   static const double verticalPadding = 5.0;
 
+  static const double ItemBottomPadding = 10.0;
+  static const double ItemShadowElevation = 5.0;
+  static const Color ItemShadowColor = Color.fromARGB(125, 141, 141, 142);
+
   static const double titleSize = 18.0;
   static const FontWeight titleWeight = FontWeight.w400;
   static const double fontSize = 16.0;

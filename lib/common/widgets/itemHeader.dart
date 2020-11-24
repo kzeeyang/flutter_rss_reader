@@ -16,6 +16,7 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
   final titleWidth = width - iconWidth - shareWidth - 20;
   return Container(
     height: height,
+    padding: EdgeInsets.symmetric(horizontal: AppValue.horizontalPadding),
     child: Row(
       children: [
         Container(

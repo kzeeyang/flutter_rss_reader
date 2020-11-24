@@ -71,6 +71,9 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
           shape: FloatingBorder(),
         ),
       ),
+      onDoubleTap: () {
+        Global.appState.reloadMRssItems();
+      },
       onLongPress: () {
         ExtendedNavigator.rootNavigator
             .pushCateDetail(cateName: Global.appState.showCategory.cateName);

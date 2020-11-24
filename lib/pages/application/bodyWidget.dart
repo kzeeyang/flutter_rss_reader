@@ -7,6 +7,7 @@ import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
+import 'package:flutter_rss_reader/pages/application/ItemSliverList.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:webfeed/webfeed.dart';
 
@@ -35,19 +36,7 @@ class _BodyWidgetState extends State<BodyWidget> {
   }
 
   _loadRss() async {
-    List<RssSetting> channels = Global.appState.showCategory.rssSettings;
-    // _mRssItems = [];
-    Global.appState.mRssItems.clear();
-    print('channels length: ${channels.length}');
-    for (var i = 0; i < channels.length; i++) {
-      print('channels: ${channels[i].rssName}');
-      if (channels[i].url.isNotEmpty) {
-        var mRssItems = await Rss.getMRssItems(
-            channels[i].url, channels[i].iconUrl,
-            context: context);
-        Global.appState.mRssItems.addAll(mRssItems);
-      }
-    }
+    Global.appState.reloadMRssItems();
     if (mounted) {
       setState(() {});
     }
@@ -87,16 +76,20 @@ class _BodyWidgetState extends State<BodyWidget> {
   Widget _panelBody() {
     // _loadRss();
     print('mRssItem length: ${Global.appState.mRssItems.length}');
-    return ListView.builder(
-      itemCount: Global.appState.mRssItems.length,
-      itemBuilder: _listItemBuilder,
-    );
-    // return Container(
-    //   child: IconButton(
-    //     icon: Icon(Icons.refresh),
-    //     onPressed: _loadRss,
-    //   ),
+    // return ListView.builder(
+    //   itemCount: Global.appState.mRssItems.length,
+    //   itemBuilder: _listItemBuilder,
     // );
+    return CustomScrollView(
+      slivers: [
+        SliverSafeArea(
+          sliver: SliverPadding(
+            padding: EdgeInsets.only(top: 8.0),
+            sliver: ItemSliverList(),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {
@@ -118,7 +111,7 @@ class _BodyWidgetState extends State<BodyWidget> {
               ? Column(
                   children: [
                     ItemHeader(context, mRssitem),
-                    ItemBody(mRssitem),
+                    ItemBody(context, mRssitem),
                   ],
                 )
               : null,
