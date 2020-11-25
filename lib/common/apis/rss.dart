@@ -117,6 +117,7 @@ class Rss {
     if (url.endsWith('.xml')) {
       var atomFeed = AtomFeed.parse(response);
       atomFeed.items.forEach((item) {
+        // print('offset: ${item.updated.timeZoneOffset}');
         MRssItem mRssItem = new MRssItem();
         mRssItem.rssName = atomFeed.title;
         mRssItem.rssIcon = rssIcon;
@@ -132,7 +133,6 @@ class Rss {
     } else {
       var rssFeed = new RssFeed.parse(response);
       rssFeed.items.forEach((item) {
-        // print('${item.title}');
         MRssItem mRssItem = new MRssItem();
         mRssItem.rssName = rssFeed.title;
         mRssItem.rssIcon = rssIcon;
@@ -142,8 +142,6 @@ class Rss {
         mRssItem.description = item.description;
         mRssItem.link = item.link;
         mRssItem.media = item.media;
-        // print('${mRssItem.title}');
-
         mRssItems.add(mRssItem);
       });
     }

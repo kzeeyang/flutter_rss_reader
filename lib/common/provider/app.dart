@@ -58,6 +58,7 @@ class AppState with ChangeNotifier {
 
   Future<void> reloadMRssItems() async {
     clearMRssItems();
+
     for (var i = 0; i < showCategory.rssSettings.length; i++) {
       print('channels: ${showCategory.rssSettings[i].rssName}');
       if (!showCategory.rssSettings[i].opened) {

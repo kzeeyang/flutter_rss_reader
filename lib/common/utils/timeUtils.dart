@@ -9,21 +9,6 @@ const String OVER_YEAR_FORMAT = "yyyy/MM/dd";
 
 String timeUtils(DateTime date) {
   DateTime utcDate = DateTime.now();
-  if (!utcDate.isUtc) {
-    utcDate = utcDate.subtract(utcDate.timeZoneOffset);
-  }
-  if (!date.isUtc) {
-    if (date.timeZoneOffset.inHours > 0) {
-      utcDate = utcDate.add(date.timeZoneOffset);
-    } else {
-      utcDate = utcDate.subtract(date.timeZoneOffset);
-    }
-  }
-  // print('utcDate: $utcDate, date: $date');
-
-  // print(
-  //     'utcDate: ${utcDate.millisecondsSinceEpoch}, date: ${date.millisecondsSinceEpoch}');
-
   if (date.year != utcDate.year) {
     return DateUtil.formatDate(date, format: OVER_YEAR_FORMAT);
   }

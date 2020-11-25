@@ -67,6 +67,11 @@ class _BodyWidgetState extends State<BodyWidget> {
       body: EasyRefresh(
         enableControlFinishRefresh: true,
         controller: _refreshController,
+        header: BezierHourGlassHeader(backgroundColor: Colors.grey),
+        onRefresh: () {
+          _loadRss();
+          _refreshController.finishRefresh();
+        },
         child: _panelBody(),
       ),
       panel: _panelWidget(_minPanelHeight, size),
