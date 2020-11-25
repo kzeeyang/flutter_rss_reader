@@ -21,12 +21,23 @@ class BodyWidget extends StatefulWidget {
 }
 
 class _BodyWidgetState extends State<BodyWidget> {
-  EasyRefreshController _refreshController;
+  List<MRssItem> _mRssItems;
+
+  EasyRefreshController _refreshController = new EasyRefreshController();
+  ScrollController _scrollController = new ScrollController();
+
   @override
   void initState() {
     super.initState();
-    _refreshController = EasyRefreshController();
     _loadRss();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _refreshController.dispose();
+
+    super.dispose();
   }
 
   _loadCache() {
@@ -38,7 +49,10 @@ class _BodyWidgetState extends State<BodyWidget> {
   _loadRss() async {
     Global.appState.reloadMRssItems();
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _mRssItems = Global.appState.mRssItems;
+        _mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
+      });
     }
   }
 
@@ -67,6 +81,7 @@ class _BodyWidgetState extends State<BodyWidget> {
       body: EasyRefresh(
         enableControlFinishRefresh: true,
         controller: _refreshController,
+        scrollController: _scrollController,
         header: BezierHourGlassHeader(backgroundColor: Colors.grey),
         onRefresh: () {
           _loadRss();
@@ -80,7 +95,6 @@ class _BodyWidgetState extends State<BodyWidget> {
 
   Widget _panelBody() {
     // _loadRss();
-    print('mRssItem length: ${Global.appState.mRssItems.length}');
     // return ListView.builder(
     //   itemCount: Global.appState.mRssItems.length,
     //   itemBuilder: _listItemBuilder,
@@ -90,7 +104,10 @@ class _BodyWidgetState extends State<BodyWidget> {
         SliverSafeArea(
           sliver: SliverPadding(
             padding: EdgeInsets.only(top: 8.0),
-            sliver: ItemSliverList(),
+            sliver: ItemSliverList(
+              mRssItems: _mRssItems,
+              scrollController: _scrollController,
+            ),
           ),
         ),
       ],
@@ -98,14 +115,14 @@ class _BodyWidgetState extends State<BodyWidget> {
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {
-    Global.appState.mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
+    _mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
     return Column(
       // children: rsses.map((rss) {
       //   RssSetting rssSetting =
       //       Global.appState.getShowCategoryRssSetting(rss.title);
       //   rss.items.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
 
-      children: Global.appState.mRssItems.map((mRssitem) {
+      children: _mRssItems.map((mRssitem) {
         return Container(
           color: Colors.white,
           margin: EdgeInsets.symmetric(
@@ -116,7 +133,7 @@ class _BodyWidgetState extends State<BodyWidget> {
               ? Column(
                   children: [
                     ItemHeader(context, mRssitem),
-                    ItemBody(context, mRssitem),
+                    ItemBody(context, mRssitem, _scrollController),
                   ],
                 )
               : null,

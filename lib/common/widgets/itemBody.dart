@@ -12,7 +12,8 @@ enum Action {
   Cancel,
 }
 
-Widget ItemBody(BuildContext context, MRssItem item) {
+Widget ItemBody(
+    BuildContext context, MRssItem item, ScrollController scrollController) {
   var document = parse(item.description);
 
   Future _openAlertDialog() async {
@@ -55,6 +56,7 @@ Widget ItemBody(BuildContext context, MRssItem item) {
         textStyle: TextStyle(
           fontSize: AppValue.fontSize,
         ),
+        scrollController: scrollController,
       ),
       onLongPress: () {
         _openAlertDialog();

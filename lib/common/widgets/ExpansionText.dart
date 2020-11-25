@@ -7,7 +7,6 @@ class ExpansionText extends StatefulWidget {
   final int minLines;
   final int maxLines;
 
-  /// 文字整体样式
   final TextStyle textStyle;
 
   /// 收起、展开文字颜色
@@ -17,6 +16,8 @@ class ExpansionText extends StatefulWidget {
 
   /// 结尾按钮是否始终处于显示状态
   final bool isAlwaysDisplay;
+
+  final ScrollController scrollController;
 
   const ExpansionText({
     Key key,
@@ -28,6 +29,7 @@ class ExpansionText extends StatefulWidget {
     this.shrinkText = '展开',
     this.expandText = '收起',
     this.isAlwaysDisplay = false,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -38,11 +40,7 @@ class _ExpansionTextState extends State<ExpansionText> {
   bool _isExpand = false;
   bool _showExpand = false;
 
-  @override
-  void initState() {
-    // isExpansion();
-    super.initState();
-  }
+  double _scrollOffset = 0.0;
 
   bool isExpansion() {
     TextPainter _textPainter = TextPainter(
@@ -113,6 +111,13 @@ class _ExpansionTextState extends State<ExpansionText> {
                     ),
                   ),
                   onTap: () {
+                    if (_isExpand) {
+                      widget.scrollController.animateTo(_scrollOffset,
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.ease);
+                    } else {
+                      _scrollOffset = widget.scrollController.offset;
+                    }
                     setState(() {
                       _isExpand = !_isExpand;
                     });
