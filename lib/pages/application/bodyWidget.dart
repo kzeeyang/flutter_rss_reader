@@ -46,8 +46,8 @@ class _BodyWidgetState extends State<BodyWidget> {
     });
   }
 
-  _loadRss() async {
-    Global.appState.reloadMRssItems();
+  _loadRss() {
+    // Global.appState.reloadMRssItems();
     if (mounted) {
       setState(() {
         _mRssItems = Global.appState.mRssItems;
@@ -82,9 +82,10 @@ class _BodyWidgetState extends State<BodyWidget> {
         enableControlFinishRefresh: true,
         controller: _refreshController,
         scrollController: _scrollController,
-        header: BezierHourGlassHeader(backgroundColor: Colors.grey),
-        onRefresh: () {
-          _loadRss();
+        // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
+        header: BezierCircleHeader(),
+        onRefresh: () async {
+          await _loadRss();
           _refreshController.finishRefresh();
         },
         child: _panelBody(),

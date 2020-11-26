@@ -113,7 +113,7 @@ class _ExpansionTextState extends State<ExpansionText> {
                   onTap: () {
                     if (_isExpand) {
                       widget.scrollController.animateTo(_scrollOffset,
-                          duration: Duration(milliseconds: 200),
+                          duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
                     } else {
                       _scrollOffset = widget.scrollController.offset;
