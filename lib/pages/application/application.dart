@@ -15,8 +15,6 @@ class ApplicationPage extends StatefulWidget {
 }
 
 class _ApplicationPageState extends State<ApplicationPage> {
-  PanelController panelController = new PanelController();
-
   @override
   void initState() {
     super.initState();
@@ -93,10 +91,10 @@ class _ApplicationPageState extends State<ApplicationPage> {
                     ],
                   ),
                 )
-              : BodyWidget(panelController),
+              : BodyWidget(),
       floatingActionButton: Global.appState.showCategory == null
           ? Container()
-          : AnimationFloatingButton(panelController),
+          : AnimationFloatingButton(),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

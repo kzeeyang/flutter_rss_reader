@@ -11,10 +11,10 @@ import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'bottomCircleWidget.dart';
 
 class AnimationFloatingButton extends StatefulWidget {
-  PanelController panelController;
-  AnimationFloatingButton(PanelController controller) {
-    this.panelController = controller;
-  }
+  // PanelController panelController;
+  // AnimationFloatingButton(PanelController controller) {
+  //   this.panelController = controller;
+  // }
 
   @override
   _AnimationFloatingButtonState createState() =>
@@ -131,12 +131,12 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
               moveX > -kBottomNavigationBarHeight &&
               moveX < kBottomNavigationBarHeight) {
             debugPrint("move to top");
-            widget.panelController.open();
+            Global.panelController.open();
           } else if (moveY > kBottomNavigationBarHeight / 2 &&
               moveX > -kBottomNavigationBarHeight &&
               moveX < kBottomNavigationBarHeight) {
             debugPrint("move to down");
-            widget.panelController.close();
+            Global.panelController.close();
           }
         },
         child: hexagonButton(),

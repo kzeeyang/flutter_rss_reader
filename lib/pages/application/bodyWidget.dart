@@ -12,19 +12,15 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:webfeed/webfeed.dart';
 
 class BodyWidget extends StatefulWidget {
-  PanelController panelController;
-  BodyWidget(PanelController controller) {
-    this.panelController = controller;
-  }
   @override
   _BodyWidgetState createState() => _BodyWidgetState();
 }
 
 class _BodyWidgetState extends State<BodyWidget> {
-  List<MRssItem> _mRssItems;
-
   EasyRefreshController _refreshController = new EasyRefreshController();
   ScrollController _scrollController = new ScrollController();
+
+  List<MRssItem> _mRssItems = new List();
 
   @override
   void initState() {
@@ -47,12 +43,9 @@ class _BodyWidgetState extends State<BodyWidget> {
   }
 
   _loadRss() {
-    // Global.appState.reloadMRssItems();
+    Global.appState.reloadMRssItems();
     if (mounted) {
-      setState(() {
-        _mRssItems = Global.appState.mRssItems;
-        _mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
-      });
+      setState(() {});
     }
   }
 
@@ -64,7 +57,7 @@ class _BodyWidgetState extends State<BodyWidget> {
     final double _maxPanelHeight = height / 2.3;
 
     return SlidingUpPanel(
-      controller: widget.panelController,
+      controller: Global.panelController,
       minHeight: _minPanelHeight,
       maxHeight: _maxPanelHeight,
       backdropEnabled: true,
@@ -73,10 +66,10 @@ class _BodyWidgetState extends State<BodyWidget> {
         topRight: Radius.circular(12),
       ),
       onPanelClosed: () {
-        Global.appState.changePanelOpen(false);
+        Global.changePanelOpen(false);
       },
       onPanelOpened: () {
-        Global.appState.changePanelOpen(true);
+        Global.changePanelOpen(true);
       },
       body: EasyRefresh(
         enableControlFinishRefresh: true,
@@ -88,58 +81,35 @@ class _BodyWidgetState extends State<BodyWidget> {
           await _loadRss();
           _refreshController.finishRefresh();
         },
-        child: _panelBody(),
+        onLoad: () async {
+          await Future.delayed(Duration(seconds: 2), () {
+            print('onLoad');
+            setState(() {});
+          });
+        },
+        child: Global.appState.mRssItems.length > 0
+            ? _panelBody()
+            : Container(
+                child: Text('暂无数据'),
+              ),
       ),
       panel: _panelWidget(_minPanelHeight, size),
     );
   }
 
   Widget _panelBody() {
-    // _loadRss();
-    // return ListView.builder(
-    //   itemCount: Global.appState.mRssItems.length,
-    //   itemBuilder: _listItemBuilder,
-    // );
     return CustomScrollView(
       slivers: [
         SliverSafeArea(
           sliver: SliverPadding(
             padding: EdgeInsets.only(top: 8.0),
             sliver: ItemSliverList(
-              mRssItems: _mRssItems,
+              mRssItems: Global.appState.mRssItems,
               scrollController: _scrollController,
             ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _listItemBuilder(BuildContext context, int index) {
-    _mRssItems.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
-    return Column(
-      // children: rsses.map((rss) {
-      //   RssSetting rssSetting =
-      //       Global.appState.getShowCategoryRssSetting(rss.title);
-      //   rss.items.sort((a, b) => (b.pubDate).compareTo(a.pubDate));
-
-      children: _mRssItems.map((mRssitem) {
-        return Container(
-          color: Colors.white,
-          margin: EdgeInsets.symmetric(
-            horizontal: AppValue.horizontalPadding,
-            vertical: AppValue.verticalPadding,
-          ),
-          child: Global.appState.mRssItemIsShow(mRssitem.rssName)
-              ? Column(
-                  children: [
-                    ItemHeader(context, mRssitem),
-                    ItemBody(context, mRssitem, _scrollController),
-                  ],
-                )
-              : null,
-        );
-      }).toList(),
     );
   }
 
@@ -154,10 +124,10 @@ class _BodyWidgetState extends State<BodyWidget> {
                 width: size.width,
                 child: FlatButton(
                   onPressed: () {
-                    if (widget.panelController.isPanelOpen()) {
-                      widget.panelController.close();
-                    } else if (widget.panelController.isPanelClosed()) {
-                      widget.panelController.open();
+                    if (Global.panelController.isPanelOpen()) {
+                      Global.panelController.close();
+                    } else if (Global.panelController.isPanelClosed()) {
+                      Global.panelController.open();
                     }
                   },
                   child: Center(
@@ -165,9 +135,8 @@ class _BodyWidgetState extends State<BodyWidget> {
                       height: 5,
                       width: 80,
                       decoration: BoxDecoration(
-                        color: Global.appState.panelOpen
-                            ? Colors.blue
-                            : Colors.grey[300],
+                        color:
+                            Global.panelOpen ? Colors.blue : Colors.grey[300],
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
                     ),

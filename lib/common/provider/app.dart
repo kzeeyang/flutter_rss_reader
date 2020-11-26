@@ -12,24 +12,18 @@ class AppState with ChangeNotifier {
   Category showCategory;
   List<MRssItem> mRssItems;
 
-  // 上滑是否开启
-  bool panelOpen;
-
   get isDarkMode => darkMode;
   get categoryList => category.keys;
   get categoryLength => category.keys.length;
 
   AppState({
     bool darkMode = false,
-    bool panelOpen = false,
   }) {
     this.darkMode = darkMode;
     // appBarTitle = "";
     this.showCategory = null;
     this.category = {};
     this.mRssItems = List();
-
-    this.panelOpen = panelOpen;
   }
 
   List<RssSetting> rssList(String catename) {
@@ -42,12 +36,6 @@ class AppState with ChangeNotifier {
   //change darkmode
   void switctDarkMode() {
     darkMode = !darkMode;
-    save();
-  }
-
-  void changePanelOpen(bool open) {
-    panelOpen = open;
-    notifyListeners();
     save();
   }
 
@@ -126,7 +114,6 @@ class AppState with ChangeNotifier {
   void changeShowRssOpened(int index) {
     this.showCategory.rssSettings[index].opened =
         !this.showCategory.rssSettings[index].opened;
-    reloadMRssItems();
     notifyListeners();
     save();
   }
