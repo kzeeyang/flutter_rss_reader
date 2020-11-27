@@ -71,8 +71,8 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
           shape: FloatingBorder(),
         ),
       ),
-      onDoubleTap: () async {
-        await Global.appState.reloadMRssItems();
+      onDoubleTap: () {
+        Global.refreshController.callRefresh();
       },
       onLongPress: () {
         ExtendedNavigator.rootNavigator

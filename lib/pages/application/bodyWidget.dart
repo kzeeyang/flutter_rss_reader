@@ -17,7 +17,6 @@ class BodyWidget extends StatefulWidget {
 }
 
 class _BodyWidgetState extends State<BodyWidget> {
-  EasyRefreshController _refreshController = new EasyRefreshController();
   ScrollController _scrollController = new ScrollController();
 
   List<MRssItem> _mRssItems = new List();
@@ -31,19 +30,20 @@ class _BodyWidgetState extends State<BodyWidget> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _refreshController.dispose();
 
     super.dispose();
   }
 
   _loadCache() {
     Timer(Duration(seconds: 3), () {
-      _refreshController.callRefresh();
+      Global.refreshController.callRefresh();
     });
   }
 
-  _loadRss() {
-    Global.appState.reloadMRssItems();
+  _loadRss() async {
+    await Global.appState.reloadMRssItems();
+    _mRssItems = Global.appState.mRssItems;
+
     if (mounted) {
       setState(() {});
     }
@@ -66,28 +66,22 @@ class _BodyWidgetState extends State<BodyWidget> {
         topRight: Radius.circular(12),
       ),
       onPanelClosed: () {
-        Global.changePanelOpen(false);
+        Global.appState.changePanelOpen(false);
       },
       onPanelOpened: () {
-        Global.changePanelOpen(true);
+        Global.appState.changePanelOpen(true);
       },
       body: EasyRefresh(
         enableControlFinishRefresh: true,
-        controller: _refreshController,
+        controller: Global.refreshController,
         scrollController: _scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
         header: BezierCircleHeader(),
         onRefresh: () async {
           await _loadRss();
-          _refreshController.finishRefresh();
+          Global.refreshController.finishRefresh();
         },
-        onLoad: () async {
-          await Future.delayed(Duration(seconds: 2), () {
-            print('onLoad');
-            setState(() {});
-          });
-        },
-        child: Global.appState.mRssItems.length > 0
+        child: _mRssItems.length > 0
             ? _panelBody()
             : Container(
                 child: Text('暂无数据'),
@@ -104,7 +98,7 @@ class _BodyWidgetState extends State<BodyWidget> {
           sliver: SliverPadding(
             padding: EdgeInsets.only(top: 8.0),
             sliver: ItemSliverList(
-              mRssItems: Global.appState.mRssItems,
+              mRssItems: _mRssItems,
               scrollController: _scrollController,
             ),
           ),
@@ -135,8 +129,9 @@ class _BodyWidgetState extends State<BodyWidget> {
                       height: 5,
                       width: 80,
                       decoration: BoxDecoration(
-                        color:
-                            Global.panelOpen ? Colors.blue : Colors.grey[300],
+                        color: Global.appState.panelOpen
+                            ? Colors.blue
+                            : Colors.grey[300],
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
                     ),

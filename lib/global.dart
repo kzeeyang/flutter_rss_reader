@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_rss_reader/common/entitys/entitys.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
@@ -21,13 +22,11 @@ class Global {
   /// 是否离线登录
   static bool isOfflineLogin = false;
 
-  /// panel 开启
-  static bool panelOpen = false;
-
   /// 应用状态
   static AppState appState = AppState();
 
   static PanelController panelController = new PanelController();
+  static EasyRefreshController refreshController = new EasyRefreshController();
 
   /// 是否 release
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
@@ -67,9 +66,5 @@ class Global {
   // 持久化 用户信息
   static Future<bool> saveAppState() {
     return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState.toJson());
-  }
-
-  static void changePanelOpen(bool open) {
-    panelOpen = open;
   }
 }

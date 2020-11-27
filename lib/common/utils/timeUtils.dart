@@ -9,6 +9,9 @@ const String OVER_YEAR_FORMAT = "yyyy/MM/dd";
 
 String timeUtils(DateTime date) {
   DateTime utcDate = DateTime.now();
+  if (date == null) {
+    return "";
+  }
   if (date.year != utcDate.year) {
     return DateUtil.formatDate(date, format: OVER_YEAR_FORMAT);
   }

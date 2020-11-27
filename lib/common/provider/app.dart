@@ -12,18 +12,24 @@ class AppState with ChangeNotifier {
   Category showCategory;
   List<MRssItem> mRssItems;
 
+  /// panel 开启
+  bool panelOpen;
+
   get isDarkMode => darkMode;
   get categoryList => category.keys;
   get categoryLength => category.keys.length;
 
   AppState({
     bool darkMode = false,
+    bool panelOpen = false,
   }) {
     this.darkMode = darkMode;
     // appBarTitle = "";
     this.showCategory = null;
     this.category = {};
     this.mRssItems = List();
+
+    this.panelOpen = panelOpen;
   }
 
   List<RssSetting> rssList(String catename) {
@@ -39,6 +45,11 @@ class AppState with ChangeNotifier {
     save();
   }
 
+  void changePanelOpen(bool open) {
+    this.panelOpen = open;
+    notifyListeners();
+  }
+
   void clearMRssItems() {
     this.mRssItems.clear();
     notifyListeners();
@@ -47,18 +58,12 @@ class AppState with ChangeNotifier {
   Future<void> reloadMRssItems() async {
     this.mRssItems.clear();
 
-    for (var i = 0; i < showCategory.rssSettings.length; i++) {
-      print('channels: ${showCategory.rssSettings[i].rssName}');
-      if (!showCategory.rssSettings[i].opened) {
-        continue;
-      }
-      if (showCategory.rssSettings[i].url.isNotEmpty) {
-        var mRssItems = await Rss.getMRssItems(showCategory.rssSettings[i].url,
-            showCategory.rssSettings[i].iconUrl,
-            context: null);
-        Global.appState.mRssItems.addAll(mRssItems);
-      }
-    }
+    // for (var i = 0; i < showCategory.rssSettings.length; i++) {
+    //   // print('channels: ${showCategory.rssSettings[i].rssName}');
+    //   if (showCategory.rssSettings[i].url.isNotEmpty) {
+    this.mRssItems =
+        await Rss.getMRssItems(showCategory.rssSettings, context: null);
+
     notifyListeners();
   }
 
