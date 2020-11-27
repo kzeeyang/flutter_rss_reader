@@ -42,6 +42,8 @@ class _BodyWidgetState extends State<BodyWidget> {
 
   _loadRss() async {
     await Global.appState.reloadMRssItems();
+    // Global.appState.mRssItems
+    //     .sort((left, right) => left.pubDate.compareTo(right.pubDate));
     _mRssItems = Global.appState.mRssItems;
 
     if (mounted) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:webfeed/webfeed.dart';
+import 'package:html/parser.dart' show parse;
 
 class Rss {
   static HttpUtil client = HttpUtil();
@@ -112,12 +113,17 @@ class Rss {
     List<MRssItem> mRssItems = List();
     for (var i = 0; i < rssSettings.length; i++) {
       var rss = rssSettings[i];
-      print('getMRssItems: $rss.url');
+      print('getMRssItems: ${rss.url}');
       var response = await client.get(rss.url, context: context);
+
+      var formatResponse = parse(response).body.outerHtml;
+      print('$formatResponse');
+
       if (isAtomUrl(rss.url)) {
         var atomFeed = AtomFeed.parse(response);
         atomFeed.items.forEach((item) {
           // print('offset: ${item.updated.timeZoneOffset}');
+          // print('Atom updated: ${item.updated}');
           MRssItem mRssItem = new MRssItem();
           mRssItem.rssName = atomFeed.title;
           mRssItem.rssIcon = rss.iconUrl;
@@ -133,6 +139,9 @@ class Rss {
       } else {
         var rssFeed = new RssFeed.parse(response);
         rssFeed.items.forEach((item) {
+          // if (rss.url == 'http://feed.smzdm.com/') {
+          //   print('link: ${item.link}');
+          // }
           MRssItem mRssItem = new MRssItem();
           mRssItem.rssName = rssFeed.title;
           mRssItem.rssIcon = rss.iconUrl;
