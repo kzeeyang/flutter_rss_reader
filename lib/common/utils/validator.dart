@@ -1,4 +1,6 @@
 import 'package:flutter_rss_reader/common/provider/provider.dart';
+import 'package:webfeed/domain/rss_feed.dart';
+import 'package:xml/xml.dart' as xml;
 
 /// 检查邮箱格式
 bool duIsEmail(String input) {
@@ -24,8 +26,8 @@ bool duCheckStringEmpty(String input) {
 bool duIsURL(String input) {
   if (input == null || input.isEmpty) return false;
 
-  String regexEmail = "^https?";
-  return RegExp(regexEmail).hasMatch(input);
+  String header = "^https?";
+  return RegExp(header).hasMatch(input);
 }
 
 bool checkHadUrl(List<RssSetting> rsses, String url) {

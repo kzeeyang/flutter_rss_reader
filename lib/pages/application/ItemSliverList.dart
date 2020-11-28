@@ -36,6 +36,8 @@ class ItemSliverList extends StatelessWidget {
                 ),
               ),
             );
+          } else {
+            return Container();
           }
         },
         childCount: Global.appState.mRssItems.length,

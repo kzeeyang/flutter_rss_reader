@@ -119,8 +119,8 @@ class AppState with ChangeNotifier {
   void changeShowRssOpened(int index) {
     this.showCategory.rssSettings[index].opened =
         !this.showCategory.rssSettings[index].opened;
-    notifyListeners();
     save();
+    notifyListeners();
   }
 
   void addCategory(String catename, String iconName) {

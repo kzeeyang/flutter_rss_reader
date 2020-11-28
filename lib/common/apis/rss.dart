@@ -115,10 +115,6 @@ class Rss {
       var rss = rssSettings[i];
       print('getMRssItems: ${rss.url}');
       var response = await client.get(rss.url, context: context);
-
-      var formatResponse = parse(response).body.outerHtml;
-      print('$formatResponse');
-
       if (isAtomUrl(rss.url)) {
         var atomFeed = AtomFeed.parse(response);
         atomFeed.items.forEach((item) {
@@ -138,10 +134,8 @@ class Rss {
         });
       } else {
         var rssFeed = new RssFeed.parse(response);
+
         rssFeed.items.forEach((item) {
-          // if (rss.url == 'http://feed.smzdm.com/') {
-          //   print('link: ${item.link}');
-          // }
           MRssItem mRssItem = new MRssItem();
           mRssItem.rssName = rssFeed.title;
           mRssItem.rssIcon = rss.iconUrl;
