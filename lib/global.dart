@@ -27,6 +27,7 @@ class Global {
 
   static PanelController panelController = new PanelController();
   static EasyRefreshController refreshController = new EasyRefreshController();
+  static ScrollController scrollController = new ScrollController();
 
   /// 是否 release
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");

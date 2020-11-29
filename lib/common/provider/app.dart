@@ -55,7 +55,7 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reloadMRssItems() async {
+  Future<List<MRssItem>> reloadMRssItems() async {
     this.mRssItems.clear();
 
     // for (var i = 0; i < showCategory.rssSettings.length; i++) {
@@ -63,8 +63,8 @@ class AppState with ChangeNotifier {
     //   if (showCategory.rssSettings[i].url.isNotEmpty) {
     this.mRssItems =
         await Rss.getMRssItems(showCategory.rssSettings, context: null);
-
-    notifyListeners();
+    return this.mRssItems;
+    // notifyListeners();
   }
 
   bool mRssItemIsShow(String rssname) {

@@ -17,19 +17,18 @@ class BodyWidget extends StatefulWidget {
 }
 
 class _BodyWidgetState extends State<BodyWidget> {
-  ScrollController _scrollController = new ScrollController();
-
   List<MRssItem> _mRssItems = new List();
 
   @override
   void initState() {
     super.initState();
+
     _loadRss();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    Global.scrollController.dispose();
 
     super.dispose();
   }
@@ -76,7 +75,7 @@ class _BodyWidgetState extends State<BodyWidget> {
       body: EasyRefresh(
         enableControlFinishRefresh: true,
         controller: Global.refreshController,
-        scrollController: _scrollController,
+        scrollController: Global.scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
         header: BezierCircleHeader(),
         onRefresh: () async {
@@ -86,7 +85,12 @@ class _BodyWidgetState extends State<BodyWidget> {
         child: _mRssItems.length > 0
             ? _panelBody()
             : Container(
-                child: Text('暂无数据'),
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    Text('暂无数据'),
+                  ],
+                ),
               ),
       ),
       panel: _panelWidget(_minPanelHeight, size),
@@ -98,10 +102,10 @@ class _BodyWidgetState extends State<BodyWidget> {
       slivers: [
         SliverSafeArea(
           sliver: SliverPadding(
-            padding: EdgeInsets.only(top: 8.0),
+            padding: EdgeInsets.only(top: 5.0, bottom: 135),
             sliver: ItemSliverList(
               mRssItems: _mRssItems,
-              scrollController: _scrollController,
+              scrollController: Global.scrollController,
             ),
           ),
         ),

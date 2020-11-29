@@ -1,10 +1,11 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
-import 'package:webfeed/webfeed.dart';
 
 Widget ItemHeader(BuildContext context, MRssItem item) {
   final size = MediaQuery.of(context).size;
@@ -34,14 +35,21 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
               Container(
                 height: 30,
                 alignment: Alignment.bottomLeft,
-                child: Text(
-                  item.title,
-                  style: TextStyle(
-                    fontSize: AppValue.titleSize,
-                    fontWeight: AppValue.titleWeight,
+                child: InkWell(
+                  child: Text(
+                    item.title,
+                    style: TextStyle(
+                      fontSize: AppValue.titleSize,
+                      fontWeight: AppValue.titleWeight,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  onTap: () {
+                    print('Enter item link: ${item.link}');
+                    ExtendedNavigator.rootNavigator
+                        .pushDetailPageRoute(item: item);
+                  },
                 ),
               ),
               Container(

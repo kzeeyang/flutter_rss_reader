@@ -11,6 +11,10 @@ class ItemSliverList extends StatelessWidget {
   const ItemSliverList({Key key, this.scrollController, this.mRssItems})
       : super(key: key);
 
+  _onTap(MRssItem mRssItem) {
+    print('Enter to link: ${mRssItem.link}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
@@ -24,14 +28,10 @@ class ItemSliverList extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0),
                 elevation: AppValue.ItemShadowElevation,
                 shadowColor: AppValue.ItemShadowColor,
-                child: Stack(
-                  children: <Widget>[
-                    Column(
-                      children: [
-                        ItemHeader(context, mRssitem),
-                        ItemBody(context, mRssitem, scrollController),
-                      ],
-                    ),
+                child: Column(
+                  children: [
+                    ItemHeader(context, mRssitem),
+                    ItemBody(context, mRssitem, scrollController),
                   ],
                 ),
               ),

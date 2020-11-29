@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/utils/full_screen_dialog_util.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
+import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
@@ -27,6 +28,8 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
   Animation _animation;
   IconUtil _iconUtil;
   Offset floatOffset = Offset(500, kToolbarHeight + 100);
+  final String topMsg = '已在最顶层';
+  final String bottomMsg = '已在最底层';
 
   @override
   void initState() {
@@ -131,12 +134,27 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
               moveX > -kBottomNavigationBarHeight &&
               moveX < kBottomNavigationBarHeight) {
             debugPrint("move to top");
-            Global.panelController.open();
+            // Global.panelController.open();
+            if (Global.scrollController.offset == 0) {
+              toastInfo(msg: topMsg);
+            } else {
+              Global.scrollController.animateTo(0,
+                  duration: Duration(milliseconds: 300), curve: Curves.ease);
+            }
           } else if (moveY > kBottomNavigationBarHeight / 2 &&
               moveX > -kBottomNavigationBarHeight &&
               moveX < kBottomNavigationBarHeight) {
             debugPrint("move to down");
-            Global.panelController.close();
+            // Global.panelController.close();
+            if (Global.scrollController.offset ==
+                Global.scrollController.position.maxScrollExtent) {
+              toastInfo(msg: bottomMsg);
+            } else {
+              Global.scrollController.animateTo(
+                  Global.scrollController.position.maxScrollExtent,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease);
+            }
           }
         },
         child: hexagonButton(),

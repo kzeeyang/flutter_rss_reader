@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rss_reader/common/provider/rssItem.dart';
@@ -60,6 +61,10 @@ Widget ItemBody(
       ),
       onLongPress: () {
         _openAlertDialog();
+      },
+      onTap: () {
+        print('Enter item link: ${item.link}');
+        ExtendedNavigator.rootNavigator.pushDetailPageRoute(item: item);
       },
     ),
     // child: HtmlTextView(data: item.description),

@@ -16,6 +16,9 @@ import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
 import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
 import 'package:flutter_rss_reader/pages/photo/photo.dart';
+import 'package:flutter_rss_reader/pages/detailPage/detailPage.dart';
+import 'package:flutter_rss_reader/common/router/router.dart';
+import 'package:flutter_rss_reader/common/provider/rssItem.dart';
 
 abstract class Routes {
   static const indexPageRoute = '/';
@@ -27,6 +30,7 @@ abstract class Routes {
   static const cateDetail = '/cate-detail';
   static const addRss = '/add-rss';
   static const photoViewScreen = '/photo-view-screen';
+  static const detailPageRoute = '/detail-page-route';
   static const all = {
     indexPageRoute,
     welcomePageRoute,
@@ -37,6 +41,7 @@ abstract class Routes {
     cateDetail,
     addRss,
     photoViewScreen,
+    detailPageRoute,
   };
 }
 
@@ -127,6 +132,17 @@ class AppRouter extends RouterBase {
               heroTag: typedArgs.heroTag),
           settings: settings,
         );
+      case Routes.detailPageRoute:
+        if (hasInvalidArgs<DetailPageArguments>(args)) {
+          return misTypedArgsRoute<DetailPageArguments>(args);
+        }
+        final typedArgs = args as DetailPageArguments ?? DetailPageArguments();
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              DetailPage(key: typedArgs.key, item: typedArgs.item),
+          settings: settings,
+          transitionsBuilder: zoomInTransition,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -178,6 +194,13 @@ class PhotoViewScreenArguments {
       this.minScale,
       this.maxScale,
       this.heroTag});
+}
+
+//DetailPage arguments holder class
+class DetailPageArguments {
+  final Key key;
+  final MRssItem item;
+  DetailPageArguments({this.key, this.item});
 }
 
 // *************************************************************************
@@ -244,5 +267,14 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
             minScale: minScale,
             maxScale: maxScale,
             heroTag: heroTag),
+      );
+
+  Future pushDetailPageRoute({
+    Key key,
+    MRssItem item,
+  }) =>
+      pushNamed(
+        Routes.detailPageRoute,
+        arguments: DetailPageArguments(key: key, item: item),
       );
 }
