@@ -38,7 +38,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
         style: TextStyle(
           color: AppColors.primaryText,
           fontFamily: AppColors.fontMontserrat,
-          fontSize: duSetFontSize(18.0),
+          fontSize: 18.0,
           fontWeight: FontWeight.w600,
         ),
       ),

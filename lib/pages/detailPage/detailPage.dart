@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
@@ -20,29 +21,39 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+
   bool _isPageFinished = false;
-  double _webViewHeight = 200;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   // 顶部导航
   Widget _buildAppBar() {
-    return transparentAppBar(
-      context: context,
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: Text(
+        widget.item.rssName,
+        style: TextStyle(
+          color: AppColors.primaryText,
+          fontFamily: AppColors.fontMontserrat,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      centerTitle: true,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back,
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          Navigator.pop(context);
+          ExtendedNavigator.rootNavigator.pop();
         },
       ),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.bookmark_border,
-            color: AppColors.primaryText,
-          ),
-          onPressed: () {},
-        ),
         IconButton(
           icon: Icon(
             Icons.share,
@@ -58,33 +69,28 @@ class _DetailPageState extends State<DetailPage> {
 
 // web内容
   Widget _buildWebView() {
-    return Container(
-      height: _webViewHeight,
-      child: WebView(
-        initialUrl: '${widget.item.link}',
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) async {
-          _controller.complete(webViewController);
-        },
-        javascriptChannels: <JavascriptChannel>[
-          _invokeJavascriptChannel(context),
-        ].toSet(),
-        navigationDelegate: (NavigationRequest request) {
-          if (request.url != '${widget.item.link}') {
-            toastInfo(msg: request.url);
-            return NavigationDecision.prevent;
-          }
-          return NavigationDecision.navigate;
-        },
-        onPageStarted: (String url) {},
-        onPageFinished: (String url) {
-          _getWebViewHeight();
-          setState(() {
-            _isPageFinished = true;
-          });
-        },
-        gestureNavigationEnabled: true,
-      ),
+    return WebView(
+      initialUrl: widget.item.link,
+      javascriptMode: JavascriptMode.unrestricted,
+      onWebViewCreated: (WebViewController webViewController) async {
+        _controller.complete(webViewController);
+      },
+      javascriptChannels: <JavascriptChannel>[
+        _invokeJavascriptChannel(context),
+      ].toSet(),
+      navigationDelegate: (NavigationRequest request) {
+        print('${request.url}');
+
+        return NavigationDecision.navigate;
+      },
+      onPageStarted: (String url) {},
+      onPageFinished: (String url) {
+        _getWebViewHeight();
+        setState(() {
+          _isPageFinished = true;
+        });
+      },
+      gestureNavigationEnabled: true,
     );
   }
 
@@ -97,7 +103,7 @@ class _DetailPageState extends State<DetailPage> {
         var webHeight = double.parse(message.message);
         if (webHeight != null) {
           setState(() {
-            _webViewHeight = webHeight;
+            // _webViewHeight = webHeight;
           });
         }
       },
@@ -158,24 +164,23 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    _buildWebView();
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildWebView(),
-              ],
-            ),
-          ),
-          _isPageFinished == true
-              ? Container()
-              : Align(
-                  alignment: Alignment.center,
-                  child: LoadingBouncingGrid.square(),
-                ),
-        ],
+      body: Container(
+        child: Stack(
+          children: [
+            _isPageFinished
+                ? Container()
+                : Align(
+                    alignment: Alignment.center,
+                    child: LoadingBouncingGrid.square(
+                      backgroundColor: Colors.blue[400],
+                    ),
+                  ),
+            _buildWebView(),
+          ],
+        ),
       ),
     );
   }

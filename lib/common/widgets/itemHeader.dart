@@ -27,15 +27,15 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
             size: iconSize,
           ),
         ),
-        Container(
-          width: titleWidth,
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            children: [
-              Container(
-                height: 30,
-                alignment: Alignment.bottomLeft,
-                child: InkWell(
+        InkWell(
+          child: Container(
+            width: titleWidth,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              children: [
+                Container(
+                  height: 30,
+                  alignment: Alignment.bottomLeft,
                   child: Text(
                     item.title,
                     style: TextStyle(
@@ -45,42 +45,43 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  onTap: () {
-                    print('Enter item link: ${item.link}');
-                    ExtendedNavigator.rootNavigator
-                        .pushDetailPageRoute(item: item);
-                  },
                 ),
-              ),
-              Container(
-                height: 30,
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: item.author != null
-                          ? Text(
-                              item.author,
-                              style: TextStyle(
-                                fontSize: AppValue.dateSize,
-                                color: Colors.black54,
-                              ),
-                            )
-                          : Container(),
-                    ),
-                    Text(
-                      timeUtils(item.pubDate),
-                      style: TextStyle(
-                        fontSize: AppValue.dateSize,
-                        color: Colors.black54,
+                Container(
+                  height: 30,
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: item.author != null
+                            ? Text(
+                                item.author,
+                                style: TextStyle(
+                                  fontSize: AppValue.dateSize,
+                                  color: Colors.black54,
+                                ),
+                              )
+                            : Container(),
                       ),
-                    ),
-                  ],
+                      Text(
+                        timeUtils(item.pubDate),
+                        style: TextStyle(
+                          fontSize: AppValue.dateSize,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          splashColor: Colors.white.withOpacity(0.1),
+          highlightColor: Colors.transparent,
+          onTap: () {
+            print('Enter item link: ${item.link}');
+            ExtendedNavigator.rootNavigator.pushDetailPageRoute(item: item);
+          },
         ),
         Container(
           width: shareWidth,
