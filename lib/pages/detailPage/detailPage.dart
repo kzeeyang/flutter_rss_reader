@@ -29,6 +29,17 @@ class _DetailPageState extends State<DetailPage> {
     super.initState();
   }
 
+  Future<bool> _willPopCallback() async {
+    WebViewController webViewController = await _controller.future;
+    bool canNavigate = await webViewController.canGoBack();
+    if (canNavigate) {
+      webViewController.goBack();
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   // 顶部导航
   Widget _buildAppBar() {
     return AppBar(
@@ -49,8 +60,11 @@ class _DetailPageState extends State<DetailPage> {
           Icons.arrow_back,
           color: AppColors.primaryText,
         ),
-        onPressed: () {
-          ExtendedNavigator.rootNavigator.pop();
+        onPressed: () async {
+          bool goBack = await _willPopCallback();
+          if (goBack) {
+            ExtendedNavigator.rootNavigator.pop();
+          }
         },
       ),
       actions: <Widget>[
@@ -71,6 +85,9 @@ class _DetailPageState extends State<DetailPage> {
   Widget _buildWebView() {
     return WebView(
       initialUrl: widget.item.link,
+      // userAgent:
+      //     "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+      // //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (WebViewController webViewController) async {
         _controller.complete(webViewController);
@@ -79,9 +96,16 @@ class _DetailPageState extends State<DetailPage> {
         _invokeJavascriptChannel(context),
       ].toSet(),
       navigationDelegate: (NavigationRequest request) {
-        print('${request.url}');
-
-        return NavigationDecision.navigate;
+        if (request.url.startsWith("mailto") ||
+            request.url.startsWith("tel") ||
+            request.url.startsWith("http") ||
+            request.url.startsWith("https")) {
+          print('blocking navigation to $request}');
+          return NavigationDecision.navigate;
+        } else {
+          print('allowing navigation to $request');
+          return NavigationDecision.prevent;
+        }
       },
       onPageStarted: (String url) {},
       onPageFinished: (String url) {

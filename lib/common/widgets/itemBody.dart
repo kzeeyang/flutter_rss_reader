@@ -54,6 +54,7 @@ Widget ItemBody(
       child: ExpansionText(
         text: document.body.text,
         minLines: 5,
+        maxLines: 0,
         textStyle: TextStyle(
           fontSize: AppValue.fontSize,
         ),

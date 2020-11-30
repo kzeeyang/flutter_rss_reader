@@ -62,6 +62,10 @@ class _ExpansionTextState extends State<ExpansionText> {
   }
 
   bool isMaxExpansion() {
+    if (widget.maxLines == 0 || widget.maxLines == null) {
+      return false;
+    }
+
     TextPainter _textPainter = TextPainter(
       maxLines: widget.maxLines,
       text: TextSpan(
@@ -95,7 +99,11 @@ class _ExpansionTextState extends State<ExpansionText> {
           children: [
             Text(
               widget.text,
-              maxLines: _isExpand ? widget.maxLines : widget.minLines,
+              maxLines: _isExpand
+                  ? widget.maxLines == 0 || widget.maxLines == null
+                      ? null
+                      : widget.maxLines
+                  : widget.minLines,
               overflow: isMaxExpansion() ? TextOverflow.ellipsis : null,
               strutStyle: strutStyle,
               style: widget.textStyle,
@@ -136,8 +144,8 @@ class _ExpansionTextState extends State<ExpansionText> {
           children: [
             Text(
               widget.text,
-              maxLines: _isExpand ? widget.maxLines : widget.minLines,
-              overflow: _isExpand ? null : TextOverflow.ellipsis,
+              maxLines: widget.minLines,
+              overflow: null,
               strutStyle: strutStyle,
               style: widget.textStyle,
             ),
