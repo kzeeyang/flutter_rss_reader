@@ -77,7 +77,7 @@ class _BodyWidgetState extends State<BodyWidget> {
         controller: Global.refreshController,
         scrollController: Global.scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
-        header: BezierCircleHeader(backgroundColor: Colors.blue[600]),
+        header: BezierCircleHeader(backgroundColor: Colors.blue[400]),
         onRefresh: () async {
           await _loadRss();
           Global.refreshController.finishRefresh();

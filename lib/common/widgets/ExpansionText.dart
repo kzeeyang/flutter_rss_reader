@@ -104,7 +104,9 @@ class _ExpansionTextState extends State<ExpansionText> {
                       ? null
                       : widget.maxLines
                   : widget.minLines,
-              overflow: isMaxExpansion() ? TextOverflow.ellipsis : null,
+              overflow: _isExpand
+                  ? isMaxExpansion() ? TextOverflow.ellipsis : null
+                  : TextOverflow.ellipsis,
               strutStyle: strutStyle,
               style: widget.textStyle,
             ),

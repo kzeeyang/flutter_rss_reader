@@ -8,6 +8,7 @@ import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:share/share.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   final MRssItem item;
@@ -22,11 +23,27 @@ class _DetailPageState extends State<DetailPage> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
+  // WebViewController webViewController;
   bool _isPageFinished = false;
+  bool _canCallBack = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _canPopCallback() async {
+    WebViewController webViewController = await _controller.future;
+    _canCallBack = await webViewController.canGoBack();
+    setState(() {});
   }
 
   Future<bool> _willPopCallback() async {
@@ -57,7 +74,7 @@ class _DetailPageState extends State<DetailPage> {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(
-          Icons.arrow_back,
+          _canCallBack ? Icons.arrow_back : Icons.close,
           color: AppColors.primaryText,
         ),
         onPressed: () async {
@@ -87,8 +104,9 @@ class _DetailPageState extends State<DetailPage> {
       initialUrl: widget.item.link,
       // userAgent:
       //     "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
-      // //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+      //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
       javascriptMode: JavascriptMode.unrestricted,
+      gestureNavigationEnabled: true,
       onWebViewCreated: (WebViewController webViewController) async {
         _controller.complete(webViewController);
       },
@@ -100,21 +118,26 @@ class _DetailPageState extends State<DetailPage> {
             request.url.startsWith("tel") ||
             request.url.startsWith("http") ||
             request.url.startsWith("https")) {
-          print('blocking navigation to $request}');
-          return NavigationDecision.navigate;
-        } else {
           print('allowing navigation to $request');
+          return NavigationDecision.navigate;
+
+          // } else if (request.url.startsWith("zhihu")) {
+          //   _launchURL(request.url);
+          //   print('allowing navigation to $request');
+          //   return NavigationDecision.prevent;
+        } else {
+          print('blocking navigation to $request}');
           return NavigationDecision.prevent;
         }
       },
       onPageStarted: (String url) {},
       onPageFinished: (String url) {
-        _getWebViewHeight();
+        _canPopCallback();
         setState(() {
           _isPageFinished = true;
         });
+        print('Page finished loading: $url');
       },
-      gestureNavigationEnabled: true,
     );
   }
 

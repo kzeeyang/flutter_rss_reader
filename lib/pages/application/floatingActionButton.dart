@@ -51,6 +51,9 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
       child: Transform.rotate(
         angle: -pi / 2,
         child: FloatingActionButton(
+          highlightElevation: 0,
+          splashColor: Colors.white.withOpacity(0.1),
+          focusColor: Colors.transparent,
           onPressed: () {
             FullScreenDialog.getInstance().showDialog(
               context,
