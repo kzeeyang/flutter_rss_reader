@@ -48,9 +48,10 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<bool> _willPopCallback() async {
     WebViewController webViewController = await _controller.future;
-    bool canNavigate = await webViewController.canGoBack();
-    if (canNavigate) {
+    _canCallBack = await webViewController.canGoBack();
+    if (_canCallBack) {
       webViewController.goBack();
+      _canPopCallback();
       return false;
     } else {
       return true;
@@ -204,29 +205,34 @@ class _DetailPageState extends State<DetailPage> {
     ''');
   }
 
-  //正文
-  Widget _buildPageView() {
-    return Container();
-  }
-
   @override
   Widget build(BuildContext context) {
     _buildWebView();
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Container(
-        child: Stack(
-          children: [
-            _isPageFinished
-                ? Container()
-                : Align(
-                    alignment: Alignment.center,
-                    child: LoadingBouncingGrid.square(
-                      backgroundColor: Colors.blue[400],
+      body: WillPopScope(
+        onWillPop: () async {
+          if (_canCallBack) {
+            await _willPopCallback();
+          } else {
+            ExtendedNavigator.rootNavigator.pop();
+          }
+          return false;
+        },
+        child: Container(
+          child: Stack(
+            children: [
+              _isPageFinished
+                  ? Container()
+                  : Align(
+                      alignment: Alignment.center,
+                      child: LoadingBouncingGrid.square(
+                        backgroundColor: Colors.blue[400],
+                      ),
                     ),
-                  ),
-            _buildWebView(),
-          ],
+              _buildWebView(),
+            ],
+          ),
         ),
       ),
     );
