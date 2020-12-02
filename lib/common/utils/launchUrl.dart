@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:android_intent/android_intent.dart';
+import 'dart:io' show Platform;
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> launchInBrowser(String url) async {
@@ -15,8 +14,17 @@ Future<void> launchInBrowser(String url) async {
   }
 }
 
-Future<void> launchInWebViewOrVC(String url) async {
-  url = "vnd." + url;
+Future<void> launchInThirdApp(String url) async {
+  if (Platform.isAndroid) {
+    if (!url.startsWith("vnd.")) {
+      url = "vnd." + url;
+    }
+  } else if (Platform.isIOS) {
+    if (!url.startsWith("vnd.")) {
+      url = url.substring(4);
+    }
+  }
+
   if (await canLaunch(url)) {
     await launch(
       url,

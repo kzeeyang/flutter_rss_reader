@@ -141,7 +141,7 @@ class _DetailPageState extends State<DetailPage> {
         } else if (request.url.startsWith("zhihu")) {
           // _launchURL(request.url);
           debugPrint('allowing navigation to $request');
-          launchInWebViewOrVC(request.url);
+          launchInThirdApp(request.url);
           return NavigationDecision.prevent;
         } else {
           debugPrint('blocking navigation to $request}');
