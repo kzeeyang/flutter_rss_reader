@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> launchInBrowser(String url) async {
@@ -24,7 +25,7 @@ Future<void> launchInThirdApp(String url) async {
       url = url.substring(4);
     }
   }
-
+  debugPrint('$url');
   if (await canLaunch(url)) {
     await launch(
       url,
