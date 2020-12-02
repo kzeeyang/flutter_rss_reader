@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
+import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:loading_animations/loading_animations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -124,23 +126,25 @@ class _DetailPageState extends State<DetailPage> {
             bottomModalBottomSheet(
               context: context,
               content: "是否下载安装包",
+              height: 150,
               cancel: () {
                 ExtendedNavigator.rootNavigator.pop();
               },
               makeSure: () {
-                print("download file");
+                debugPrint("jump to browser download file: ${request.url}");
+                launchInBrowser(request.url);
                 ExtendedNavigator.rootNavigator.pop();
               },
             );
           }
           return NavigationDecision.navigate;
-
-          // } else if (request.url.startsWith("zhihu")) {
-          //   _launchURL(request.url);
-          //   print('allowing navigation to $request');
-          //   return NavigationDecision.prevent;
+        } else if (request.url.startsWith("zhihu")) {
+          // _launchURL(request.url);
+          debugPrint('allowing navigation to $request');
+          launchInWebViewOrVC(request.url);
+          return NavigationDecision.prevent;
         } else {
-          print('blocking navigation to $request}');
+          debugPrint('blocking navigation to $request}');
           return NavigationDecision.prevent;
         }
       },

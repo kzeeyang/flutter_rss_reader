@@ -1,46 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future bottomMessage({
-  BuildContext context,
-  // Widget title,
-  // Widget content,
-}) async {
-  await showModalBottomSheet(
-    context: context,
-    // barrierDismissible: true,
-    builder: (BuildContext context) {
-      return Container(
-        height: 200,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              title: Text('选项一'),
-              onTap: () {
-                Navigator.pop(context, '选项一');
-              },
-            ),
-            ListTile(
-              title: Text('选项二'),
-              onTap: () {
-                Navigator.pop(context, '选项二');
-              },
-            ),
-            ListTile(
-              title: Text('选项三'),
-              onTap: () {
-                Navigator.pop(context, '选项三');
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
 Future bottomModalBottomSheet({
   BuildContext context,
+  double height,
   String content = "测试文本",
   Function cancel,
   Function makeSure,
@@ -52,7 +15,7 @@ Future bottomModalBottomSheet({
       return Padding(
         padding: EdgeInsets.all(8),
         child: Container(
-          height: 200,
+          height: height,
           padding: EdgeInsets.all(25),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -63,13 +26,13 @@ Future bottomModalBottomSheet({
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       content,
                       style: TextStyle(
                         fontSize: 19,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],

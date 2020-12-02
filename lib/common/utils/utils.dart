@@ -18,3 +18,4 @@ export 'floating_border.dart';
 export 'host.dart';
 export 'timeUtils.dart';
 export 'isAtomUrl.dart';
+export 'downloadInBrowser.dart';

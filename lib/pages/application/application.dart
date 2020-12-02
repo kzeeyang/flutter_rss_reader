@@ -68,8 +68,8 @@ class _ApplicationPageState extends State<ApplicationPage> {
       body: WillPopScope(
         onWillPop: () async {
           if (_lastTime == null ||
-              DateTime.now().difference(_lastTime) > Duration(seconds: 1)) {
-            //两次点击间隔超过1s重新计时
+              DateTime.now().difference(_lastTime) > Duration(seconds: 2)) {
+            //两次点击间隔超过2s重新计时
             _lastTime = DateTime.now();
             toastInfo(
               msg: "再按一次退出",
