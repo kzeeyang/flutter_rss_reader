@@ -14,3 +14,4 @@ export 'itemHeader.dart';
 export 'itemBody.dart';
 export 'ExpansionText.dart';
 export 'paddingContainer.dart';
+export 'bottomMessage.dart';

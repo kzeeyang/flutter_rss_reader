@@ -108,7 +108,7 @@ class _DetailPageState extends State<DetailPage> {
       //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
       javascriptMode: JavascriptMode.unrestricted,
       gestureNavigationEnabled: true,
-      onWebViewCreated: (WebViewController webViewController) async {
+      onWebViewCreated: (WebViewController webViewController) {
         _controller.complete(webViewController);
       },
       javascriptChannels: <JavascriptChannel>[
@@ -120,6 +120,19 @@ class _DetailPageState extends State<DetailPage> {
             request.url.startsWith("http") ||
             request.url.startsWith("https")) {
           print('allowing navigation to $request');
+          if (request.url.contains(".apk")) {
+            bottomModalBottomSheet(
+              context: context,
+              content: "是否下载安装包",
+              cancel: () {
+                ExtendedNavigator.rootNavigator.pop();
+              },
+              makeSure: () {
+                print("download file");
+                ExtendedNavigator.rootNavigator.pop();
+              },
+            );
+          }
           return NavigationDecision.navigate;
 
           // } else if (request.url.startsWith("zhihu")) {

@@ -8,11 +8,6 @@ import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart' show parse;
 
-enum Action {
-  Ok,
-  Cancel,
-}
-
 Widget ItemBody(
     BuildContext context, MRssItem item, ScrollController scrollController) {
   var document = parse(item.description);
