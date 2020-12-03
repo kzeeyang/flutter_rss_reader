@@ -16,21 +16,21 @@ Future<void> launchInBrowser(String url) async {
 }
 
 Future<void> launchInThirdApp(String url) async {
-  if (Platform.isAndroid) {
-    if (!url.startsWith("vnd.")) {
-      url = "vnd." + url;
-    }
-  } else if (Platform.isIOS) {
-    if (!url.startsWith("vnd.")) {
-      url = url.substring(4);
-    }
-  }
+  // if (Platform.isAndroid) {
+  //   if (!url.startsWith("vnd.")) {
+  //     url = "vnd." + url;
+  //   }
+  // } else if (Platform.isIOS) {
+  //   if (!url.startsWith("vnd.")) {
+  //     url = url.substring(4);
+  //   }
+  // }
   debugPrint('$url');
   if (await canLaunch(url)) {
     await launch(
       url,
-      forceSafariVC: true,
-      forceWebView: true,
+      // forceSafariVC: true,
+      // forceWebView: true,
       // headers: <String, String>{'my_header_key': 'my_header_value'},
     );
   } else {

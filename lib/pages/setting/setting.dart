@@ -43,6 +43,7 @@ class _SettingPageState extends State<SettingPage> {
       title: Text('配置'),
       pinned: true, //保持在顶部
       backgroundColor: AppColors.primaryWhiteBackground,
+      brightness: Brightness.light,
       floating: true, //向下滚动时会显示回来
       flexibleSpace: FlexibleSpaceBar(
         title: Text(

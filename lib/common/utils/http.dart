@@ -37,7 +37,7 @@ class HttpUtil {
       connectTimeout: 15000,
 
       // 响应流上前后两次接受到数据的间隔，单位为毫秒。
-      receiveTimeout: 5000,
+      receiveTimeout: 10000,
 
       // Http请求头.
       headers: {},

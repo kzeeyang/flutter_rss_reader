@@ -34,6 +34,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
     return AppBar(
       // context: context,
       backgroundColor: Colors.transparent,
+      brightness: Brightness.light,
       elevation: 0,
       title: Text(
         Global.appState.showCategory == null

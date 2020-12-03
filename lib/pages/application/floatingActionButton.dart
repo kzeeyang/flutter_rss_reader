@@ -129,10 +129,31 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
               moveY > -kBottomNavigationBarHeight &&
               moveY < kBottomNavigationBarHeight) {
             debugPrint("move to left");
+            if (Global.scrollController.offset == 0) {
+              toastInfo(msg: topMsg);
+            } else {
+              var offsize = Global.scrollController.offset - height;
+              if (offsize < 0) {
+                offsize = 0;
+              }
+              Global.scrollController.animateTo(offsize,
+                  duration: Duration(milliseconds: 300), curve: Curves.ease);
+            }
           } else if (moveX > kBottomNavigationBarHeight &&
               moveY > -kBottomNavigationBarHeight &&
               moveY < kBottomNavigationBarHeight) {
             debugPrint("move to right");
+            if (Global.scrollController.offset ==
+                Global.scrollController.position.maxScrollExtent) {
+              toastInfo(msg: bottomMsg);
+            } else {
+              var offsize = Global.scrollController.offset + height;
+              if (offsize > Global.scrollController.position.maxScrollExtent) {
+                offsize = Global.scrollController.position.maxScrollExtent;
+              }
+              Global.scrollController.animateTo(offsize,
+                  duration: Duration(milliseconds: 300), curve: Curves.ease);
+            }
           } else if (moveY < -kBottomNavigationBarHeight &&
               moveX > -kBottomNavigationBarHeight &&
               moveX < kBottomNavigationBarHeight) {
@@ -149,15 +170,7 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
               moveX < kBottomNavigationBarHeight) {
             debugPrint("move to down");
             // Global.panelController.close();
-            if (Global.scrollController.offset ==
-                Global.scrollController.position.maxScrollExtent) {
-              toastInfo(msg: bottomMsg);
-            } else {
-              Global.scrollController.animateTo(
-                  Global.scrollController.position.maxScrollExtent,
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.ease);
-            }
+
           }
         },
         child: hexagonButton(),

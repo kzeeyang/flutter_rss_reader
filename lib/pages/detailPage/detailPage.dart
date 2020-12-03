@@ -34,14 +34,6 @@ class _DetailPageState extends State<DetailPage> {
     super.initState();
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Future<void> _canPopCallback() async {
     WebViewController webViewController = await _controller.future;
     _canCallBack = await webViewController.canGoBack();
@@ -64,6 +56,7 @@ class _DetailPageState extends State<DetailPage> {
   Widget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
+      brightness: Brightness.light,
       elevation: 0,
       title: Text(
         widget.item.rssName,
@@ -138,22 +131,37 @@ class _DetailPageState extends State<DetailPage> {
             );
           }
           return NavigationDecision.navigate;
-        } else if (request.url.startsWith("zhihu")) {
+        } else if (request.url.startsWith("jike")) {
           // _launchURL(request.url);
           debugPrint('allowing navigation to $request');
-          launchInThirdApp(request.url);
-          return NavigationDecision.prevent;
-        } else {
-          debugPrint('blocking navigation to $request}');
+          bottomModalBottomSheet(
+            context: context,
+            content: "是否跳转到APP打开",
+            height: 150,
+            cancel: () {
+              ExtendedNavigator.rootNavigator.pop();
+            },
+            makeSure: () {
+              debugPrint("jump to browser download file: ${request.url}");
+              launchInThirdApp(request.url);
+              ExtendedNavigator.rootNavigator.pop();
+            },
+          );
+
           return NavigationDecision.prevent;
         }
+
+        debugPrint('blocking navigation to $request}');
+        return NavigationDecision.prevent;
       },
       onPageStarted: (String url) {},
       onPageFinished: (String url) {
         _canPopCallback();
-        setState(() {
+        Future.delayed(Duration(seconds: 5), () {
           _isPageFinished = true;
+          setState(() {});
         });
+
         print('Page finished loading: $url');
       },
     );
