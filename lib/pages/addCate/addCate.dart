@@ -50,19 +50,8 @@ class _AddCatePageState extends State<AddCatePage> {
   }
 
   AppBar _buildAppBar() {
-    return AppBar(
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      title: Text(
-        '添加分类',
-        style: TextStyle(
-          color: AppColors.primaryText,
-          fontFamily: AppColors.fontMontserrat,
-          fontSize: duSetFontSize(18.0),
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
+    return MyAppBar(
+      title: '添加分类',
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back_ios,

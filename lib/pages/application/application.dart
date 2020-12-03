@@ -31,23 +31,10 @@ class _ApplicationPageState extends State<ApplicationPage> {
 
   // 顶部导航
   Widget _buildAppBar() {
-    return AppBar(
-      // context: context,
-      backgroundColor: Colors.transparent,
-      brightness: Brightness.light,
-      elevation: 0,
-      title: Text(
-        Global.appState.showCategory == null
-            ? "Home".toUpperCase()
-            : Global.appState.showCategory.cateName.toUpperCase(),
-        style: TextStyle(
-          color: AppColors.primaryText,
-          fontFamily: AppColors.fontMontserrat,
-          fontSize: 18.0,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
+    return MyAppBar(
+      title: Global.appState.showCategory == null
+          ? "Home".toUpperCase()
+          : Global.appState.showCategory.cateName.toUpperCase(),
       actions: <Widget>[
         IconButton(
           icon: Icon(

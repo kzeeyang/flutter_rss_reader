@@ -22,19 +22,8 @@ class _CateDetailState extends State<CateDetail> {
   List<RssSetting> _rssSettings;
 
   AppBar _buildAppBar() {
-    return AppBar(
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      title: Text(
-        widget.cateName,
-        style: TextStyle(
-          color: AppColors.primaryText,
-          fontFamily: AppColors.fontMontserrat,
-          fontSize: duSetFontSize(18.0),
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
+    return MyAppBar(
+      title: widget.cateName,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back_ios,

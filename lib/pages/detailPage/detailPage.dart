@@ -54,20 +54,8 @@ class _DetailPageState extends State<DetailPage> {
 
   // 顶部导航
   Widget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      brightness: Brightness.light,
-      elevation: 0,
-      title: Text(
-        widget.item.rssName,
-        style: TextStyle(
-          color: AppColors.primaryText,
-          fontFamily: AppColors.fontMontserrat,
-          fontSize: 18.0,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
+    return MyAppBar(
+      title: widget.item.rssName,
       leading: IconButton(
         icon: Icon(
           _canCallBack ? Icons.arrow_back : Icons.close,

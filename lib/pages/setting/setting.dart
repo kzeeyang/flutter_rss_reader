@@ -8,6 +8,7 @@ import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/reward.dart';
+import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/setting/paddingSpace.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,7 +26,7 @@ class _SettingPageState extends State<SettingPage> {
   ScrollController _scrollController = new ScrollController();
   String _choice = 'Nothing';
 
-  final Duration paddindDuration = Duration(milliseconds: 1000);
+  final Duration paddindDuration = Duration(milliseconds: 600);
 
   @override
   initState() {
@@ -38,26 +39,9 @@ class _SettingPageState extends State<SettingPage> {
     super.dispose();
   }
 
-  SliverAppBar _buildSliverAppBar() {
-    return SliverAppBar(
-      title: Text('配置'),
-      pinned: true, //保持在顶部
-      backgroundColor: AppColors.primaryWhiteBackground,
-      brightness: Brightness.light,
-      floating: true, //向下滚动时会显示回来
-      flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          '配置',
-          style: TextStyle(
-            color: AppColors.primaryText,
-            fontFamily: AppColors.fontMontserrat,
-            fontSize: duSetFontSize(18.0),
-            fontWeight: FontWeight.w600,
-            letterSpacing: 3.0, //字间距
-          ),
-        ),
-        centerTitle: true,
-      ),
+  Widget _buildAppBar() {
+    return MyAppBar(
+      title: '配置',
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back_ios,
@@ -154,6 +138,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _buildAppBar(),
       body: Listener(
         onPointerUp: (event) {
           final length = Global.appState.category.keys.toList().length;
@@ -179,7 +164,6 @@ class _SettingPageState extends State<SettingPage> {
         },
         child: CustomScrollView(
           slivers: [
-            _buildSliverAppBar(),
             cateList(context),
             paddingSpace(context),
             rewardWidget(),
