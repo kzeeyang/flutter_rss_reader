@@ -102,7 +102,7 @@ Widget inputRSSURLEdit({
   Widget rotationTransition,
 }) {
   return Container(
-    height: duSetHeight(55),
+    // height: 55,
     margin: EdgeInsets.only(top: duSetHeight(marginTop)),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,

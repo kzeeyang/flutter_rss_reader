@@ -220,19 +220,19 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    _buildWebView();
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: WillPopScope(
-        onWillPop: () async {
-          if (_canCallBack) {
-            await _willPopCallback();
-          } else {
-            ExtendedNavigator.rootNavigator.pop();
-          }
-          return false;
-        },
-        child: Container(
+    // _buildWebView();
+    return WillPopScope(
+      onWillPop: () async {
+        if (_canCallBack) {
+          await _willPopCallback();
+        } else {
+          ExtendedNavigator.rootNavigator.pop();
+        }
+        return false;
+      },
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: Container(
           child: Stack(
             children: [
               _isPageFinished

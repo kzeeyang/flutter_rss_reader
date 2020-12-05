@@ -13,6 +13,7 @@ import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/setting/paddingSpace.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 import 'cateList.dart';
 import '../../common/widgets/inputDialog.dart';
@@ -23,13 +24,16 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  ScrollController _scrollController = new ScrollController();
-  String _choice = 'Nothing';
+  ScrollController _scrollController = new ScrollController(
+    initialScrollOffset: 0,
+  );
+  // String _choice = 'Nothing';
 
   final Duration paddindDuration = Duration(milliseconds: 600);
 
   @override
   initState() {
+    // _hideReward();
     super.initState();
   }
 
@@ -38,6 +42,21 @@ class _SettingPageState extends State<SettingPage> {
     _scrollController.dispose();
     super.dispose();
   }
+
+  // _hideReward() {
+  //   // final height = MediaQuery.of(context).size.height;
+  //   _scrollController.addListener(() {
+  //     print(_scrollController.offset); //打印滚动位置
+  //     var offset = _scrollController.offset;
+  //     // if (offset > height) {
+  //     _scrollController.animateTo(
+  //       _scrollController.position.maxScrollExtent - rewardHeight,
+  //       duration: paddindDuration,
+  //       curve: Curves.ease,
+  //     );
+  //     // }
+  //   });
+  // }
 
   Widget _buildAppBar() {
     return MyAppBar(
@@ -137,38 +156,56 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cateLength = Global.appState.category.length;
+    final height = MediaQuery.of(context).size.height;
+    final itemHeight = 50.0;
+    final paddingHeight = height - itemHeight * cateLength;
+    final rewardHeight = 300.0;
+
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Listener(
-        onPointerUp: (event) {
-          final length = Global.appState.category.keys.toList().length;
-          if (length <= 12) {
-            _scrollController.animateTo(
-              0,
-              duration: paddindDuration,
-              curve: Curves.ease,
-            );
-          } else {
-            final size = MediaQuery.of(context).size;
-            final height = size.height;
-            double padding = length * 50 + duSetHeight(190) - height;
+      body: GestureDetector(
+        child: Listener(
+          onPointerUp: (event) {
+            print(height);
+            print(_scrollController.offset);
+            double padding = 0;
+            var itemLength = itemHeight * cateLength;
             var offset = _scrollController.offset;
-            if (offset > padding) {
+
+            if (itemLength > height) {
+              padding = itemLength - height;
+            }
+            if (offset > 0) {
               _scrollController.animateTo(
                 padding,
                 duration: paddindDuration,
                 curve: Curves.ease,
               );
             }
-          }
-        },
-        child: CustomScrollView(
-          slivers: [
-            cateList(context),
-            paddingSpace(context),
-            rewardWidget(),
-          ],
-          controller: _scrollController,
+          },
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                cateLength > 0
+                    ? cateList(context, itemHeight)
+                    : Container(
+                        height: height,
+                        child: Text("暂无分类"),
+                      ),
+                cateLength == 0
+                    ? Container()
+                    : paddingHeight > 0
+                        ? Container(
+                            height: paddingHeight,
+                            child: null,
+                          )
+                        : Container(),
+                rewardWidget(rewardHeight),
+              ],
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: _buildBottomTip(),

@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        platform: TargetPlatform.iOS,
+      ),
       builder: ExtendedNavigator<AppRouter>(
         initialRoute: Routes.indexPageRoute,
         router: AppRouter(),

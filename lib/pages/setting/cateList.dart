@@ -2,87 +2,90 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
+import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 
-Widget cateList(BuildContext context) {
+Widget cateList(BuildContext context, double itemHeight) {
   List<String> cateList = Global.appState.category.keys.toList();
   final size = MediaQuery.of(context).size;
+  // final height = size.height;
   final width = size.width;
-  final itemHeight = 50.0;
+  final iconWidth = 40.0;
   var iconUtil = IconUtil.getInstance();
-  return SliverList(
-    delegate: SliverChildBuilderDelegate(
-      (context, index) {
-        if (cateList.length <= 0) {
-          return null;
-        }
-        String key = cateList[index];
+  return Container(
+    child: Column(
+      children: cateList.map((catename) {
         return InkWell(
-          child: Row(
-            children: [
-              Container(
-                height: duSetHeight(itemHeight),
-                padding: EdgeInsets.symmetric(horizontal: duSetWidth(15)),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryWhiteBackground,
-                ),
-                child: Icon(
-                  iconUtil.getIconDataForCategory(
-                    Global.appState.categoryIconName(key),
-                  ),
-                ),
-              ),
-              Container(
-                height: duSetHeight(50),
-                width: duSetWidth(width - 92),
-                padding: EdgeInsets.only(right: duSetWidth(10)),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryWhiteBackground,
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1,
-                      color: AppColors.primaryGreyBackground,
+          child: Container(
+            height: itemHeight,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.primaryWhiteBackground,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: iconWidth,
+                  child: Icon(
+                    iconUtil.getIconDataForCategory(
+                      Global.appState.categoryIconName(catename),
                     ),
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: width * 0.7,
-                      child: Text(
-                        key,
-                        style: TextStyle(
-                          fontSize: duSetFontSize(20),
+                Container(
+                  height: 50,
+                  width: width - 10 * 2 - iconWidth,
+                  padding: EdgeInsets.only(left: 10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryWhiteBackground,
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 1,
+                        color: AppColors.primaryGreyBackground,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: width - 10 * 3 - iconWidth * 2,
+                        child: Text(
+                          catename,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(
-                        Icons.chevron_right,
-                        color: AppColors.primaryText,
+                      Spacer(),
+                      Container(
+                        width: iconWidth,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.chevron_right,
+                            color: AppColors.primaryText,
+                          ),
+                          onPressed: () {
+                            ExtendedNavigator.rootNavigator
+                                .pushCateDetail(cateName: catename);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        ExtendedNavigator.rootNavigator
-                            .pushCateDetail(cateName: key);
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           onTap: () {
-            ExtendedNavigator.rootNavigator.pushCateDetail(cateName: key);
+            ExtendedNavigator.rootNavigator.pushCateDetail(cateName: catename);
           },
         );
-      },
-      childCount: cateList.length < 1 ? 1 : cateList.length,
+      }).toList(),
     ),
   );
 }

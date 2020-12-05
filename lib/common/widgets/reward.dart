@@ -4,15 +4,15 @@ import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 
-Widget rewardWidget() {
+Widget rewardWidget(double rewardHeight) {
   final rewardPic = "assets/images/微信图片_20200602112022.jpg";
-  final double extentHeight = 280.0;
 
-  return Padding(
-    padding: const EdgeInsets.only(top: 20),
-    child: Container(
-      color: AppColors.primaryWhiteBackground,
-      height: extentHeight,
+  return Container(
+    color: AppColors.primaryWhiteBackground,
+    height: rewardHeight,
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: const EdgeInsets.only(top: 40),
       child: Column(
         children: [
           Container(
@@ -20,7 +20,7 @@ Widget rewardWidget() {
             child: Text(
               "这是一个赞赏码😉",
               style: TextStyle(
-                fontSize: duSetFontSize(16),
+                fontSize: 16,
               ),
             ),
           ),
@@ -29,7 +29,7 @@ Widget rewardWidget() {
             child: Text(
               "CREATED BY Trevor、",
               style: TextStyle(
-                fontSize: duSetFontSize(16),
+                fontSize: 16,
               ),
             ),
           ),
