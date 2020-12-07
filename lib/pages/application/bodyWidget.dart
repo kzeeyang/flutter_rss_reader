@@ -28,8 +28,6 @@ class _BodyWidgetState extends State<BodyWidget> {
 
   @override
   void dispose() {
-    Global.scrollController.dispose();
-
     super.dispose();
   }
 

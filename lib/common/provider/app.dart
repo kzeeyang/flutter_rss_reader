@@ -14,6 +14,8 @@ class AppState with ChangeNotifier {
 
   /// panel 开启
   bool panelOpen;
+  bool isDragging = false;
+  int draggingChoice = 0;
 
   get isDarkMode => darkMode;
   get categoryList => category.keys;
@@ -30,6 +32,8 @@ class AppState with ChangeNotifier {
     this.mRssItems = List();
 
     this.panelOpen = panelOpen;
+    isDragging = false;
+    draggingChoice = 0;
   }
 
   List<RssSetting> rssList(String catename) {
@@ -47,6 +51,16 @@ class AppState with ChangeNotifier {
 
   void changePanelOpen(bool open) {
     this.panelOpen = open;
+    notifyListeners();
+  }
+
+  void changeDragging(bool open) {
+    this.isDragging = open;
+    notifyListeners();
+  }
+
+  void changeDragChoice(int choice) {
+    this.draggingChoice = choice;
     notifyListeners();
   }
 

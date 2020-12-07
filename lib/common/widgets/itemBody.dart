@@ -49,7 +49,7 @@ Widget ItemBody(
       child: ExpansionText(
         text: document.body.text,
         minLines: 5,
-        maxLines: 0,
+        maxLines: 60,
         textStyle: TextStyle(
           fontSize: AppValue.fontSize,
         ),
