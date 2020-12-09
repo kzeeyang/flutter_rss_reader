@@ -18,6 +18,8 @@ class BodyWidget extends StatefulWidget {
 
 class _BodyWidgetState extends State<BodyWidget> {
   List<MRssItem> _mRssItems = new List();
+  Offset _initialSwipeOffset;
+  Offset _finalSwipeOffset;
 
   @override
   void initState() {
@@ -45,6 +47,21 @@ class _BodyWidgetState extends State<BodyWidget> {
 
     if (mounted) {
       setState(() {});
+    }
+  }
+
+  void _onHorizontalDragStart(DragStartDetails details) {
+    _initialSwipeOffset = details.globalPosition;
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    _finalSwipeOffset = details.globalPosition;
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    if (_initialSwipeOffset != null) {
+      final offsetDifference = _initialSwipeOffset.dx - _finalSwipeOffset.dx;
+      final direction = offsetDifference > 0 ? print('left') : print('right');
     }
   }
 
@@ -80,16 +97,21 @@ class _BodyWidgetState extends State<BodyWidget> {
           await _loadRss();
           Global.refreshController.finishRefresh();
         },
-        child: _mRssItems.length > 0
-            ? _panelBody()
-            : Container(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Text('暂无数据'),
-                  ],
+        child: GestureDetector(
+          onHorizontalDragStart: _onHorizontalDragStart,
+          onHorizontalDragUpdate: _onHorizontalDragUpdate,
+          onHorizontalDragEnd: _onHorizontalDragEnd,
+          child: _mRssItems.length > 0
+              ? _panelBody()
+              : Container(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Text('暂无数据'),
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
       panel: _panelWidget(_minPanelHeight, size),
     );
