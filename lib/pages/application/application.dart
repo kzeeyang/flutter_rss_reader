@@ -19,9 +19,14 @@ class ApplicationPage extends StatefulWidget {
 class _ApplicationPageState extends State<ApplicationPage> {
   final String topMsg = '已在最顶层';
   final String bottomMsg = '已在最底层';
+  Offset _initialSwipeOffset;
+  Offset _finalSwipeOffset;
   DateTime _lastTime;
   bool _draggingBtn = false;
   int _draggingChoice = 0;
+  double startOffset = 10;
+  bool choicePop = false;
+  bool choiceForward = false;
 
   @override
   void initState() {
@@ -31,6 +36,46 @@ class _ApplicationPageState extends State<ApplicationPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _onHorizontalDragStart(DragStartDetails details) {
+    final width = MediaQuery.of(context).size.width;
+    _initialSwipeOffset = details.globalPosition;
+    if (_initialSwipeOffset.dx < 10) {
+      print("start at left");
+      choicePop = true;
+    } else if (_initialSwipeOffset.dx + 10 > width) {
+      print("start at right");
+      choiceForward = true;
+    }
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    final width = MediaQuery.of(context).size.width;
+    _finalSwipeOffset = details.globalPosition;
+
+    if (choicePop) {
+      if (_finalSwipeOffset.dx > width / 4) {
+        print("will pop");
+      } else {
+        print("cancel pop");
+      }
+    }
+
+    if (choiceForward) {
+      if (_finalSwipeOffset.dx > width * 0.75) {
+        print("cancel forward");
+      } else {
+        print("will forward");
+      }
+    }
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    if (_initialSwipeOffset != null) {
+      final offsetDifference = _initialSwipeOffset.dx - _finalSwipeOffset.dx;
+      final direction = offsetDifference > 0 ? print('left') : print('right');
+    }
   }
 
   // 顶部导航
@@ -104,98 +149,104 @@ class _ApplicationPageState extends State<ApplicationPage> {
         }
         return true;
       },
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: Global.appState.showCategory == null
-            ? Container(
-                color: AppColors.primaryGreyBackground,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text('尚未添加分类'),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            : Global.appState.showCategory.rssSettings.length == 0
-                ? Container(
-                    color: AppColors.primaryGreyBackground,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text('分类下尚未添加RSS'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(
-                    child: Stack(
-                      children: [
-                        Positioned(child: BodyWidget()),
-                        scrollDragtarget(
-                          left: 0,
-                          onWillAccept: (data) {
-                            Global.appState.changeDragChoice(1);
-                            return true;
-                          },
-                          onAccept: (data) {
-                            _draggingChoice = 0;
-                            if (Global.scrollController.offset == 0) {
-                              toastInfo(msg: topMsg);
-                            } else {
-                              var offsize =
-                                  Global.scrollController.offset - height;
-                              if (offsize < 0) {
-                                offsize = 0;
+      child: GestureDetector(
+        onHorizontalDragStart: _onHorizontalDragStart,
+        onHorizontalDragUpdate: _onHorizontalDragUpdate,
+        onHorizontalDragEnd: _onHorizontalDragEnd,
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: Global.appState.showCategory == null
+              ? Container(
+                  color: AppColors.primaryGreyBackground,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('尚未添加分类'),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : Global.appState.showCategory.rssSettings.length == 0
+                  ? Container(
+                      color: AppColors.primaryGreyBackground,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('分类下尚未添加RSS'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      child: Stack(
+                        children: [
+                          Positioned(child: BodyWidget()),
+                          scrollDragtarget(
+                            left: 0,
+                            onWillAccept: (data) {
+                              Global.appState.changeDragChoice(1);
+                              return true;
+                            },
+                            onAccept: (data) {
+                              _draggingChoice = 0;
+                              if (Global.scrollController.offset == 0) {
+                                toastInfo(msg: topMsg);
+                              } else {
+                                var offsize =
+                                    Global.scrollController.offset - height;
+                                if (offsize < 0) {
+                                  offsize = 0;
+                                }
+                                Global.scrollController.animateTo(offsize,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease);
                               }
-                              Global.scrollController.animateTo(offsize,
-                                  duration: Duration(milliseconds: 300),
-                                  curve: Curves.ease);
-                            }
-                          },
-                        ),
-                        scrollDragtarget(
-                          right: 0,
-                          onWillAccept: (data) {
-                            Global.appState.changeDragChoice(2);
-                            return true;
-                          },
-                          onAccept: (data) {
-                            if (Global.scrollController.offset ==
-                                Global.scrollController.position
-                                    .maxScrollExtent) {
-                              toastInfo(msg: bottomMsg);
-                            } else {
-                              var offsize =
-                                  Global.scrollController.offset + height;
-                              if (offsize >
+                            },
+                          ),
+                          scrollDragtarget(
+                            right: 0,
+                            onWillAccept: (data) {
+                              Global.appState.changeDragChoice(2);
+                              return true;
+                            },
+                            onAccept: (data) {
+                              if (Global.scrollController.offset ==
                                   Global.scrollController.position
                                       .maxScrollExtent) {
-                                offsize = Global
-                                    .scrollController.position.maxScrollExtent;
+                                toastInfo(msg: bottomMsg);
+                              } else {
+                                var offsize =
+                                    Global.scrollController.offset + height;
+                                if (offsize >
+                                    Global.scrollController.position
+                                        .maxScrollExtent) {
+                                  offsize = Global.scrollController.position
+                                      .maxScrollExtent;
+                                }
+                                Global.scrollController.animateTo(offsize,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease);
                               }
-                              Global.scrollController.animateTo(offsize,
-                                  duration: Duration(milliseconds: 300),
-                                  curve: Curves.ease);
-                            }
-                          },
-                        ),
-                      ],
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-        floatingActionButton: Global.appState.showCategory == null
-            ? Container()
-            : AnimationFloatingButton(),
-        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Global.appState.showCategory == null
+              ? Container()
+              : AnimationFloatingButton(),
+          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+        ),
       ),
     );
   }

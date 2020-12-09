@@ -24,26 +24,10 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
-  final icons = [
-      AnimatedIcons.menu_close,
-      AnimatedIcons.arrow_menu,
-      AnimatedIcons.close_menu,
-      AnimatedIcons.ellipsis_search,
-      AnimatedIcons.event_add,
-      AnimatedIcons.home_menu,
-      AnimatedIcons.list_view,
-      AnimatedIcons.menu_arrow,
-      AnimatedIcons.menu_close,
-      AnimatedIcons.menu_home,
-      AnimatedIcons.pause_play,
-      AnimatedIcons.play_pause,
-      AnimatedIcons.search_ellipsis,
-      AnimatedIcons.view_list
-    ];
+
   // WebViewController webViewController;
   bool _isPageFinished = false;
   bool _canCallBack = false;
-
 
   @override
   void initState() {
@@ -72,19 +56,18 @@ class _DetailPageState extends State<DetailPage> {
   Widget _buildAppBar() {
     return MyAppBar(
       title: widget.item.rssName,
-      // leading: IconButton(
-      //   icon: Icon(
-      //     _canCallBack ? Icons.arrow_back : Icons.close,
-      //     color: AppColors.primaryText,
-      //   ),
-      //   onPressed: () async {
-      //     bool goBack = await _willPopCallback();
-      //     if (goBack) {
-      //       ExtendedNavigator.rootNavigator.pop();
-      //     }
-      //   },
-      // ),
-      leading: AnimatedIcon(icon: , progress: null),
+      leading: IconButton(
+        icon: Icon(
+          _canCallBack ? Icons.arrow_back : Icons.close,
+          color: AppColors.primaryText,
+        ),
+        onPressed: () async {
+          bool goBack = await _willPopCallback();
+          if (goBack) {
+            ExtendedNavigator.rootNavigator.pop();
+          }
+        },
+      ),
       actions: <Widget>[
         IconButton(
           icon: Icon(
