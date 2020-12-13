@@ -80,6 +80,7 @@ class _BodyWidgetState extends State<BodyWidget> {
           await _loadRss();
           Global.refreshController.finishRefresh();
         },
+
         child: _mRssItems.length > 0
             ? _panelBody()
             : Container(
