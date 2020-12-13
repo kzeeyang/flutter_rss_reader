@@ -28,11 +28,12 @@ class _ApplicationPageState extends State<ApplicationPage>
   double _animationWidth;
   double _animationTop;
 
-  double _enbaleWidth = 10;
+  double _enbaleWidth = 25;
   double _edgeFloatingBtnHeight = 150;
   double _edgeFloatingBtnWidth = 80;
   bool _enabel = false;
   bool _cando = false;
+  bool _showIcon = false;
   bool _right = false;
   Offset _startOffset;
   Offset _endOffset;
@@ -68,6 +69,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   void _onHorizontalDragStart(DragStartDetails details) {
     final screenWidth = MediaQuery.of(context).size.width;
     _startOffset = details.globalPosition;
+    debugPrint("startOffset: ${_startOffset.dx}");
 
     if (_startOffset.dx + _enbaleWidth > screenWidth) {
       // _enabel = true;
@@ -98,6 +100,11 @@ class _ApplicationPageState extends State<ApplicationPage>
         // }
       } else {
         _animationWidth = _endOffset.dx * 4 * _edgeFloatingBtnWidth / width;
+        if (_endOffset.dx > width / 8) {
+          _showIcon = true;
+        } else {
+          _showIcon = false;
+        }
         if (_endOffset.dx > width / 4) {
           _cando = true;
           debugPrint("will do something...");
@@ -127,6 +134,7 @@ class _ApplicationPageState extends State<ApplicationPage>
     _cando = false;
     _enabel = false;
     _right = false;
+    _showIcon = false;
   }
 
   Widget _leftFloatingIcon() {
@@ -135,21 +143,23 @@ class _ApplicationPageState extends State<ApplicationPage>
       height: _edgeFloatingBtnHeight,
       animation: _animation,
       animationTop: _animationTop,
-      icon: _cando
-          ? Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            )
-          : Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: SizedBox(
-                width: 3,
-                height: 28,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Colors.white),
-                ),
-              ),
-            ),
+      icon: _showIcon
+          ? _cando
+              ? Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: SizedBox(
+                    width: 3,
+                    height: 28,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Colors.white),
+                    ),
+                  ),
+                )
+          : Container(),
     );
   }
 
@@ -214,13 +224,13 @@ class _ApplicationPageState extends State<ApplicationPage>
       onWillPop: () async {
         return _popFunction();
       },
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: GestureDetector(
-          onHorizontalDragStart: _onHorizontalDragStart,
-          onHorizontalDragUpdate: _onHorizontalDragUpdate,
-          onHorizontalDragEnd: _onHorizontalDragEnd,
-          child: Container(
+      child: GestureDetector(
+        onHorizontalDragStart: _onHorizontalDragStart,
+        onHorizontalDragUpdate: _onHorizontalDragUpdate,
+        onHorizontalDragEnd: _onHorizontalDragEnd,
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: Container(
             color: AppColors.primaryGreyBackground,
             child: Stack(
               // mainAxisAlignment: MainAxisAlignment.center,
@@ -280,12 +290,13 @@ class _ApplicationPageState extends State<ApplicationPage>
               ],
             ),
           ),
+          floatingActionButton: Global.appState.showCategory == null
+              ? Container()
+              : AnimationFloatingButton(),
+          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
         ),
-        floatingActionButton: Global.appState.showCategory == null
-            ? Container()
-            : AnimationFloatingButton(),
-        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

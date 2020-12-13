@@ -36,7 +36,7 @@ class _LeftEdgeFloatingIconState extends State<LeftEdgeFloatingIcon> {
                   offset: widget.animation.value,
                 ),
                 child: Container(
-                  color: Colors.black54,
+                  color: Colors.black87,
                   width: widget.animation.value,
                   height: 150,
                   child: Row(
