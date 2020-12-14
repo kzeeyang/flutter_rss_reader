@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/screen.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
@@ -28,9 +31,9 @@ class _ApplicationPageState extends State<ApplicationPage>
   double _animationWidth;
   double _animationTop;
 
-  double _enbaleWidth = 25;
+  double _enbaleWidth = 10;
   double _edgeFloatingBtnHeight = 150;
-  double _edgeFloatingBtnWidth = 80;
+  double _edgeFloatingBtnWidth = 70;
   bool _enabel = false;
   bool _cando = false;
   bool _showIcon = false;
@@ -70,7 +73,8 @@ class _ApplicationPageState extends State<ApplicationPage>
     final screenWidth = MediaQuery.of(context).size.width;
     _startOffset = details.globalPosition;
     debugPrint("startOffset: ${_startOffset.dx}");
-
+    _enbaleWidth =
+        Global.appState.mRssItems.length > 0 ? 15 + _enbaleWidth : _enbaleWidth;
     if (_startOffset.dx + _enbaleWidth > screenWidth) {
       // _enabel = true;
       _right = true;
@@ -86,6 +90,7 @@ class _ApplicationPageState extends State<ApplicationPage>
     final width = size.width;
     final height = size.height;
     _endOffset = details.globalPosition;
+
     if (_enabel) {
       _animationTop = height - _endOffset.dy - _edgeFloatingBtnHeight / 2;
       if (_right) {
@@ -128,8 +133,10 @@ class _ApplicationPageState extends State<ApplicationPage>
   void _onHorizontalDragEnd(DragEndDetails details) {
     _animationController.reverse();
     if (_cando) {
-      print("do someting...");
-      _popFunction();
+      debugPrint("do someting...");
+      if (_popFunction()) {
+        exit(0);
+      }
     }
     _cando = false;
     _enabel = false;
@@ -262,6 +269,7 @@ class _ApplicationPageState extends State<ApplicationPage>
                           duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
                     }
+                    Global.appState.changeDragChoice(0);
                   },
                 ),
                 scrollDragtarget(
@@ -285,6 +293,7 @@ class _ApplicationPageState extends State<ApplicationPage>
                           duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
                     }
+                    Global.appState.changeDragChoice(0);
                   },
                 ),
               ],
