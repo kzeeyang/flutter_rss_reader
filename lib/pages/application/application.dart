@@ -7,6 +7,7 @@ import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/screen.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/colors.dart';
+import 'package:flutter_rss_reader/common/widgets/myScaffold.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/application/bodyWidget.dart';
@@ -69,144 +70,8 @@ class _ApplicationPageState extends State<ApplicationPage>
     return true;
   }
 
-  void _onHorizontalDragStart(DragStartDetails details) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    _startOffset = details.globalPosition;
-    debugPrint("startOffset: ${_startOffset.dx}");
-    _enbaleWidth =
-        Global.appState.mRssItems.length > 0 ? 15 + _enbaleWidth : _enbaleWidth;
-    if (_startOffset.dx + _enbaleWidth > screenWidth) {
-      _enabel = true;
-      _right = true;
-    }
-
-    if (_startOffset.dx < _enbaleWidth) {
-      _enabel = true;
-    }
-  }
-
-  void _onHorizontalDragUpdate(DragUpdateDetails details) {
-    final size = MediaQuery.of(context).size;
-    final width = size.width;
-    final height = size.height;
-    _endOffset = details.globalPosition;
-
-    if (_enabel) {
-      _animationTop = height - _endOffset.dy - _edgeFloatingBtnHeight / 2;
-      if (_right) {
-        _animationWidth =
-            (width - _endOffset.dx) * 4 * _edgeFloatingBtnWidth / width;
-        if (_endOffset.dx < width * 7 / 8) {
-          _showIcon = true;
-        } else {
-          _showIcon = false;
-        }
-        if (_endOffset.dx > width / 4 * 3) {
-          _cando = false;
-          debugPrint("cancel do something...");
-        } else {
-          _cando = true;
-          debugPrint("will do something...");
-        }
-      } else {
-        _animationWidth = _endOffset.dx * 4 * _edgeFloatingBtnWidth / width;
-        if (_endOffset.dx > width / 8) {
-          _showIcon = true;
-        } else {
-          _showIcon = false;
-        }
-        if (_endOffset.dx > width / 4) {
-          _cando = true;
-          debugPrint("will do something...");
-        } else {
-          _cando = false;
-          debugPrint("cancel do something...");
-        }
-      }
-      _animation = Tween(
-              begin: 0.0,
-              end: _animationWidth > _edgeFloatingBtnWidth
-                  ? _edgeFloatingBtnWidth
-                  : _animationWidth)
-          .animate(_animationController);
-      _animationController.reset();
-      _animationController.forward();
-      setState(() {});
-    }
-  }
-
-  void _onHorizontalDragEnd(DragEndDetails details) {
-    _animationController.reverse();
-    if (_cando) {
-      if (_right) {
-        debugPrint("do right someting...");
-      } else {
-        debugPrint("do left someting...");
-        if (_popFunction()) {
-          exit(0);
-        }
-      }
-    }
-    _cando = false;
-    _enabel = false;
-    _right = false;
-    _showIcon = false;
-  }
-
-  Widget _leftFloatingIcon() {
-    return LeftEdgeFloatingIcon(
-      right: _right,
-      width: _edgeFloatingBtnWidth,
-      height: _edgeFloatingBtnHeight,
-      animation: _animation,
-      animationTop: _animationTop,
-      icon: _showIcon
-          ? _cando
-              ? Icon(
-                  _right ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                  color: Colors.white,
-                )
-              : Padding(
-                  padding: _right
-                      ? EdgeInsets.only(right: 5)
-                      : EdgeInsets.only(left: 5),
-                  child: SizedBox(
-                    width: 3,
-                    height: 28,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(color: Colors.white),
-                    ),
-                  ),
-                )
-          : Container(),
-    );
-  }
-
-  Widget _rightFloatingIcon() {
-    return LeftEdgeFloatingIcon(
-      right: true,
-      width: _edgeFloatingBtnWidth,
-      height: _edgeFloatingBtnHeight,
-      animation: _animation,
-      animationTop: _animationTop,
-      icon: _showIcon
-          ? _cando
-              ? Icon(
-                  _right ? Icons.arrow_forward_ios : Icons.arrow_forward_ios,
-                  color: Colors.white,
-                )
-              : Padding(
-                  padding: EdgeInsets.only(right: 5),
-                  child: SizedBox(
-                    width: 3,
-                    height: 25,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(color: Colors.white),
-                    ),
-                  ),
-                )
-          : Container(),
-    );
+  Future<void> _exitApp() async {
+    await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 
   // 顶部导航
@@ -266,87 +131,74 @@ class _ApplicationPageState extends State<ApplicationPage>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final height = size.height;
-    return WillPopScope(
+    return MyScaffold(
+      showRightDragItem: false,
+      dragItemWidth: 35,
       onWillPop: () async {
         return _popFunction();
       },
-      child: GestureDetector(
-        onHorizontalDragStart: _onHorizontalDragStart,
-        onHorizontalDragUpdate: _onHorizontalDragUpdate,
-        onHorizontalDragEnd: _onHorizontalDragEnd,
-        child: Scaffold(
-          appBar: _buildAppBar(),
-          body: Container(
-            color: AppColors.primaryGreyBackground,
-            child: Stack(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Global.appState.showCategory == null
-                    ? Center(
-                        child: Text('尚未添加分类'),
-                      )
-                    : Global.appState.showCategory.rssSettings.length == 0
-                        ? Center(child: Text('分类下尚未添加RSS'))
-                        : Positioned(child: BodyWidget()),
-                _leftFloatingIcon(),
-                // _rightFloatingIcon(),
-                scrollDragtarget(
-                  left: 0,
-                  onWillAccept: (data) {
-                    Global.appState.changeDragChoice(1);
-                    return true;
-                  },
-                  onAccept: (data) {
-                    // _draggingChoice = 0;
-                    if (Global.scrollController.offset == 0) {
-                      toastInfo(msg: topMsg);
-                    } else {
-                      var offsize = Global.scrollController.offset - height;
-                      if (offsize < 0) {
-                        offsize = 0;
-                      }
-                      Global.scrollController.animateTo(offsize,
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    }
-                    Global.appState.changeDragChoice(0);
-                  },
-                ),
-                scrollDragtarget(
-                  right: 0,
-                  onWillAccept: (data) {
-                    Global.appState.changeDragChoice(2);
-                    return true;
-                  },
-                  onAccept: (data) {
-                    if (Global.scrollController.offset ==
-                        Global.scrollController.position.maxScrollExtent) {
-                      toastInfo(msg: bottomMsg);
-                    } else {
-                      var offsize = Global.scrollController.offset + height;
-                      if (offsize >
-                          Global.scrollController.position.maxScrollExtent) {
-                        offsize =
-                            Global.scrollController.position.maxScrollExtent;
-                      }
-                      Global.scrollController.animateTo(offsize,
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    }
-                    Global.appState.changeDragChoice(0);
-                  },
-                ),
-              ],
-            ),
+      onLeftDragEnd: () async {
+        if (_popFunction()) {
+          _exitApp();
+        }
+      },
+      appBar: _buildAppBar(),
+      body: Stack(
+        children: [
+          Global.appState.showCategory == null
+              ? Center(
+                  child: Text('尚未添加分类'),
+                )
+              : Global.appState.showCategory.rssSettings.length == 0
+                  ? Center(child: Text('分类下尚未添加RSS'))
+                  : Positioned(child: BodyWidget()),
+          scrollDragtarget(
+            left: 0,
+            onWillAccept: (data) {
+              Global.appState.changeDragChoice(1);
+              return true;
+            },
+            onAccept: (data) {
+              if (Global.scrollController.offset == 0) {
+                toastInfo(msg: topMsg);
+              } else {
+                var offsize = Global.scrollController.offset - height;
+                if (offsize < 0) {
+                  offsize = 0;
+                }
+                Global.scrollController.animateTo(offsize,
+                    duration: Duration(milliseconds: 300), curve: Curves.ease);
+              }
+              Global.appState.changeDragChoice(0);
+            },
           ),
-          floatingActionButton: Global.appState.showCategory == null
-              ? Container()
-              : AnimationFloatingButton(),
-          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-        ),
+          scrollDragtarget(
+            right: 0,
+            onWillAccept: (data) {
+              Global.appState.changeDragChoice(2);
+              return true;
+            },
+            onAccept: (data) {
+              if (Global.scrollController.offset ==
+                  Global.scrollController.position.maxScrollExtent) {
+                toastInfo(msg: bottomMsg);
+              } else {
+                var offsize = Global.scrollController.offset + height;
+                if (offsize >
+                    Global.scrollController.position.maxScrollExtent) {
+                  offsize = Global.scrollController.position.maxScrollExtent;
+                }
+                Global.scrollController.animateTo(offsize,
+                    duration: Duration(milliseconds: 300), curve: Curves.ease);
+              }
+              Global.appState.changeDragChoice(0);
+            },
+          ),
+        ],
       ),
+      floatingActionButton: Global.appState.showCategory == null
+          ? Container()
+          : AnimationFloatingButton(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LeftEdgeFloatingIcon extends StatefulWidget {
+class EdgeFloatingIcon extends StatefulWidget {
   final bool right;
   final double width;
   final double height;
@@ -8,7 +8,7 @@ class LeftEdgeFloatingIcon extends StatefulWidget {
   final Animation animation;
   final Widget icon;
 
-  const LeftEdgeFloatingIcon(
+  const EdgeFloatingIcon(
       {Key key,
       this.width,
       this.height,
@@ -19,10 +19,10 @@ class LeftEdgeFloatingIcon extends StatefulWidget {
       : super(key: key);
 
   @override
-  _LeftEdgeFloatingIconState createState() => _LeftEdgeFloatingIconState();
+  _EdgeFloatingIconState createState() => _EdgeFloatingIconState();
 }
 
-class _LeftEdgeFloatingIconState extends State<LeftEdgeFloatingIcon> {
+class _EdgeFloatingIconState extends State<EdgeFloatingIcon> {
   @override
   Widget build(BuildContext context) {
     return Stack(

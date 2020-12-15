@@ -15,4 +15,4 @@ export 'itemBody.dart';
 export 'ExpansionText.dart';
 export 'paddingContainer.dart';
 export 'bottomMessage.dart';
-export 'leftEdgeFloatingIcon.dart';
+export 'edgeFloatingIcon.dart';
