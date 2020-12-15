@@ -32,8 +32,8 @@ class _ApplicationPageState extends State<ApplicationPage>
   double _animationTop;
 
   double _enbaleWidth = 10;
-  double _edgeFloatingBtnHeight = 150;
-  double _edgeFloatingBtnWidth = 70;
+  double _edgeFloatingBtnHeight = 120;
+  double _edgeFloatingBtnWidth = 40;
   bool _enabel = false;
   bool _cando = false;
   bool _showIcon = false;
@@ -76,7 +76,7 @@ class _ApplicationPageState extends State<ApplicationPage>
     _enbaleWidth =
         Global.appState.mRssItems.length > 0 ? 15 + _enbaleWidth : _enbaleWidth;
     if (_startOffset.dx + _enbaleWidth > screenWidth) {
-      // _enabel = true;
+      _enabel = true;
       _right = true;
     }
 
@@ -94,15 +94,20 @@ class _ApplicationPageState extends State<ApplicationPage>
     if (_enabel) {
       _animationTop = height - _endOffset.dy - _edgeFloatingBtnHeight / 2;
       if (_right) {
-        // _animationWidth =
-        //     (width - _endOffset.dx) * 4 * _edgeFloatingBtnWidth / width;
-        // if (_endOffset.dx > width / 4 * 3) {
-        //   _cando = false;
-        //   debugPrint("cancel do something...");
-        // } else {
-        //   _cando = true;
-        //   debugPrint("will do something...");
-        // }
+        _animationWidth =
+            (width - _endOffset.dx) * 4 * _edgeFloatingBtnWidth / width;
+        if (_endOffset.dx < width * 7 / 8) {
+          _showIcon = true;
+        } else {
+          _showIcon = false;
+        }
+        if (_endOffset.dx > width / 4 * 3) {
+          _cando = false;
+          debugPrint("cancel do something...");
+        } else {
+          _cando = true;
+          debugPrint("will do something...");
+        }
       } else {
         _animationWidth = _endOffset.dx * 4 * _edgeFloatingBtnWidth / width;
         if (_endOffset.dx > width / 8) {
@@ -133,9 +138,13 @@ class _ApplicationPageState extends State<ApplicationPage>
   void _onHorizontalDragEnd(DragEndDetails details) {
     _animationController.reverse();
     if (_cando) {
-      debugPrint("do someting...");
-      if (_popFunction()) {
-        exit(0);
+      if (_right) {
+        debugPrint("do right someting...");
+      } else {
+        debugPrint("do left someting...");
+        if (_popFunction()) {
+          exit(0);
+        }
       }
     }
     _cando = false;
@@ -146,6 +155,7 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   Widget _leftFloatingIcon() {
     return LeftEdgeFloatingIcon(
+      right: _right,
       width: _edgeFloatingBtnWidth,
       height: _edgeFloatingBtnHeight,
       animation: _animation,
@@ -153,14 +163,43 @@ class _ApplicationPageState extends State<ApplicationPage>
       icon: _showIcon
           ? _cando
               ? Icon(
-                  Icons.arrow_back_ios,
+                  _right ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
                   color: Colors.white,
                 )
               : Padding(
-                  padding: const EdgeInsets.only(left: 5),
+                  padding: _right
+                      ? EdgeInsets.only(right: 5)
+                      : EdgeInsets.only(left: 5),
                   child: SizedBox(
                     width: 3,
                     height: 28,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Colors.white),
+                    ),
+                  ),
+                )
+          : Container(),
+    );
+  }
+
+  Widget _rightFloatingIcon() {
+    return LeftEdgeFloatingIcon(
+      right: true,
+      width: _edgeFloatingBtnWidth,
+      height: _edgeFloatingBtnHeight,
+      animation: _animation,
+      animationTop: _animationTop,
+      icon: _showIcon
+          ? _cando
+              ? Icon(
+                  _right ? Icons.arrow_forward_ios : Icons.arrow_forward_ios,
+                  color: Colors.white,
+                )
+              : Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: SizedBox(
+                    width: 3,
+                    height: 25,
                     child: DecoratedBox(
                       decoration: BoxDecoration(color: Colors.white),
                     ),
@@ -250,6 +289,7 @@ class _ApplicationPageState extends State<ApplicationPage>
                         ? Center(child: Text('分类下尚未添加RSS'))
                         : Positioned(child: BodyWidget()),
                 _leftFloatingIcon(),
+                // _rightFloatingIcon(),
                 scrollDragtarget(
                   left: 0,
                   onWillAccept: (data) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LeftEdgeFloatingIcon extends StatefulWidget {
+  final bool right;
   final double width;
   final double height;
   final double animationTop;
@@ -13,7 +14,8 @@ class LeftEdgeFloatingIcon extends StatefulWidget {
       this.height,
       this.animationTop,
       this.animation,
-      this.icon})
+      this.icon,
+      this.right = false})
       : super(key: key);
 
   @override
@@ -26,12 +28,14 @@ class _LeftEdgeFloatingIconState extends State<LeftEdgeFloatingIcon> {
     return Stack(
       children: [
         Positioned(
+          right: widget.right ? 0 : null,
           bottom: widget.animationTop,
           child: AnimatedBuilder(
             animation: widget.animation,
             builder: (context, child) {
               return ClipPath(
                 clipper: EdgeClipper(
+                  right: widget.right,
                   height: 150,
                   offset: widget.animation.value,
                 ),
@@ -41,9 +45,10 @@ class _LeftEdgeFloatingIconState extends State<LeftEdgeFloatingIcon> {
                     color: Colors.black,
                     width: widget.animation.value,
                     height: 150,
-                    child: Row(
-                      children: [widget.icon],
-                    ),
+                    alignment: widget.right
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: widget.icon,
                   ),
                 ),
               );
@@ -72,37 +77,36 @@ class EdgeClipper extends CustomClipper<Path> {
     var path = Path();
     // debugPrint("offset: $offset, height: $height");
     if (right) {
-      final edgeWidth = MediaQuery.of(context).size.width;
-      path.lineTo(edgeWidth, 0);
-      path.lineTo(edgeWidth, height);
-      var firstPoint = Offset(edgeWidth - offset / 16, height / 8 * 7);
-      var secondPoint = Offset(edgeWidth - offset / 4, height / 4 * 3);
+      path.lineTo(size.width, 0);
+      path.lineTo(size.width, height);
+      var firstPoint = Offset(size.width - offset / 8, height / 8 * 7);
+      var secondPoint = Offset(size.width - offset / 2, height / 4 * 3);
       path.quadraticBezierTo(
           firstPoint.dx, firstPoint.dy, secondPoint.dx, secondPoint.dy);
 
-      var thirdPoint = Offset(edgeWidth - offset / 2, height / 2);
-      var fourthPoint = Offset(edgeWidth - offset / 4, height / 4);
+      var thirdPoint = Offset(size.width - offset, height / 2);
+      var fourthPoint = Offset(size.width - offset / 2, height / 4);
       path.quadraticBezierTo(
           thirdPoint.dx, thirdPoint.dy, fourthPoint.dx, fourthPoint.dy);
 
-      var fivePoint = Offset(edgeWidth - offset / 16, height / 8);
-      var endPotin = Offset(edgeWidth, 0);
+      var fivePoint = Offset(size.width - offset / 8, height / 8);
+      var endPotin = Offset(size.width, 0);
       path.quadraticBezierTo(
           fivePoint.dx, fivePoint.dy, endPotin.dx, endPotin.dy);
     } else {
       path.lineTo(0, 0);
       path.lineTo(0, size.height);
-      var firstPoint = Offset(offset / 16, height / 8 * 7);
-      var secondPoint = Offset(offset / 4, height / 4 * 3);
+      var firstPoint = Offset(offset / 8, height / 8 * 7);
+      var secondPoint = Offset(offset / 2, height / 4 * 3);
       path.quadraticBezierTo(
           firstPoint.dx, firstPoint.dy, secondPoint.dx, secondPoint.dy);
 
-      var thirdPoint = Offset(offset / 2, height / 2);
-      var fourthPoint = Offset(offset / 4, height / 4);
+      var thirdPoint = Offset(offset, height / 2);
+      var fourthPoint = Offset(offset / 2, height / 4);
       path.quadraticBezierTo(
           thirdPoint.dx, thirdPoint.dy, fourthPoint.dx, fourthPoint.dy);
 
-      var fivePoint = Offset(offset / 16, height / 8);
+      var fivePoint = Offset(offset / 8, height / 8);
       var endPotin = Offset(0, 0);
       path.quadraticBezierTo(
           fivePoint.dx, fivePoint.dy, endPotin.dx, endPotin.dy);
