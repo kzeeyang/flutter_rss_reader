@@ -115,7 +115,7 @@ class _BottomCircleWidgetState extends State<BottomCircleWidget>
                                     .categoryIconName(cateList[index]),
                               ),
                               color: Colors.white,
-                              size: duSetFontSize(30),
+                              size: 30,
                             ),
                           );
                         },

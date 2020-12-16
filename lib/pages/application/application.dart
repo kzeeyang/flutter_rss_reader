@@ -133,7 +133,7 @@ class _ApplicationPageState extends State<ApplicationPage>
     final height = size.height;
     return MyScaffold(
       showRightDragItem: false,
-      dragItemWidth: 35,
+      dragItemWidth: 30,
       onWillPop: () async {
         return _popFunction();
       },

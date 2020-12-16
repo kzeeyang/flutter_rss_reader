@@ -142,10 +142,11 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
   void _onHorizontalDragEnd(DragEndDetails details) {
     _animationController.reverse();
     if (_cando) {
-      if (_right) {
+      if (_right && widget.onRightDragEnd != null) {
         debugPrint("do right someting...");
         Future(widget.onRightDragEnd);
-      } else {
+      }
+      if (!_right && widget.onLeftDragEnd != null) {
         debugPrint("do left someting...");
         Future(widget.onLeftDragEnd);
       }
@@ -167,7 +168,7 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
           ? _cando
               ? Icon(
                   _right ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                  size: 20,
+                  size: 16,
                   color: Colors.white,
                 )
               : Padding(
@@ -176,7 +177,7 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
                       : EdgeInsets.only(left: 5),
                   child: SizedBox(
                     width: 2.5,
-                    height: 24,
+                    height: 16,
                     child: DecoratedBox(
                       decoration: BoxDecoration(color: Colors.white),
                     ),

@@ -106,6 +106,9 @@ class AppState with ChangeNotifier {
 
   Future<void> changeShowCategory(String catename) async {
     if (hadCategory(catename)) {
+      if (showCategory.cateName == catename) {
+        return;
+      }
       showCategory = category[catename];
     } else {
       if (category.isEmpty) {

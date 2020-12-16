@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
+import 'package:flutter_rss_reader/common/widgets/myScaffold.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
@@ -28,6 +30,7 @@ class _DetailPageState extends State<DetailPage> {
   // WebViewController webViewController;
   bool _isPageFinished = false;
   bool _canCallBack = false;
+  bool _canForward = false;
 
   @override
   void initState() {
@@ -40,15 +43,39 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {});
   }
 
-  Future<bool> _willPopCallback() async {
+  Future<bool> _canForwardCallback() async {
+    WebViewController webViewController = await _controller.future;
+    _canForward = await webViewController.canGoForward();
+    setState(() {});
+    return _canForward;
+  }
+
+  Future<bool> _goBackOrPopCallback() async {
     WebViewController webViewController = await _controller.future;
     _canCallBack = await webViewController.canGoBack();
     if (_canCallBack) {
       webViewController.goBack();
-      _canPopCallback();
-      return false;
+      _canCallBack = await webViewController.canGoBack();
+      _canForward = await webViewController.canGoForward();
+      setState(() {});
     } else {
-      return true;
+      ExtendedNavigator.rootNavigator.pop();
+    }
+  }
+
+  void _forwardCallback() async {
+    WebViewController webViewController = await _controller.future;
+    _canCallBack = await webViewController.canGoForward();
+    if (_canCallBack) {
+      webViewController.goForward();
+      _canCallBack = await webViewController.canGoBack();
+      _canForward = await webViewController.canGoForward();
+      setState(() {});
+    } else {
+      toastInfo(
+        msg: "没有记录",
+        toastGravity: ToastGravity.TOP,
+      );
     }
   }
 
@@ -61,11 +88,8 @@ class _DetailPageState extends State<DetailPage> {
           _canCallBack ? Icons.arrow_back : Icons.close,
           color: AppColors.primaryText,
         ),
-        onPressed: () async {
-          bool goBack = await _willPopCallback();
-          if (goBack) {
-            ExtendedNavigator.rootNavigator.pop();
-          }
+        onPressed: () {
+          _goBackOrPopCallback();
         },
       ),
       actions: <Widget>[
@@ -217,32 +241,53 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     // _buildWebView();
-    return WillPopScope(
-      onWillPop: () async {
-        if (_canCallBack) {
-          await _willPopCallback();
-        } else {
-          ExtendedNavigator.rootNavigator.pop();
-        }
-        return false;
-      },
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: Container(
-          child: Stack(
-            children: [
-              _isPageFinished
-                  ? Container()
-                  : Align(
-                      alignment: Alignment.center,
-                      child: LoadingBouncingGrid.square(
-                        backgroundColor: Colors.blue[400],
-                      ),
-                    ),
-              _buildWebView(),
-            ],
-          ),
-        ),
+    // return WillPopScope(
+    //   onWillPop: () async {
+    //     if (_canCallBack) {
+    //       await _willPopCallback();
+    //     } else {
+    //       ExtendedNavigator.rootNavigator.pop();
+    //     }
+    //     return false;
+    //   },
+    //   child: Scaffold(
+    //     appBar: _buildAppBar(),
+    //     body: Container(
+    //       child: Stack(
+    //         children: [
+    //           _isPageFinished
+    //               ? Container()
+    //               : Align(
+    //                   alignment: Alignment.center,
+    //                   child: LoadingBouncingGrid.square(
+    //                     backgroundColor: Colors.blue[400],
+    //                   ),
+    //                 ),
+    //           _buildWebView(),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
+    return MyScaffold(
+      showRightDragItem: _canForward,
+      dragItemWidth: 30,
+      onWillPop: _goBackOrPopCallback,
+      onLeftDragEnd: _goBackOrPopCallback,
+      onRightDragEnd: _forwardCallback,
+      appBar: _buildAppBar(),
+      body: Stack(
+        children: [
+          _isPageFinished
+              ? Container()
+              : Align(
+                  alignment: Alignment.center,
+                  child: LoadingBouncingGrid.square(
+                    backgroundColor: Colors.blue[400],
+                  ),
+                ),
+          _buildWebView(),
+        ],
       ),
     );
   }
