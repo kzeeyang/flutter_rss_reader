@@ -33,24 +33,16 @@ Widget rewardWidget(double rewardHeight) {
               ),
             ),
           ),
-          InkWell(
-            child: Container(
-              height: 200,
-              color: Colors.grey,
-              child: Hero(
-                tag: "simple",
-                child: Image.asset(
-                  rewardPic,
-                  fit: BoxFit.cover,
-                ),
+          Container(
+            height: 200,
+            color: Colors.grey,
+            child: Hero(
+              tag: "simple",
+              child: Image.asset(
+                rewardPic,
+                fit: BoxFit.cover,
               ),
             ),
-            onTap: () {
-              ExtendedNavigator.rootNavigator.pushPhotoViewScreen(
-                imageProvider: AssetImage(rewardPic),
-                heroTag: 'simple',
-              );
-            },
           ),
         ],
       ),
