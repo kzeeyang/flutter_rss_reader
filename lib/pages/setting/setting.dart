@@ -165,64 +165,57 @@ class _SettingPageState extends State<SettingPage> {
     Offset _offset;
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          Listener(
-            onPointerUp: (event) {
-              print(height);
-              print(_scrollController.offset);
-              double padding = 0;
-              var itemLength = itemHeight * cateLength;
-              var offset = _scrollController.offset;
+      body: Listener(
+        onPointerDown: (event) {},
+        onPointerMove: (event) {
+          print("onPointMove");
+        },
+        onPointerUp: (event) {
+          print("offset: ${_scrollController.offset}");
+          double padding = 0;
+          var itemLength = itemHeight * cateLength;
+          var offset = _scrollController.offset;
 
-              if (itemLength > height) {
-                padding = itemLength - height;
-              }
-              if (offset > 0) {
-                _scrollController.animateTo(
-                  padding,
-                  duration: paddindDuration,
-                  curve: Curves.ease,
-                );
-              }
-            },
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  cateLength > 0
-                      ? cateList(context, itemHeight)
-                      : Container(
-                          height: height,
-                          child: Text("暂无分类"),
-                        ),
-                  cateLength == 0
-                      ? Container()
-                      : paddingHeight > 0
-                          ? Container(
-                              height: paddingHeight,
-                              child: null,
-                            )
-                          : Container(),
-                  AbsorbPointer(
-                    // absorbing: false,
-                    child: Listener(
-                      child: rewardWidget(rewardHeight),
-                      onPointerDown: (details) {
-                        final rewardPic =
-                            "assets/images/微信图片_20200602112022.jpg";
-                        ExtendedNavigator.rootNavigator.pushPhotoViewScreen(
-                          imageProvider: AssetImage(rewardPic),
-                          heroTag: 'simple',
-                        );
-                      },
-                    ),
+          if (itemLength > height) {
+            padding = itemLength - height;
+          }
+          if (offset > 0) {
+            _scrollController.animateTo(
+              padding,
+              duration: paddindDuration,
+              curve: Curves.ease,
+            );
+          }
+        },
+        child: ListView(
+          controller: _scrollController,
+          children: [
+            cateLength > 0
+                ? cateList(context, itemHeight)
+                : Container(
+                    height: height,
+                    child: Center(child: Text("暂无分类")),
                   ),
-                ],
-              ),
+            cateLength == 0
+                ? Container()
+                : paddingHeight > 0
+                    ? Container(
+                        height: paddingHeight,
+                        child: null,
+                      )
+                    : Container(),
+            InkWell(
+              child: rewardWidget(rewardHeight),
+              onTap: () {
+                final rewardPic = "assets/images/微信图片_20200602112022.jpg";
+                ExtendedNavigator.rootNavigator.pushPhotoViewScreen(
+                  imageProvider: AssetImage(rewardPic),
+                  heroTag: 'simple',
+                );
+              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: _buildBottomTip(),
     );

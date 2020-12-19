@@ -37,6 +37,7 @@ class $AppRouter {
 
   AddRss addRss;
 
+  @CustomRoute(transitionsBuilder: zoomInTransition)
   PhotoViewScreen photoViewScreen;
 
   @CustomRoute(transitionsBuilder: zoomInTransition)
