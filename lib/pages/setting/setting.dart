@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
@@ -30,6 +31,10 @@ class _SettingPageState extends State<SettingPage> {
   // String _choice = 'Nothing';
 
   final Duration paddindDuration = Duration(milliseconds: 400);
+
+  TapGestureRecognizer _tapGestureRecognizer = new TapGestureRecognizer();
+
+  int _pointerDownNum = 0;
 
   @override
   initState() {
@@ -157,37 +162,62 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     final cateLength = Global.appState.category.length;
+    final pageWidth = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final itemHeight = 50.0;
     final paddingHeight = height - itemHeight * cateLength;
     final rewardHeight = 300.0;
 
-    Offset _offset;
     return Scaffold(
       appBar: _buildAppBar(),
       body: Listener(
-        onPointerDown: (event) {},
-        onPointerMove: (event) {
-          print("onPointMove");
+        onPointerDown: (event) {
+          // print("point down");
+          _pointerDownNum++;
         },
         onPointerUp: (event) {
-          print("offset: ${_scrollController.offset}");
+          // print("point up");
+          print("pageHeight: $height");
+          print("${event.position}");
+          _pointerDownNum--;
+          double imgWidth = 200;
+          var scrollOffset = _scrollController.offset;
+          var pointOffset = event.position;
           double padding = 0;
           var itemLength = itemHeight * cateLength;
-          var offset = _scrollController.offset;
 
-          if (itemLength > height) {
-            padding = itemLength - height;
-          }
-          if (offset > 0) {
-            _scrollController.animateTo(
-              padding,
-              duration: paddindDuration,
-              curve: Curves.ease,
-            );
+          if (_pointerDownNum == 0) {
+            if (itemLength > height) {
+              padding = itemLength - height;
+            }
+            if (scrollOffset > 0) {
+              _scrollController.animateTo(
+                padding,
+                duration: paddindDuration,
+                curve: Curves.ease,
+              );
+            }
+          } else if (_pointerDownNum > 0) {
+            if (scrollOffset - imgWidth > 0 &&
+                height <= imgWidth + pointOffset.dy &&
+                (pageWidth - imgWidth) / 2 < pointOffset.dx &&
+                pointOffset.dx < pageWidth - imgWidth / 2) {
+              _pointerDownNum = 0;
+              _scrollController.animateTo(
+                padding,
+                duration: paddindDuration,
+                curve: Curves.ease,
+              );
+              final rewardPic = "assets/images/微信图片_20200602112022.jpg";
+              ExtendedNavigator.rootNavigator.pushPhotoViewScreen(
+                imageProvider: AssetImage(rewardPic),
+                heroTag: 'simple',
+              );
+            }
           }
         },
         child: ListView(
+          physics: ClampingScrollPhysics(),
           controller: _scrollController,
           children: [
             cateLength > 0
@@ -204,16 +234,7 @@ class _SettingPageState extends State<SettingPage> {
                         child: null,
                       )
                     : Container(),
-            InkWell(
-              child: rewardWidget(rewardHeight),
-              onTap: () {
-                final rewardPic = "assets/images/微信图片_20200602112022.jpg";
-                ExtendedNavigator.rootNavigator.pushPhotoViewScreen(
-                  imageProvider: AssetImage(rewardPic),
-                  heroTag: 'simple',
-                );
-              },
-            ),
+            rewardWidget(rewardHeight),
           ],
         ),
       ),
