@@ -41,8 +41,8 @@ class Global {
     await StorageUtil.init();
 
     // 读取设备第一次打开
-    isFirstOpen = !StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
-    if (isFirstOpen) {
+    isFirstOpen = StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
+    if (!isFirstOpen) {
       StorageUtil().setBool(STORAGE_DEVICE_ALREADY_OPEN_KEY, true);
     }
 
@@ -56,16 +56,19 @@ class Global {
     //读取配置
     if (isFirstOpen) {
       var _appStateJSON = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
+      // debugPrint("load appJson: $_appStateJSON");
       if (_appStateJSON != null) {
         appState = AppState.fromJson(_appStateJSON);
       }
     }
-    debugPrint("appstate: ${appState.isDarkMode}");
-    debugPrint("cateLength: ${appState.category.length}");
+    // debugPrint("appstate: ${appState.isDarkMode}");
+    // debugPrint("cateLength: ${appState.category.length}");
   }
 
   // 持久化 用户信息
-  static Future<bool> saveAppState() {
-    return StorageUtil().setJSON(STORAGE_APP_DATA_KEY, appState.toJson());
+  static Future<bool> saveAppStateCategory() {
+    var temp = appState.categoryToJson();
+    debugPrint("$temp");
+    return StorageUtil().setJSON(STORAGE_APP_DATA_CATEGORY_KEY, temp);
   }
 }

@@ -142,13 +142,14 @@ class _SettingPageState extends State<SettingPage> {
                     style: TextStyle(color: AppColors.primaryElementText),
                   ),
                   onPressed: () {
-                    final jsonDate = Global.appState.categoryToJson();
-                    // debugPrint('${jsonDate.toString()}');
-                    requestPermission(Permission.storage).then((state) async {
-                      if (state) {
-                        saveFile(jsonDate.toString());
-                      }
-                    });
+                    // final jsonDate = Global.appState.categoryToJson();
+                    // // debugPrint('${jsonDate.toString()}');
+                    // requestPermission(Permission.storage).then((state) async {
+                    //   if (state) {
+                    //     saveFile(jsonDate.toString());
+                    //   }
+                    // });
+                    Global.saveAppStateCategory();
                   },
                 ),
               ),

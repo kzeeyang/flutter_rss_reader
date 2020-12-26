@@ -22,7 +22,7 @@ class _IndexPageState extends State<IndexPage> {
     );
 
     return Scaffold(
-      body: Global.isFirstOpen == true ? WelcomePage() : ApplicationPage(),
+      body: ApplicationPage(),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/screen.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/colors.dart';
+import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/myScaffold.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
@@ -27,33 +28,16 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   DateTime _willPopLastTime;
 
-  Animation _animation;
-  AnimationController _animationController;
-  double _animationWidth;
-  double _animationTop;
-
-  double _enbaleWidth = 10;
-  double _edgeFloatingBtnHeight = 120;
-  double _edgeFloatingBtnWidth = 40;
-  bool _enabel = false;
-  bool _cando = false;
-  bool _showIcon = false;
-  bool _right = false;
-  Offset _startOffset;
-  Offset _endOffset;
-
   @override
   void initState() {
     super.initState();
-    _animationController = new AnimationController(
-        duration: const Duration(milliseconds: 0), vsync: this);
-    _animation = Tween(begin: 0.0, end: 0).animate(_animationController);
+    bool firstOpen = StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
+    debugPrint("firstOpen: $firstOpen");
   }
 
   @override
   void dispose() {
     super.dispose();
-    _animationController.dispose();
   }
 
   bool _popFunction() {

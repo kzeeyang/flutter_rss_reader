@@ -117,7 +117,7 @@ class _CateDetailState extends State<CateDetail> {
                     _rssSettings[index].opened = value;
                     Global.appState.changeRssOpen(widget.cateName,
                         _rssSettings[index].url, item.rssName, value);
-                    Global.saveAppState();
+                    Global.saveAppStateCategory();
                   });
                 },
               ),
@@ -159,7 +159,7 @@ class _CateDetailState extends State<CateDetail> {
               toastInfo(msg: '已删除分类: ' + widget.cateName);
               ExtendedNavigator.rootNavigator.pop();
               Global.appState.deleteCategory(widget.cateName);
-              Global.saveAppState();
+              Global.saveAppStateCategory();
             },
             splashColor: Colors.blueGrey,
             textColor: AppColors.primaryElementText,

@@ -22,8 +22,9 @@ class _BodyWidgetState extends State<BodyWidget> {
   @override
   void initState() {
     super.initState();
-
-    _loadRss();
+    if (Global.appState.showCategory.rssSettings.isNotEmpty) {
+      _loadRss();
+    }
   }
 
   @override

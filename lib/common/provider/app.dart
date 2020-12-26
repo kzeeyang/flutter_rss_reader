@@ -6,18 +6,16 @@ import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/global.dart';
 
 class AppState with ChangeNotifier {
-  bool darkMode;
   // String appBarTitle;
   Map<String, Category> category;
   Category showCategory;
-  List<MRssItem> mRssItems;
+  List<MRssItem> mRssItems = new List();
 
   /// panel 开启
-  bool panelOpen;
+  bool panelOpen = false;
   bool isDragging = false;
   int draggingChoice = 0;
 
-  get isDarkMode => darkMode;
   get categoryList => category.keys;
   get categoryLength => category.keys.length;
 
@@ -25,7 +23,6 @@ class AppState with ChangeNotifier {
     bool darkMode = false,
     bool panelOpen = false,
   }) {
-    this.darkMode = darkMode;
     // appBarTitle = "";
     this.showCategory = null;
     this.category = {};
@@ -44,10 +41,10 @@ class AppState with ChangeNotifier {
   }
 
   //change darkmode
-  void switctDarkMode() {
-    darkMode = !darkMode;
-    save();
-  }
+  // void switctDarkMode() {
+  //   darkMode = !darkMode;
+  //   save();
+  // }
 
   void changePanelOpen(bool open) {
     this.panelOpen = open;
@@ -136,7 +133,7 @@ class AppState with ChangeNotifier {
   void changeShowRssOpened(int index) {
     this.showCategory.rssSettings[index].opened =
         !this.showCategory.rssSettings[index].opened;
-    save();
+    // save();
     notifyListeners();
   }
 
@@ -225,8 +222,16 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  void save() {
-    Global.saveAppState();
+  void save(int type) {
+    switch (type) {
+      case 0:
+        Global.saveAppStateCategory();
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
   }
 
   void addByJson(String jsonData) {
@@ -258,7 +263,7 @@ class AppState with ChangeNotifier {
   }
 
   AppState.fromJson(Map<String, dynamic> json) {
-    darkMode = json['darkMode'];
+    // darkMode = json['darkMode'];
     showCategory = Category.fromJson(json['showCategory']);
     if (json['category'] != null) {
       category = new Map<String, Category>();
@@ -267,16 +272,25 @@ class AppState with ChangeNotifier {
         category[data.cateName] = data;
       });
     }
+    if (json['mRssItems'] != null) {
+      mRssItems = new List<MRssItem>();
+      json['rssSettings'].forEach((v) {
+        mRssItems.add(new MRssItem.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['darkMode'] = this.darkMode;
+    // data['darkMode'] = this.darkMode;
     data['showCategory'] = this.showCategory.toJson();
     if (this.category != null) {
       this.category.forEach((key, value) {
         data[key] = value.toJson();
       });
+    }
+    if (this.mRssItems != null) {
+      data['mRssItems'] = this.mRssItems.map((v) => v.toJson()).toList();
     }
     return data;
   }
