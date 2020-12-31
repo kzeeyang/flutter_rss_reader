@@ -1,4 +1,5 @@
 import 'package:flutter_rss_reader/common/apis/api.dart';
+import 'package:flutter_rss_reader/common/provider/provider.dart';
 
 class RssSetting {
   String rssName;
@@ -16,12 +17,14 @@ class RssSetting {
     }
     if (json['iconUrl'] == null) {
       Future(() async {
-        // print('$url');
-        String str = await Rss.rssIcon(this.url, context: null);
-        if (str == null || str == '') {
-          str = rssName.trim().substring(0, 1);
+        print('rsssetting get iconurl: $url');
+        RssEntity rssEntity =
+            await Rss.getRss(this.url, context: null, getIconUrl: true);
+        if (rssEntity.iconUrl == null || rssEntity.iconUrl == '') {
+          iconUrl = rssName.trim().substring(0, 1);
+        } else {
+          iconUrl = rssEntity.iconUrl;
         }
-        iconUrl = str;
       });
     }
     opened = json['opened'];

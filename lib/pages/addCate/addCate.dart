@@ -45,7 +45,7 @@ class _AddCatePageState extends State<AddCatePage> {
       return;
     }
     Global.appState.addCategory(catename, iconName);
-    Global.saveAppState();
+    // Global.saveAppState();
     Navigator.pop(context);
   }
 
@@ -86,7 +86,7 @@ class _AddCatePageState extends State<AddCatePage> {
           iconButton: IconButton(
             icon: Icon(
               iconDataController,
-              size: duSetFontSize(26),
+              size: 26,
             ),
             onPressed: () {},
           ),
@@ -159,7 +159,7 @@ class _AddCatePageState extends State<AddCatePage> {
                   iconBtn: IconButton(
                     icon: Icon(
                       iconData,
-                      size: duSetFontSize(20),
+                      size: 20,
                     ),
                     onPressed: () {
                       setState(() {

@@ -103,7 +103,7 @@ Widget inputRSSURLEdit({
 }) {
   return Container(
     // height: 55,
-    margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+    margin: EdgeInsets.only(top: marginTop),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
       borderRadius: Radii.k6pxRadius,
@@ -123,7 +123,7 @@ Widget inputRSSURLEdit({
         color: AppColors.primaryText,
         fontFamily: "Avenir",
         fontWeight: FontWeight.w400,
-        fontSize: duSetFontSize(18),
+        fontSize: 18,
       ),
       maxLines: 1,
       autocorrect: false, // 自动纠正
@@ -147,8 +147,8 @@ Widget inputTextEditWithIconButton({
   Function onChanged,
 }) {
   return Container(
-    height: duSetHeight(55),
-    margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+    height: 55,
+    margin: EdgeInsets.only(top: marginTop),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
       borderRadius: Radii.k6pxRadius,
@@ -156,13 +156,13 @@ Widget inputTextEditWithIconButton({
     child: Row(
       children: <Widget>[
         Container(
-          width: duSetWidth(55),
+          width: 55,
           alignment: Alignment.center,
           child: iconButton,
         ),
         Spacer(),
         Container(
-          width: duSetWidth(width - 100),
+          width: width - 100,
           child: TextField(
             autofocus: autofocus,
             controller: controller,
@@ -178,7 +178,7 @@ Widget inputTextEditWithIconButton({
               color: AppColors.primaryText,
               fontFamily: "Avenir",
               fontWeight: FontWeight.w400,
-              fontSize: duSetFontSize(18),
+              fontSize: 18,
             ),
             maxLines: 1,
             autocorrect: false, // 自动纠正

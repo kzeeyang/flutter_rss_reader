@@ -40,7 +40,7 @@ void inputDialog(BuildContext context) {
               await client
                   .get(textController.text, context: null)
                   .then((response) {
-                Global.appState.addByJson(response);
+                Global.appState.addFromInputJson(response);
               });
               ExtendedNavigator.rootNavigator.pop();
             },

@@ -94,7 +94,7 @@ class _SettingPageState extends State<SettingPage> {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     return Container(
-      height: duSetHeight(50),
+      height: 50,
       alignment: Alignment.center,
       child: Padding(
         padding: EdgeInsets.symmetric(

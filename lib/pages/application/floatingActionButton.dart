@@ -112,7 +112,7 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
               ? Text(
                   "😏",
                   style: TextStyle(
-                    fontSize: duSetFontSize(18),
+                    fontSize: 18,
                   ),
                 )
               : Global.appState.draggingChoice == 1

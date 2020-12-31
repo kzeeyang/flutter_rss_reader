@@ -8,8 +8,8 @@ Widget IconContainer({
   Widget textWgt,
 }) {
   return Container(
-    height: duSetHeight(width),
-    width: duSetWidth(width),
+    height: width,
+    width: width,
     color: AppColors.primaryWhiteBackground,
     padding: EdgeInsets.all(8),
     child: Column(

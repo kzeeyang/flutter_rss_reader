@@ -55,20 +55,64 @@ class Global {
 
     //读取配置
     if (isFirstOpen) {
-      var _appStateJSON = StorageUtil().getJSON(STORAGE_APP_DATA_KEY);
-      // debugPrint("load appJson: $_appStateJSON");
-      if (_appStateJSON != null) {
-        appState = AppState.fromJson(_appStateJSON);
-      }
+      // var _appStateJSON = StorageUtil().getJSON(STORAGE_APP_DATA_CATEGORY_KEY);
+      // // debugPrint("load appJson: $_appStateJSON");
+      // if (_appStateJSON != null) {
+      //   appState = AppState.fromJson(_appStateJSON);
+      // }
+      readCategory();
+      readShowCategory();
+      readMRssItems();
     }
     // debugPrint("appstate: ${appState.isDarkMode}");
     // debugPrint("cateLength: ${appState.category.length}");
   }
 
-  // 持久化 用户信息
+  // 持久化 category
   static Future<bool> saveAppStateCategory() {
     var temp = appState.categoryToJson();
     debugPrint("$temp");
     return StorageUtil().setJSON(STORAGE_APP_DATA_CATEGORY_KEY, temp);
+  }
+
+  static void readCategory() {
+    var _appStateCategoryJSON =
+        StorageUtil().getJSON(STORAGE_APP_DATA_CATEGORY_KEY);
+    debugPrint("load appStateCategoryJSON: $_appStateCategoryJSON");
+    if (_appStateCategoryJSON != null) {
+      appState = AppState.categoryFromJson(_appStateCategoryJSON);
+    }
+  }
+
+  // 持久化 showcategory
+  static Future<bool> saveAppStateShowCategory() {
+    var temp = appState.showCategoryToJson();
+    debugPrint("showCategoryToJson: $temp");
+    return StorageUtil().setJSON(STORAGE_APP_DATA_SHOWCATEGORY_KEY, temp);
+  }
+
+  static void readShowCategory() {
+    var _appStateShowCategoryJSON =
+        StorageUtil().getJSON(STORAGE_APP_DATA_SHOWCATEGORY_KEY);
+    debugPrint("load appStateShowCategoryJSON: $_appStateShowCategoryJSON");
+    if (_appStateShowCategoryJSON != null) {
+      appState = AppState.showCategoryFromJson(_appStateShowCategoryJSON);
+    }
+  }
+
+  // 持久化 mRssItems
+  static Future<bool> saveAppStateMRssItems() {
+    var temp = appState.mRssItemsToJson();
+    // debugPrint("$temp");
+    return StorageUtil().setJSON(STORAGE_APP_DATA_MRSSITEMS_KEY, temp);
+  }
+
+  static void readMRssItems() {
+    var _appStateMRssItemsJSON =
+        StorageUtil().getJSON(STORAGE_APP_DATA_MRSSITEMS_KEY);
+    // debugPrint("load appJson: $_appStateJSON");
+    if (_appStateMRssItemsJSON != null) {
+      appState = AppState.showCategoryFromJson(_appStateMRssItemsJSON);
+    }
   }
 }

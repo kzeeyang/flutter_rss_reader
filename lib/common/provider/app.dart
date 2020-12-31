@@ -5,6 +5,12 @@ import 'package:flutter_rss_reader/common/apis/api.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/global.dart';
 
+enum Save {
+  Category,
+  ShowCategory,
+  MRssItems,
+}
+
 class AppState with ChangeNotifier {
   // String appBarTitle;
   Map<String, Category> category;
@@ -69,11 +75,20 @@ class AppState with ChangeNotifier {
   Future<List<MRssItem>> reloadMRssItems() async {
     this.mRssItems.clear();
 
-    // for (var i = 0; i < showCategory.rssSettings.length; i++) {
-    //   // print('channels: ${showCategory.rssSettings[i].rssName}');
-    //   if (showCategory.rssSettings[i].url.isNotEmpty) {
-    this.mRssItems =
-        await Rss.getMRssItems(showCategory.rssSettings, context: null);
+    for (var i = 0; i < showCategory.rssSettings.length; i++) {
+      // print('channels: ${showCategory.rssSettings[i].rssName}');
+      var url = showCategory.rssSettings[i].url;
+      if (url.isNotEmpty) {
+        var rssEntity = await Rss.getRss(
+          url,
+          context: null,
+          getMRssItems: true,
+          rssIconUrl: showCategory.rssSettings[i].iconUrl,
+        );
+
+        this.mRssItems.addAll(rssEntity.mrssItems);
+      }
+    }
     return this.mRssItems;
     // notifyListeners();
   }
@@ -122,8 +137,8 @@ class AppState with ChangeNotifier {
     // }
 
     reloadMRssItems();
+    save(Save.ShowCategory);
     notifyListeners();
-    save();
   }
 
   bool showRssOpened(int index) {
@@ -148,7 +163,7 @@ class AppState with ChangeNotifier {
     }
     changeShowCategory(catename);
     notifyListeners();
-    save();
+    save(Save.Category);
   }
 
   void deleteCategory(String catename) {
@@ -160,7 +175,7 @@ class AppState with ChangeNotifier {
     }
 
     notifyListeners();
-    save();
+    save(Save.Category);
   }
 
   String categoryIconName(String catename) {
@@ -178,7 +193,7 @@ class AppState with ChangeNotifier {
     }
 
     notifyListeners();
-    save();
+    save(Save.Category);
   }
 
   void deleteRss(String catename, String url, String rssname) {
@@ -191,7 +206,7 @@ class AppState with ChangeNotifier {
     }
 
     notifyListeners();
-    save();
+    save(Save.Category);
   }
 
   void changeRssOpen(String catename, String url, String rssname, bool open) {
@@ -204,7 +219,7 @@ class AppState with ChangeNotifier {
     }
 
     notifyListeners();
-    save();
+    save(Save.Category);
   }
 
   int rssIndex(String catename, url, rssname) {
@@ -222,19 +237,21 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  void save(int type) {
+  void save(Save type) {
     switch (type) {
-      case 0:
+      case Save.Category:
         Global.saveAppStateCategory();
         break;
-      case 1:
+      case Save.ShowCategory:
+        Global.saveAppStateShowCategory();
         break;
-      case 2:
+      case Save.MRssItems:
+        Global.saveAppStateMRssItems();
         break;
     }
   }
 
-  void addByJson(String jsonData) {
+  void addFromInputJson(String jsonData) {
     final postJsonConverted = json.decode(jsonData);
     if (postJsonConverted['category'] != null) {
       if (category == null) {
@@ -258,8 +275,8 @@ class AppState with ChangeNotifier {
     if (this.showCategory == null) {
       changeShowCategory('');
     }
+    save(Save.Category);
     notifyListeners();
-    save();
   }
 
   AppState.fromJson(Map<String, dynamic> json) {
@@ -295,11 +312,48 @@ class AppState with ChangeNotifier {
     return data;
   }
 
+  AppState.categoryFromJson(Map<String, dynamic> json) {
+    category = new Map<String, Category>();
+    if (json['category'] != null) {
+      json['category'].forEach((v) {
+        Category data = Category.fromJson(v);
+        category[data.cateName] = data;
+      });
+    }
+  }
+
   Map<String, dynamic> categoryToJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.category != null) {
       final listData = this.category.values.toList();
       data['category'] = listData.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+
+  AppState.showCategoryFromJson(Map<String, dynamic> json) {
+    showCategory = Category.fromJson(json['showCategory']);
+  }
+
+  Map<String, dynamic> showCategoryToJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['showCategory'] = this.showCategory.toJson();
+    return data;
+  }
+
+  AppState.mRssItemsFromJson(Map<String, dynamic> json) {
+    mRssItems = new List<MRssItem>();
+    if (json['mRssItems'] != null) {
+      json['rssSettings'].forEach((v) {
+        mRssItems.add(new MRssItem.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> mRssItemsToJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.mRssItems != null) {
+      data['mRssItems'] = this.mRssItems.map((v) => v.toJson()).toList();
     }
     return data;
   }

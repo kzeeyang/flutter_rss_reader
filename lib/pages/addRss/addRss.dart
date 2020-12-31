@@ -71,13 +71,14 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
     controller.reset();
     _nameController.text = null;
     controller.forward();
-    RssSetting rss = await Rss.testConn(
+    var rssEntity = await Rss.getRss(
       _urlController.value.text,
       context: context,
       cacheDisk: true,
+      getRssSetting: true,
     );
-    _nameController.text = rss.rssName;
-    _iconUrl = rss.iconUrl;
+    _nameController.text = rssEntity.rssSetting.rssName;
+    _iconUrl = rssEntity.rssSetting.iconUrl;
     // debugPrint('iconUrl: $_iconUrl');
     if (Global.appState.rssIndex(
             widget.cateName, _urlController.text, _nameController.text) !=
@@ -103,7 +104,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
       opened: _used,
     );
     Global.appState.addRss(widget.cateName, _rssSetting);
-    Global.saveAppState();
+    // Global.saveAppState();
     Navigator.pop(context);
   }
 
