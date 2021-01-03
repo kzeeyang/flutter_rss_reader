@@ -78,9 +78,9 @@ class Global {
   static void readCategory() {
     var _appStateCategoryJSON =
         StorageUtil().getJSON(STORAGE_APP_DATA_CATEGORY_KEY);
-    debugPrint("load appStateCategoryJSON: $_appStateCategoryJSON");
+    // debugPrint("load appStateCategoryJSON: $_appStateCategoryJSON");
     if (_appStateCategoryJSON != null) {
-      appState = AppState.categoryFromJson(_appStateCategoryJSON);
+      appState.category = AppState.categoryFromJson(_appStateCategoryJSON);
     }
   }
 
@@ -94,9 +94,10 @@ class Global {
   static void readShowCategory() {
     var _appStateShowCategoryJSON =
         StorageUtil().getJSON(STORAGE_APP_DATA_SHOWCATEGORY_KEY);
-    debugPrint("load appStateShowCategoryJSON: $_appStateShowCategoryJSON");
+    // debugPrint("load appStateShowCategoryJSON: $_appStateShowCategoryJSON");
     if (_appStateShowCategoryJSON != null) {
-      appState = AppState.showCategoryFromJson(_appStateShowCategoryJSON);
+      appState.showCategory =
+          AppState.showCategoryFromJson(_appStateShowCategoryJSON);
     }
   }
 
@@ -112,7 +113,7 @@ class Global {
         StorageUtil().getJSON(STORAGE_APP_DATA_MRSSITEMS_KEY);
     // debugPrint("load appJson: $_appStateJSON");
     if (_appStateMRssItemsJSON != null) {
-      appState = AppState.showCategoryFromJson(_appStateMRssItemsJSON);
+      appState.mRssItems = AppState.mRssItemsFromJson(_appStateMRssItemsJSON);
     }
   }
 }

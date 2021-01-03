@@ -13,8 +13,8 @@ Widget imageCached(
   return CachedNetworkImage(
     imageUrl: url,
     imageBuilder: (context, imageProvider) => Container(
-      height: duSetHeight(height),
-      width: duSetWidth(width),
+      height: height,
+      width: width,
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: Radii.k6pxRadius,

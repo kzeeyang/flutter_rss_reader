@@ -12,7 +12,7 @@ class WelcomePage extends StatelessWidget {
   /// 页头标题
   Widget _buildPageHeadTitle() {
     return Container(
-      margin: EdgeInsets.only(top: duSetHeight(60 + 44.0)), // 顶部系统栏 44px
+      margin: EdgeInsets.only(top: (60 + 44.0)), // 顶部系统栏 44px
       child: Text(
         "Welcome Title",
       ),
@@ -22,9 +22,9 @@ class WelcomePage extends StatelessWidget {
   /// 页头说明
   Widget _buildPageHeaderDetail() {
     return Container(
-      width: duSetWidth(242),
-      height: duSetHeight(70),
-      margin: EdgeInsets.only(top: duSetHeight(14)),
+      width: 242,
+      height: 70,
+      margin: EdgeInsets.only(top: 14),
       child: Text(
         "Welcome explain.",
         textAlign: TextAlign.center,
@@ -36,14 +36,14 @@ class WelcomePage extends StatelessWidget {
   /// 宽度 80 + 20 + 195 = 295
   Widget _buildFeatureItem(String imageName, String intro, double marginTop) {
     return Container(
-      width: duSetWidth(295),
-      height: duSetHeight(80),
-      margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+      width: 295,
+      height: 80,
+      margin: EdgeInsets.only(top: marginTop),
       child: Row(
         children: [
           Container(
-            width: duSetWidth(80),
-            height: duSetWidth(80),
+            width: 80,
+            height: 80,
             child: Text(
               "Welcome Image.",
               textAlign: TextAlign.center,
@@ -55,7 +55,7 @@ class WelcomePage extends StatelessWidget {
           ),
           Spacer(),
           Container(
-            width: duSetWidth(195),
+            width: 195,
             child: Text(
               intro,
               textAlign: TextAlign.left,
@@ -63,7 +63,7 @@ class WelcomePage extends StatelessWidget {
                 color: AppColors.primaryText,
                 fontFamily: "Avenir",
                 fontWeight: FontWeight.normal,
-                fontSize: duSetFontSize(16),
+                fontSize: 16,
               ),
             ),
           ),
@@ -75,9 +75,9 @@ class WelcomePage extends StatelessWidget {
   /// 开始按钮
   Widget _buildStartButton(BuildContext context) {
     return Container(
-      width: duSetWidth(295),
-      height: duSetHeight(44),
-      margin: EdgeInsets.only(bottom: duSetHeight(20)),
+      width: 295,
+      height: 44,
+      margin: EdgeInsets.only(bottom: 20),
       child: FlatButton(
         color: AppColors.primaryElement,
         textColor: AppColors.primaryElementText,

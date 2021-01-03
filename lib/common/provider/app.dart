@@ -15,7 +15,7 @@ class AppState with ChangeNotifier {
   // String appBarTitle;
   Map<String, Category> category;
   Category showCategory;
-  List<MRssItem> mRssItems = new List();
+  List<MRssItem> mRssItems;
 
   /// panel 开启
   bool panelOpen = false;
@@ -31,7 +31,7 @@ class AppState with ChangeNotifier {
   }) {
     // appBarTitle = "";
     this.showCategory = null;
-    this.category = {};
+    this.category = Map();
     this.mRssItems = List();
 
     this.panelOpen = panelOpen;
@@ -76,7 +76,8 @@ class AppState with ChangeNotifier {
     this.mRssItems.clear();
 
     for (var i = 0; i < showCategory.rssSettings.length; i++) {
-      // print('channels: ${showCategory.rssSettings[i].rssName}');
+      debugPrint(
+          'get rss from reloadMRssItems: ${showCategory.rssSettings[i].rssName}');
       var url = showCategory.rssSettings[i].url;
       if (url.isNotEmpty) {
         var rssEntity = await Rss.getRss(
@@ -89,8 +90,8 @@ class AppState with ChangeNotifier {
         this.mRssItems.addAll(rssEntity.mrssItems);
       }
     }
-    return this.mRssItems;
     // notifyListeners();
+    return this.mRssItems;
   }
 
   bool mRssItemIsShow(String rssname) {
@@ -312,14 +313,15 @@ class AppState with ChangeNotifier {
     return data;
   }
 
-  AppState.categoryFromJson(Map<String, dynamic> json) {
-    category = new Map<String, Category>();
+  static Map<String, Category> categoryFromJson(Map<String, dynamic> json) {
+    var category = new Map<String, Category>();
     if (json['category'] != null) {
       json['category'].forEach((v) {
         Category data = Category.fromJson(v);
         category[data.cateName] = data;
       });
     }
+    return category;
   }
 
   Map<String, dynamic> categoryToJson() {
@@ -331,8 +333,9 @@ class AppState with ChangeNotifier {
     return data;
   }
 
-  AppState.showCategoryFromJson(Map<String, dynamic> json) {
-    showCategory = Category.fromJson(json['showCategory']);
+  static Category showCategoryFromJson(Map<String, dynamic> json) {
+    Category showCategory = Category.fromJson(json['showCategory']);
+    return showCategory;
   }
 
   Map<String, dynamic> showCategoryToJson() {
@@ -341,13 +344,14 @@ class AppState with ChangeNotifier {
     return data;
   }
 
-  AppState.mRssItemsFromJson(Map<String, dynamic> json) {
-    mRssItems = new List<MRssItem>();
+  static List<MRssItem> mRssItemsFromJson(Map<String, dynamic> json) {
+    var mRssItems = new List<MRssItem>();
     if (json['mRssItems'] != null) {
       json['rssSettings'].forEach((v) {
         mRssItems.add(new MRssItem.fromJson(v));
       });
     }
+    return mRssItems;
   }
 
   Map<String, dynamic> mRssItemsToJson() {

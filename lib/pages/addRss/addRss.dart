@@ -138,7 +138,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
       child: Column(
         children: <Widget>[
           Container(
-            height: duSetHeight(10),
+            height: 10,
           ),
           inputRSSURLEdit(
             controller: _urlController,
@@ -157,7 +157,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
             ),
           ),
           Container(
-            height: duSetHeight(3),
+            height: 3,
           ),
           inputTextEdit(
             controller: _nameController,
@@ -165,7 +165,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
             marginTop: 0,
           ),
           Container(
-            height: duSetHeight(3),
+            height: 3,
           ),
           Container(
             color: AppColors.primaryWhiteBackground,

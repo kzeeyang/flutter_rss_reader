@@ -14,13 +14,13 @@ Widget flipBtnCard({
     key: key,
     // flipOnTouch: false,
     front: Container(
-      height: duSetHeight(width / 5),
-      width: duSetWidth(width / 5),
+      height: width / 5,
+      width: width / 5,
       color: AppColors.primaryGreyBackground,
     ),
     back: Container(
-      height: duSetHeight(width / 5),
-      width: duSetWidth(width / 5),
+      height: width / 5,
+      width: width / 5,
       decoration: BoxDecoration(
         color: AppColors.primaryWhiteBackground,
       ),

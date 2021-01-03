@@ -7,9 +7,9 @@ Widget paddingSpace(BuildContext context) {
   final size = MediaQuery.of(context).size;
   final height = size.height;
   final length = Global.appState.category.keys.toList().length;
-  double spaceHeight = height - duSetHeight(190) - length * 50;
+  double spaceHeight = height - 190 - length * 50;
   return SliverFixedExtentList(
-    itemExtent: spaceHeight < 0 ? 0 : duSetHeight(spaceHeight),
+    itemExtent: spaceHeight < 0 ? 0 : spaceHeight,
     delegate: new SliverChildBuilderDelegate(
       (BuildContext context, int index) {
         //创建列表项

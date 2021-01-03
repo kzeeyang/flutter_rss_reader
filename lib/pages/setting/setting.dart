@@ -162,6 +162,7 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Global.appState.category.length: ${Global.appState.category}");
     final cateLength = Global.appState.category.length;
     final pageWidth = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;

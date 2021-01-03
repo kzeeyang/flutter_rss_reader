@@ -77,7 +77,7 @@ class _CateDetailState extends State<CateDetail> {
         RssSetting item = _rssSettings[index];
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          height: duSetHeight(45),
+          height: 45,
           decoration: BoxDecoration(
             color: AppColors.primaryWhiteBackground,
             border: Border(
@@ -103,7 +103,7 @@ class _CateDetailState extends State<CateDetail> {
                 child: Text(
                   item.rssName,
                   style: TextStyle(
-                    fontSize: duSetFontSize(16),
+                    fontSize: 16,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -141,15 +141,15 @@ class _CateDetailState extends State<CateDetail> {
 
   Widget _buildBottomTip(double width) {
     return Container(
-      height: duSetHeight(50),
+      height: 50,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: duSetWidth(5),
-          horizontal: duSetHeight(60),
+          vertical: 5,
+          horizontal: 60,
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(duSetWidth(25)),
+            borderRadius: BorderRadius.circular(25),
             color: Colors.red[400],
           ),
           child: FlatButton.icon(

@@ -54,7 +54,7 @@ class PhotoViewScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                right: duSetWidth(10),
+                right: 10,
                 top: MediaQuery.of(context).padding.top,
                 child: IconButton(
                   icon: Icon(
@@ -69,7 +69,7 @@ class PhotoViewScreen extends StatelessWidget {
               ),
               Positioned(
                 bottom: MediaQuery.of(context).padding.bottom,
-                right: duSetWidth(10),
+                right: 10,
                 child: IconButton(
                   icon: Icon(
                     Icons.file_download,

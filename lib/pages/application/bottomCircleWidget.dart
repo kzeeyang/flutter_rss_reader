@@ -92,7 +92,7 @@ class _BottomCircleWidgetState extends State<BottomCircleWidget>
                 ),
                 Positioned(
                   // left: circleOrigin.dx,
-                  top: duSetHeight(offsetHeight - 30),
+                  top: offsetHeight - 30,
                   child: AnimatedBuilder(
                     animation: _animation,
                     child: CircleList(

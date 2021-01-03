@@ -15,8 +15,8 @@ Widget btnFlatButtonWidget({
   FontWeight fontWeight = FontWeight.w400,
 }) {
   return Container(
-    width: duSetWidth(width),
-    height: duSetHeight(height),
+    width: width,
+    height: height,
     child: FlatButton(
       onPressed: onPressed,
       color: gbColor,
@@ -30,7 +30,7 @@ Widget btnFlatButtonWidget({
           color: fontColor,
           fontFamily: fontName,
           fontWeight: fontWeight,
-          fontSize: duSetFontSize(fontSize),
+          fontSize: fontSize,
           height: 1,
         ),
       ),
@@ -46,8 +46,8 @@ Widget btnFlatButtonBorderOnlyWidget({
   String iconFileName,
 }) {
   return Container(
-    width: duSetWidth(width),
-    height: duSetHeight(height),
+    width: width,
+    height: height,
     child: FlatButton(
       onPressed: onPressed,
       shape: RoundedRectangleBorder(

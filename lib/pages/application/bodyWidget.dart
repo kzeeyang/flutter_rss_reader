@@ -24,7 +24,7 @@ class _BodyWidgetState extends State<BodyWidget> {
     super.initState();
     if (Global.appState.showCategory.rssSettings.isNotEmpty) {
       // print("body init get rss");
-      // _loadRss();
+      _loadRss();
     }
   }
 

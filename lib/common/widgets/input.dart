@@ -12,8 +12,8 @@ Widget inputTextEdit({
   bool autofocus = false,
 }) {
   return Container(
-    height: duSetHeight(55),
-    margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+    height: 55,
+    margin: EdgeInsets.only(top: marginTop),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
       borderRadius: Radii.k6pxRadius,
@@ -32,7 +32,7 @@ Widget inputTextEdit({
         color: AppColors.primaryText,
         fontFamily: "Avenir",
         fontWeight: FontWeight.w400,
-        fontSize: duSetFontSize(18),
+        fontSize: 18,
       ),
       maxLines: 1,
       autocorrect: false, // 自动纠正
@@ -52,8 +52,8 @@ Widget inputEmailEdit({
   bool autofocus = false,
 }) {
   return Container(
-    height: duSetHeight(55),
-    margin: EdgeInsets.only(top: duSetHeight(marginTop)),
+    height: 55,
+    margin: EdgeInsets.only(top: marginTop),
     decoration: BoxDecoration(
       color: AppColors.primaryWhiteBackground,
       borderRadius: Radii.k6pxRadius,
@@ -81,7 +81,7 @@ Widget inputEmailEdit({
         color: AppColors.primaryText,
         fontFamily: "Avenir",
         fontWeight: FontWeight.w400,
-        fontSize: duSetFontSize(18),
+        fontSize: 18,
       ),
       maxLines: 1,
       autocorrect: false, // 自动纠正
