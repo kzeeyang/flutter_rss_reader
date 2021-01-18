@@ -71,13 +71,15 @@ class Global {
   // 持久化 category
   static Future<bool> saveAppStateCategory() {
     var temp = appState.categoryToJson();
-    debugPrint("$temp");
+    // debugPrint("$temp");
+    debugPrint("save category json");
     return StorageUtil().setJSON(STORAGE_APP_DATA_CATEGORY_KEY, temp);
   }
 
   static void readCategory() {
     var _appStateCategoryJSON =
         StorageUtil().getJSON(STORAGE_APP_DATA_CATEGORY_KEY);
+    debugPrint("read category json");
     // debugPrint("load appStateCategoryJSON: $_appStateCategoryJSON");
     if (_appStateCategoryJSON != null) {
       appState.category = AppState.categoryFromJson(_appStateCategoryJSON);
@@ -87,13 +89,14 @@ class Global {
   // 持久化 showcategory
   static Future<bool> saveAppStateShowCategory() {
     var temp = appState.showCategoryToJson();
-    debugPrint("showCategoryToJson: $temp");
+    debugPrint("save showCategory json");
     return StorageUtil().setJSON(STORAGE_APP_DATA_SHOWCATEGORY_KEY, temp);
   }
 
   static void readShowCategory() {
     var _appStateShowCategoryJSON =
         StorageUtil().getJSON(STORAGE_APP_DATA_SHOWCATEGORY_KEY);
+    debugPrint("read showCategory json");
     // debugPrint("load appStateShowCategoryJSON: $_appStateShowCategoryJSON");
     if (_appStateShowCategoryJSON != null) {
       appState.showCategory =
@@ -104,6 +107,7 @@ class Global {
   // 持久化 mRssItems
   static Future<bool> saveAppStateMRssItems() {
     var temp = appState.mRssItemsToJson();
+    debugPrint("save mRssItems json");
     // debugPrint("$temp");
     return StorageUtil().setJSON(STORAGE_APP_DATA_MRSSITEMS_KEY, temp);
   }
@@ -112,6 +116,7 @@ class Global {
     var _appStateMRssItemsJSON =
         StorageUtil().getJSON(STORAGE_APP_DATA_MRSSITEMS_KEY);
     // debugPrint("load appJson: $_appStateJSON");
+    debugPrint("read mRssItems json");
     if (_appStateMRssItemsJSON != null) {
       appState.mRssItems = AppState.mRssItemsFromJson(_appStateMRssItemsJSON);
     }

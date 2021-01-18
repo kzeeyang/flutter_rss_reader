@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_rss_reader/common/apis/api.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 
@@ -25,6 +26,7 @@ class RssSetting {
         } else {
           iconUrl = rssEntity.iconUrl;
         }
+        debugPrint("iconUrl: $iconUrl");
       });
     }
     opened = json['opened'];

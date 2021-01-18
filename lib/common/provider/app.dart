@@ -238,16 +238,16 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  void save(Save type) {
+  Future<void> save(Save type) async {
     switch (type) {
       case Save.Category:
-        Global.saveAppStateCategory();
+        await Global.saveAppStateCategory();
         break;
       case Save.ShowCategory:
-        Global.saveAppStateShowCategory();
+        await Global.saveAppStateShowCategory();
         break;
       case Save.MRssItems:
-        Global.saveAppStateMRssItems();
+        await Global.saveAppStateMRssItems();
         break;
     }
   }

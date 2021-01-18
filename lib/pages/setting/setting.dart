@@ -179,8 +179,8 @@ class _SettingPageState extends State<SettingPage> {
         },
         onPointerUp: (event) {
           // print("point up");
-          print("pageHeight: $height");
-          print("${event.position}");
+          // print("pageHeight: $height");
+          // print("${event.position}");
           _pointerDownNum--;
           double imgWidth = 200;
           var scrollOffset = _scrollController.offset;
