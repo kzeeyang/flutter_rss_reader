@@ -6,6 +6,7 @@ import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
+import 'package:share/share.dart';
 
 Widget ItemHeader(BuildContext context, MRssItem item) {
   final size = MediaQuery.of(context).size;
@@ -85,8 +86,13 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
         ),
         Container(
           width: shareWidth,
-          child: Icon(
-            Icons.share,
+          child: TransparentIconButton(
+            icon: Icon(
+              Icons.share,
+            ),
+            onPressed: () {
+              Share.share('${item.link}');
+            },
           ),
         ),
       ],

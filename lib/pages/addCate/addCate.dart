@@ -52,7 +52,7 @@ class _AddCatePageState extends State<AddCatePage> {
   AppBar _buildAppBar() {
     return MyAppBar(
       title: '添加分类',
-      leading: IconButton(
+      leading: TransparentIconButton(
         icon: Icon(
           Icons.arrow_back_ios,
           color: AppColors.primaryText,
@@ -83,12 +83,9 @@ class _AddCatePageState extends State<AddCatePage> {
           hintText: _searchIconController ? "搜索图标名称" : "输入分类名称",
           marginTop: 0,
           width: width,
-          iconButton: IconButton(
-            icon: Icon(
-              iconDataController,
-              size: 26,
-            ),
-            onPressed: () {},
+          iconButton: Icon(
+            iconDataController,
+            size: 26,
           ),
           rotationTransition: IconButton(
             icon: _searchIconController

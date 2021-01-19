@@ -66,7 +66,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildAppBar() {
     return MyAppBar(
       title: '配置',
-      leading: IconButton(
+      leading: TransparentIconButton(
         icon: Icon(
           Icons.arrow_back_ios,
           color: AppColors.primaryText,
@@ -76,7 +76,7 @@ class _SettingPageState extends State<SettingPage> {
         },
       ),
       actions: <Widget>[
-        IconButton(
+        TransparentIconButton(
           icon: Icon(
             Icons.add,
             color: AppColors.primaryText,
@@ -118,6 +118,13 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomLeft: Radius.circular(20),
+                    ),
+                  ),
+                  highlightColor: Colors.green[600],
                   child: Text(
                     "导入分类",
                     style: TextStyle(color: AppColors.primaryElementText),
@@ -137,19 +144,26 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  highlightColor: Colors.blueAccent[400],
                   child: Text(
                     "导出分类",
                     style: TextStyle(color: AppColors.primaryElementText),
                   ),
                   onPressed: () {
-                    // final jsonDate = Global.appState.categoryToJson();
-                    // // debugPrint('${jsonDate.toString()}');
-                    // requestPermission(Permission.storage).then((state) async {
-                    //   if (state) {
-                    //     saveFile(jsonDate.toString());
-                    //   }
-                    // });
-                    Global.saveAppStateCategory();
+                    final jsonDate = Global.appState.categoryToJson();
+                    // debugPrint('${jsonDate.toString()}');
+                    requestPermission(Permission.storage).then((state) async {
+                      if (state) {
+                        saveFile(jsonDate.toString());
+                      }
+                    });
+                    // Global.saveAppStateCategory();
                   },
                 ),
               ),

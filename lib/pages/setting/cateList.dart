@@ -64,7 +64,7 @@ Widget cateList(BuildContext context, double itemHeight) {
                       Spacer(),
                       Container(
                         width: iconWidth,
-                        child: IconButton(
+                        child: TransparentIconButton(
                           icon: Icon(
                             Icons.chevron_right,
                             color: AppColors.primaryText,

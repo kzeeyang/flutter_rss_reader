@@ -24,7 +24,7 @@ class _CateDetailState extends State<CateDetail> {
   AppBar _buildAppBar() {
     return MyAppBar(
       title: widget.cateName,
-      leading: IconButton(
+      leading: TransparentIconButton(
         icon: Icon(
           Icons.arrow_back_ios,
           color: AppColors.primaryText,
@@ -34,7 +34,7 @@ class _CateDetailState extends State<CateDetail> {
         },
       ),
       actions: <Widget>[
-        IconButton(
+        TransparentIconButton(
           icon: Icon(
             Icons.add,
             color: AppColors.primaryText,
@@ -121,7 +121,7 @@ class _CateDetailState extends State<CateDetail> {
                   });
                 },
               ),
-              IconButton(
+              TransparentIconButton(
                 icon: Icon(
                   Icons.delete,
                   color: Colors.red[300],
@@ -153,6 +153,11 @@ class _CateDetailState extends State<CateDetail> {
             color: Colors.red[400],
           ),
           child: FlatButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            highlightColor: Colors.red[600],
+            // splashColor: Colors.transparent,
             icon: Icon(Icons.delete_outline),
             label: Text('删除分类'),
             onPressed: () {
@@ -161,7 +166,6 @@ class _CateDetailState extends State<CateDetail> {
               Global.appState.deleteCategory(widget.cateName);
               Global.saveAppStateCategory();
             },
-            splashColor: Colors.blueGrey,
             textColor: AppColors.primaryElementText,
           ),
         ),

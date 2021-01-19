@@ -31,10 +31,12 @@ class _DetailPageState extends State<DetailPage> {
   bool _isPageFinished = false;
   bool _canCallBack = false;
   bool _canForward = false;
+  List<String> _shareEndUrl = new List();
 
   @override
   void initState() {
     super.initState();
+    _shareEndUrl.add(widget.item.link);
   }
 
   Future<void> _canPopCallback() async {
@@ -57,6 +59,7 @@ class _DetailPageState extends State<DetailPage> {
       webViewController.goBack();
       _canCallBack = await webViewController.canGoBack();
       _canForward = await webViewController.canGoForward();
+      _shareEndUrl.removeLast();
       setState(() {});
     } else {
       ExtendedNavigator.rootNavigator.pop();
@@ -83,23 +86,23 @@ class _DetailPageState extends State<DetailPage> {
   Widget _buildAppBar() {
     return MyAppBar(
       title: widget.item.rssName,
-      leading: IconButton(
+      leading: TransparentIconButton(
         icon: Icon(
-          _canCallBack ? Icons.arrow_back : Icons.close,
+          Icons.close,
           color: AppColors.primaryText,
         ),
         onPressed: () {
-          _goBackOrPopCallback();
+          ExtendedNavigator.rootNavigator.pop();
         },
       ),
       actions: <Widget>[
-        IconButton(
+        TransparentIconButton(
           icon: Icon(
             Icons.share,
             color: AppColors.primaryText,
           ),
           onPressed: () {
-            Share.share('${widget.item.title} ${widget.item.link}');
+            Share.share('${_shareEndUrl.last}');
           },
         ),
       ],
@@ -142,6 +145,7 @@ class _DetailPageState extends State<DetailPage> {
               },
             );
           }
+          _shareEndUrl.add(request.url);
           return NavigationDecision.navigate;
         } else if (request.url.startsWith("jike")) {
           // _launchURL(request.url);

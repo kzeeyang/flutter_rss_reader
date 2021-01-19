@@ -111,7 +111,7 @@ class _AddRssState extends State<AddRss> with TickerProviderStateMixin {
   AppBar _buildAppBar() {
     return MyAppBar(
       title: "添加RSS",
-      leading: IconButton(
+      leading: TransparentIconButton(
         icon: Icon(
           Icons.arrow_back_ios,
           color: AppColors.primaryText,

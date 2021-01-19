@@ -65,7 +65,7 @@ class _ApplicationPageState extends State<ApplicationPage>
           ? "Home".toUpperCase()
           : Global.appState.showCategory.cateName.toUpperCase(),
       actions: <Widget>[
-        IconButton(
+        TransparentIconButton(
           icon: Icon(
             Icons.settings,
             color: AppColors.primaryText,
