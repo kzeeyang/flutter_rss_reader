@@ -28,6 +28,8 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   DateTime _willPopLastTime;
 
+  AppBar _appBar;
+
   @override
   void initState() {
     super.initState();
@@ -60,7 +62,7 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   // 顶部导航
   Widget _buildAppBar() {
-    return MyAppBar(
+    _appBar = MyAppBar(
       title: Global.appState.showCategory == null
           ? "Home".toUpperCase()
           : Global.appState.showCategory.cateName.toUpperCase(),
@@ -76,6 +78,7 @@ class _ApplicationPageState extends State<ApplicationPage>
         ),
       ],
     );
+    return _appBar;
   }
 
   Widget scrollDragtarget({
@@ -135,7 +138,8 @@ class _ApplicationPageState extends State<ApplicationPage>
                 )
               : Global.appState.showCategory.rssSettings.length == 0
                   ? Center(child: Text('分类下尚未添加RSS'))
-                  : Positioned(child: BodyWidget()),
+                  : Positioned(
+                      child: BodyWidget(appBarSize: _appBar.preferredSize)),
           scrollDragtarget(
             left: 0,
             onWillAccept: (data) {

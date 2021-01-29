@@ -8,10 +8,15 @@ import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:flutter_rss_reader/pages/application/ItemSliverList.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:webfeed/webfeed.dart';
 
 class BodyWidget extends StatefulWidget {
+  final Size appBarSize;
+
+  const BodyWidget({Key key, this.appBarSize}) : super(key: key);
+
   @override
   _BodyWidgetState createState() => _BodyWidgetState();
 }
@@ -86,11 +91,11 @@ class _BodyWidgetState extends State<BodyWidget> {
         child: _mRssItems.length > 0
             ? _panelBody()
             : Container(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Text('暂无数据'),
-                  ],
+                height: height - widget.appBarSize.height,
+                child: Center(
+                  child: LoadingBouncingGrid.square(
+                    backgroundColor: Colors.blue[400],
+                  ),
                 ),
               ),
       ),
