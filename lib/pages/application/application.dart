@@ -28,12 +28,23 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   DateTime _willPopLastTime;
 
-  AppBar _appBar;
+  AppBar _appBar = new AppBar(
+    title: Text(
+      "Home".toUpperCase(),
+      style: TextStyle(
+        color: AppColors.primaryText,
+        fontFamily: AppColors.fontMontserrat,
+        fontSize: 18.0,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
 
   @override
   void initState() {
     super.initState();
     bool firstOpen = StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
+    _buildAppBar();
     debugPrint("firstOpen: $firstOpen");
   }
 
@@ -118,6 +129,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final height = size.height;
+    final pageHeight = height - _appBar.preferredSize.height;
     return MyScaffold(
       showRightDragItem: false,
       dragItemWidth: 30,
@@ -150,7 +162,7 @@ class _ApplicationPageState extends State<ApplicationPage>
               if (Global.scrollController.offset == 0) {
                 toastInfo(msg: topMsg);
               } else {
-                var offsize = Global.scrollController.offset - height;
+                var offsize = Global.scrollController.offset - pageHeight;
                 if (offsize < 0) {
                   offsize = 0;
                 }
@@ -171,7 +183,7 @@ class _ApplicationPageState extends State<ApplicationPage>
                   Global.scrollController.position.maxScrollExtent) {
                 toastInfo(msg: bottomMsg);
               } else {
-                var offsize = Global.scrollController.offset + height;
+                var offsize = Global.scrollController.offset + pageHeight;
                 if (offsize >
                     Global.scrollController.position.maxScrollExtent) {
                   offsize = Global.scrollController.position.maxScrollExtent;
