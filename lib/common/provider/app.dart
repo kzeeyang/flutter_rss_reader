@@ -90,6 +90,8 @@ class AppState with ChangeNotifier {
         this.mRssItems.addAll(rssEntity.mrssItems);
       }
     }
+
+    this.mRssItems.sort((left, right) => right.pubDate.compareTo(left.pubDate));
     // notifyListeners();
     return this.mRssItems;
   }

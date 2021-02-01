@@ -22,7 +22,7 @@ class BodyWidget extends StatefulWidget {
 }
 
 class _BodyWidgetState extends State<BodyWidget> {
-  List<MRssItem> _mRssItems = new List();
+  // List<MRssItem> _mRssItems = new List();
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _BodyWidgetState extends State<BodyWidget> {
     await Global.appState.reloadMRssItems();
     Global.appState.mRssItems
         .sort((left, right) => right.pubDate.compareTo(left.pubDate));
-    _mRssItems = Global.appState.mRssItems;
+    // _mRssItems = Global.appState.mRssItems;
 
     if (mounted) {
       setState(() {});
@@ -88,7 +88,7 @@ class _BodyWidgetState extends State<BodyWidget> {
           Global.refreshController.finishRefresh();
         },
 
-        child: _mRssItems.length > 0
+        child: Global.appState.mRssItems.length > 0
             ? _panelBody()
             : Container(
                 height: height - widget.appBarSize.height,
@@ -110,7 +110,7 @@ class _BodyWidgetState extends State<BodyWidget> {
           sliver: SliverPadding(
             padding: EdgeInsets.only(top: 5.0, bottom: 135),
             sliver: ItemSliverList(
-              mRssItems: _mRssItems,
+              mRssItems: Global.appState.mRssItems,
               scrollController: Global.scrollController,
             ),
           ),
