@@ -33,6 +33,7 @@ class Rss {
             rssName: atomFeed.title,
             iconUrl: _getIconURL(atomFeed.logo, host),
             opened: true,
+            description: atomFeed.subtitle,
           );
         }
 
@@ -62,6 +63,7 @@ class Rss {
             iconUrl: _getIconURL(
                 rssFeed.image == null ? "" : rssFeed.image.url, host),
             opened: true,
+            description: rssFeed.description,
           );
         }
 

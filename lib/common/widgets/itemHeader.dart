@@ -26,6 +26,10 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
           child: RssIcon(
             Global.appState.getShowCategoryRssSetting(item.rssName),
             size: iconSize,
+            onTap: () {
+              ExtendedNavigator.rootNavigator.pushCatePage(
+                  rssSetting: Global.appState.getRss(item.rssName));
+            },
           ),
         ),
         InkWell(

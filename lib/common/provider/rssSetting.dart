@@ -6,9 +6,11 @@ class RssSetting {
   String rssName;
   String url;
   String iconUrl;
+  String description;
   bool opened;
 
-  RssSetting({this.rssName, this.url, this.iconUrl, this.opened});
+  RssSetting(
+      {this.rssName, this.url, this.iconUrl, this.opened, this.description});
 
   RssSetting.fromJson(Map<String, dynamic> json) {
     rssName = json['rssName'];
@@ -29,6 +31,7 @@ class RssSetting {
         debugPrint("iconUrl: $iconUrl");
       });
     }
+    description = json['description'];
     opened = json['opened'];
   }
 
@@ -37,6 +40,7 @@ class RssSetting {
     data['rssName'] = this.rssName;
     data['url'] = this.url;
     data['iconUrl'] = this.iconUrl;
+    data['description'] = this.description;
     data['opened'] = this.opened;
     return data;
   }

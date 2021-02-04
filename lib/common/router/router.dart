@@ -4,6 +4,7 @@ import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
 import 'package:flutter_rss_reader/pages/application/application.dart';
 import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
+import 'package:flutter_rss_reader/pages/catepage/catepage.dart';
 import 'package:flutter_rss_reader/pages/detailPage/detailPage.dart';
 import 'package:flutter_rss_reader/pages/index/index.dart';
 import 'package:flutter_rss_reader/pages/main/main.dart';
@@ -42,4 +43,7 @@ class $AppRouter {
 
   @CustomRoute(transitionsBuilder: zoomInTransition)
   DetailPage detailPageRoute;
+
+  @CustomRoute(transitionsBuilder: zoomInTransition)
+  CatePage catePage;
 }

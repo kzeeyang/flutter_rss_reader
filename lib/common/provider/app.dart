@@ -92,7 +92,7 @@ class AppState with ChangeNotifier {
     }
 
     this.mRssItems.sort((left, right) => right.pubDate.compareTo(left.pubDate));
-    // notifyListeners();
+    notifyListeners();
     return this.mRssItems;
   }
 
@@ -212,14 +212,28 @@ class AppState with ChangeNotifier {
     save(Save.Category);
   }
 
+  RssSetting getRss(String rssname) {
+    // int length = category[catename].rssSettings.length;
+    debugPrint("${rssname}");
+    for (int i = 0; i < showCategory.rssSettings.length; i++) {
+      RssSetting rss = showCategory.rssSettings[i];
+      debugPrint("${rss.rssName}");
+      if (rss.rssName == rssname) {
+        return rss;
+      }
+    }
+    return null;
+  }
+
   void changeRssOpen(String catename, String url, String rssname, bool open) {
     int index = rssIndex(catename, url, rssname);
     if (index != -1) {
       category[catename].rssSettings[index].opened = open;
+      showCategory.rssSettings[index].opened = open;
     }
-    if (this.showCategory == null) {
-      changeShowCategory(catename);
-    }
+    // if (this.showCategory == null) {
+    //   changeShowCategory(catename);
+    // }
 
     notifyListeners();
     save(Save.Category);

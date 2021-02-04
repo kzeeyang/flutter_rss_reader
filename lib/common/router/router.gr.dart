@@ -16,9 +16,11 @@ import 'package:flutter_rss_reader/pages/addCate/addCate.dart';
 import 'package:flutter_rss_reader/pages/cateDetail/cateDetail.dart';
 import 'package:flutter_rss_reader/pages/addRss/addRss.dart';
 import 'package:flutter_rss_reader/pages/photo/photo.dart';
-import 'package:flutter_rss_reader/pages/detailPage/detailPage.dart';
 import 'package:flutter_rss_reader/common/router/router.dart';
+import 'package:flutter_rss_reader/pages/detailPage/detailPage.dart';
 import 'package:flutter_rss_reader/common/provider/rssItem.dart';
+import 'package:flutter_rss_reader/pages/catepage/catepage.dart';
+import 'package:flutter_rss_reader/common/provider/rssSetting.dart';
 
 abstract class Routes {
   static const indexPageRoute = '/';
@@ -31,6 +33,7 @@ abstract class Routes {
   static const addRss = '/add-rss';
   static const photoViewScreen = '/photo-view-screen';
   static const detailPageRoute = '/detail-page-route';
+  static const catePage = '/cate-page';
   static const all = {
     indexPageRoute,
     welcomePageRoute,
@@ -42,6 +45,7 @@ abstract class Routes {
     addRss,
     photoViewScreen,
     detailPageRoute,
+    catePage,
   };
 }
 
@@ -122,15 +126,17 @@ class AppRouter extends RouterBase {
         }
         final typedArgs =
             args as PhotoViewScreenArguments ?? PhotoViewScreenArguments();
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => PhotoViewScreen(
-              imageProvider: typedArgs.imageProvider,
-              loadingChild: typedArgs.loadingChild,
-              backgroundDecoration: typedArgs.backgroundDecoration,
-              minScale: typedArgs.minScale,
-              maxScale: typedArgs.maxScale,
-              heroTag: typedArgs.heroTag),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              PhotoViewScreen(
+                  imageProvider: typedArgs.imageProvider,
+                  loadingChild: typedArgs.loadingChild,
+                  backgroundDecoration: typedArgs.backgroundDecoration,
+                  minScale: typedArgs.minScale,
+                  maxScale: typedArgs.maxScale,
+                  heroTag: typedArgs.heroTag),
           settings: settings,
+          transitionsBuilder: zoomInTransition,
         );
       case Routes.detailPageRoute:
         if (hasInvalidArgs<DetailPageArguments>(args)) {
@@ -140,6 +146,17 @@ class AppRouter extends RouterBase {
         return PageRouteBuilder<dynamic>(
           pageBuilder: (context, animation, secondaryAnimation) =>
               DetailPage(key: typedArgs.key, item: typedArgs.item),
+          settings: settings,
+          transitionsBuilder: zoomInTransition,
+        );
+      case Routes.catePage:
+        if (hasInvalidArgs<CatePageArguments>(args)) {
+          return misTypedArgsRoute<CatePageArguments>(args);
+        }
+        final typedArgs = args as CatePageArguments ?? CatePageArguments();
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              CatePage(key: typedArgs.key, rssSetting: typedArgs.rssSetting),
           settings: settings,
           transitionsBuilder: zoomInTransition,
         );
@@ -201,6 +218,13 @@ class DetailPageArguments {
   final Key key;
   final MRssItem item;
   DetailPageArguments({this.key, this.item});
+}
+
+//CatePage arguments holder class
+class CatePageArguments {
+  final Key key;
+  final RssSetting rssSetting;
+  CatePageArguments({this.key, this.rssSetting});
 }
 
 // *************************************************************************
@@ -276,5 +300,14 @@ extension AppRouterNavigationHelperMethods on ExtendedNavigatorState {
       pushNamed(
         Routes.detailPageRoute,
         arguments: DetailPageArguments(key: key, item: item),
+      );
+
+  Future pushCatePage({
+    Key key,
+    RssSetting rssSetting,
+  }) =>
+      pushNamed(
+        Routes.catePage,
+        arguments: CatePageArguments(key: key, rssSetting: rssSetting),
       );
 }
