@@ -225,6 +225,16 @@ class AppState with ChangeNotifier {
     return null;
   }
 
+  List<MRssItem> getCatePage(String rssName) {
+    List<MRssItem> list = List();
+    mRssItems.forEach((item) {
+      if (item.rssName == rssName) {
+        list.add(item);
+      }
+    });
+    return list;
+  }
+
   void changeRssOpen(String catename, String url, String rssname, bool open) {
     int index = rssIndex(catename, url, rssname);
     if (index != -1) {

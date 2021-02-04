@@ -40,7 +40,7 @@ class ItemSliverList extends StatelessWidget {
             return Container();
           }
         },
-        childCount: Global.appState.mRssItems.length,
+        childCount: mRssItems.length,
       ),
     );
   }
