@@ -112,6 +112,7 @@ class _BodyWidgetState extends State<BodyWidget> {
             sliver: ItemSliverList(
               mRssItems: Global.appState.mRssItems,
               scrollController: Global.scrollController,
+              useCatePage: true,
             ),
           ),
         ),

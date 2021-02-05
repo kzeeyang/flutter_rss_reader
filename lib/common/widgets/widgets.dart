@@ -17,3 +17,4 @@ export 'paddingContainer.dart';
 export 'bottomMessage.dart';
 export 'edgeFloatingIcon.dart';
 export 'transparentIconButton.dart';
+export 'catePageAppBar.dart';

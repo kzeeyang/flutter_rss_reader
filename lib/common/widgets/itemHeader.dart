@@ -8,7 +8,7 @@ import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
 import 'package:share/share.dart';
 
-Widget ItemHeader(BuildContext context, MRssItem item) {
+Widget ItemHeader(BuildContext context, MRssItem item, bool useCatePage) {
   final size = MediaQuery.of(context).size;
   final width = size.width;
   final height = 60.0;
@@ -27,8 +27,10 @@ Widget ItemHeader(BuildContext context, MRssItem item) {
             Global.appState.getShowCategoryRssSetting(item.rssName),
             size: iconSize,
             onTap: () {
-              ExtendedNavigator.rootNavigator.pushCatePage(
-                  rssSetting: Global.appState.getRss(item.rssName));
+              if (useCatePage) {
+                ExtendedNavigator.rootNavigator.pushCatePage(
+                    rssSetting: Global.appState.getRss(item.rssName));
+              }
             },
           ),
         ),

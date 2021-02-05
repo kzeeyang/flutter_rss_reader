@@ -19,6 +19,8 @@ class MyScaffold extends StatefulWidget {
   final Function onLeftDragEnd;
   final Function onRightDragEnd;
 
+  final Color backgroundColor;
+
   const MyScaffold({
     Key key,
     this.onWillPop,
@@ -32,6 +34,7 @@ class MyScaffold extends StatefulWidget {
     this.dragItemWidth = 40,
     this.dragItemHeight = 120,
     this.dragItemEnableWidth = 10,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -197,6 +200,7 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
         onHorizontalDragEnd: _onHorizontalDragEnd,
         child: Scaffold(
           appBar: widget.appBar,
+          backgroundColor: widget.backgroundColor,
           body: Container(
             color: AppColors.primaryGreyBackground,
             child: Stack(

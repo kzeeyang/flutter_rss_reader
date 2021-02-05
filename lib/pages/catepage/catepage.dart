@@ -21,7 +21,22 @@ class CatePage extends StatefulWidget {
 
 class _CatePageState extends State<CatePage> {
   bool _canForward = false;
-  double _sliverAppBarHeight = 220;
+  double _sliverAppBarHeight = 230;
+  ScrollController _scrollController = new ScrollController();
+  bool _showTitle = false;
+  final double stateHeight = MediaQueryData.fromWindow(window).padding.top;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      // debugPrint("${_scrollController.offset}");
+      _showTitle = _scrollController.offset + stateHeight > _sliverAppBarHeight
+          ? true
+          : false;
+      setState(() {});
+    });
+  }
 
   Future<bool> _goBackOrPopCallback() async {
     ExtendedNavigator.rootNavigator.pop();
@@ -33,7 +48,6 @@ class _CatePageState extends State<CatePage> {
     Global.appState.mRssItems
         .sort((left, right) => right.pubDate.compareTo(left.pubDate));
     // _mRssItems = Global.appState.mRssItems;
-
     if (mounted) {
       setState(() {});
     }
@@ -56,126 +70,24 @@ class _CatePageState extends State<CatePage> {
 
   Widget _sliverAppBar() {
     return SliverAppBar(
-      backgroundColor: Colors.black,
-      // title: Text(widget.rssSetting.rssName),
-      leading: Icon(null),
-      // leading: TransparentIconButton(
-      //   icon: Icon(
-      //     Icons.arrow_back_ios,
-      //     color: Colors.white,
-      //   ),
-      //   onPressed: () {
-      //     ExtendedNavigator.rootNavigator.pop();
-      //   },
-      // ),
-      // pinned: true, //保持在顶部
-      floating: true, //向下滚动时会显示回来
-      expandedHeight: _sliverAppBarHeight, //标题栏高度
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          height: _sliverAppBarHeight,
-          decoration: BoxDecoration(
-            // color: Colors.black54,
-            image: DecorationImage(
-              image: NetworkImage(widget.rssSetting.iconUrl),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.black87, BlendMode.darken),
-            ),
-          ),
-          padding: EdgeInsets.only(top: 110, left: 15, right: 15),
-          alignment: Alignment.topLeft,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  RssIcon(
-                    Global.appState
-                        .getShowCategoryRssSetting(widget.rssSetting.rssName),
-                    size: 60,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      widget.rssSetting.rssName,
-                      style: TextStyle(
-                        fontSize: AppValue.titleSize * 1.2,
-                        fontWeight: AppValue.titleWeight,
-                        color: Colors.white,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15.0),
-                child: Row(
-                  children: [
-                    Text(
-                      widget.rssSetting.description == null ||
-                              widget.rssSetting.description == ""
-                          ? "这个Rss很懒，什么介绍都没有"
-                          : widget.rssSetting.description,
-                      style: TextStyle(
-                        fontSize: AppValue.titleSize,
-                        // fontWeight: AppValue.titleWeight,
-                        color: Colors.white,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+      backgroundColor: Colors.transparent,
+      title: _showTitle ? Text(widget.rssSetting.rssName) : null,
+      leading: TransparentIconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.white,
         ),
+        onPressed: () {
+          ExtendedNavigator.rootNavigator.pop();
+        },
       ),
-    );
-  }
-
-  Widget _sliverAppBar2() {
-    return SliverAppBar(
-      backgroundColor: Colors.black,
-      leading: Icon(null),
-      floating: true, //向下滚动时会显示回来
-      expandedHeight: _sliverAppBarHeight, //标题栏高度
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          children: [
-            Container(
-              height: _sliverAppBarHeight,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(widget.rssSetting.iconUrl),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Center(
-              child: ClipRect(
-                //可裁切的矩形
-                child: BackdropFilter(
-                  //背景过滤器
-                  filter: ImageFilter.blur(
-                      sigmaX: 5.0, sigmaY: 5.0), //图片过滤器包含在dart:UI中
-                  child: Opacity(
-                    opacity: 0.6, //透明度,数值越大越不透明
-                    child: Container(
-                      width: 500.0,
-                      height: 700.0,
-                      decoration: BoxDecoration(
-                          //盒子修饰器
-                          color: Colors.grey.shade200),
-                      child: Center(),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      pinned: true,
+      floating: true,
+      expandedHeight: _sliverAppBarHeight,
+      flexibleSpace: CatePageAppBar(
+        imageUrl: widget.rssSetting.iconUrl,
+        rssSetting: widget.rssSetting,
+        context: context,
       ),
     );
   }
@@ -192,24 +104,25 @@ class _CatePageState extends State<CatePage> {
       body: EasyRefresh(
         enableControlFinishRefresh: true,
         controller: Global.refreshController,
-        scrollController: Global.scrollController,
+        scrollController: _scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
-        header: BezierCircleHeader(backgroundColor: Colors.blue[400]),
+        header: MaterialHeader(),
         onRefresh: () async {
           await _loadRss();
           Global.refreshController.finishRefresh();
         },
         child: CustomScrollView(
           slivers: [
-            _sliverAppBar2(),
+            _sliverAppBar(),
             SliverPadding(
               padding: EdgeInsets.only(top: 5.0),
               sliver: ItemSliverList(
                 mRssItems:
                     Global.appState.getCatePage(widget.rssSetting.rssName),
-                scrollController: Global.scrollController,
+                scrollController: _scrollController,
+                useCatePage: false,
               ),
-            )
+            ),
           ],
         ),
       ),

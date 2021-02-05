@@ -7,8 +7,10 @@ import 'package:flutter_rss_reader/global.dart';
 class ItemSliverList extends StatelessWidget {
   final List<MRssItem> mRssItems;
   final ScrollController scrollController;
+  final bool useCatePage;
 
-  const ItemSliverList({Key key, this.scrollController, this.mRssItems})
+  const ItemSliverList(
+      {Key key, this.scrollController, this.mRssItems, this.useCatePage})
       : super(key: key);
 
   _onTap(MRssItem mRssItem) {
@@ -30,7 +32,7 @@ class ItemSliverList extends StatelessWidget {
                 shadowColor: AppValue.ItemShadowColor,
                 child: Column(
                   children: [
-                    ItemHeader(context, mRssitem),
+                    ItemHeader(context, mRssitem, useCatePage),
                     ItemBody(context, mRssitem, scrollController),
                   ],
                 ),
