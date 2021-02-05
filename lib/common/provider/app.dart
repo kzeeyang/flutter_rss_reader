@@ -83,10 +83,12 @@ class AppState with ChangeNotifier {
         var rssEntity = await Rss.getRss(
           url,
           context: null,
+          getRssSetting: true,
           getMRssItems: true,
           rssIconUrl: showCategory.rssSettings[i].iconUrl,
         );
-
+        showCategory.rssSettings[i].description =
+            rssEntity.rssSetting.description;
         this.mRssItems.addAll(rssEntity.mrssItems);
       }
     }

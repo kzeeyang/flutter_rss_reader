@@ -21,7 +21,7 @@ class CatePage extends StatefulWidget {
 
 class _CatePageState extends State<CatePage> {
   bool _canForward = false;
-  double _sliverAppBarHeight = 230;
+  double _sliverAppBarHeight = 200;
   ScrollController _scrollController = new ScrollController();
   bool _showTitle = false;
   final double stateHeight = MediaQueryData.fromWindow(window).padding.top;
@@ -31,9 +31,10 @@ class _CatePageState extends State<CatePage> {
     super.initState();
     _scrollController.addListener(() {
       // debugPrint("${_scrollController.offset}");
-      _showTitle = _scrollController.offset + stateHeight > _sliverAppBarHeight
-          ? true
-          : false;
+      _showTitle =
+          _scrollController.offset > (_sliverAppBarHeight - stateHeight) / 2
+              ? true
+              : false;
       setState(() {});
     });
   }
@@ -69,6 +70,7 @@ class _CatePageState extends State<CatePage> {
   }
 
   Widget _sliverAppBar() {
+    final double stateHeight = MediaQueryData.fromWindow(window).padding.top;
     return SliverAppBar(
       backgroundColor: Colors.transparent,
       title: _showTitle ? Text(widget.rssSetting.rssName) : null,
@@ -82,12 +84,14 @@ class _CatePageState extends State<CatePage> {
         },
       ),
       pinned: true,
-      floating: true,
+      floating: _showTitle ? false : true,
       expandedHeight: _sliverAppBarHeight,
       flexibleSpace: CatePageAppBar(
         imageUrl: widget.rssSetting.iconUrl,
         rssSetting: widget.rssSetting,
         context: context,
+        stateHeight: stateHeight,
+        sliverAppBarHeight: _sliverAppBarHeight,
       ),
     );
   }
@@ -106,7 +110,7 @@ class _CatePageState extends State<CatePage> {
         controller: Global.refreshController,
         scrollController: _scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
-        header: MaterialHeader(),
+        header: MaterialHeader(displacement: 40 + _sliverAppBarHeight),
         onRefresh: () async {
           await _loadRss();
           Global.refreshController.finishRefresh();
@@ -129,31 +133,3 @@ class _CatePageState extends State<CatePage> {
     );
   }
 }
-
-// Container(
-//               height: _sliverAppBarHeight,
-//               alignment: Alignment.bottomCenter,
-//               // color: Colors.blueAccent,
-//               child: UserAccountsDrawerHeader(
-//                 accountName: Text(
-//                   widget.rssSetting.rssName,
-//                   style: TextStyle(fontWeight: FontWeight.bold),
-//                 ),
-//                 accountEmail: widget.rssSetting.description == null
-//                     ? Text("这个Rss很懒，什么介绍都没有。")
-//                     : Text(widget.rssSetting.description),
-//                 currentAccountPicture: CircleAvatar(
-//                   backgroundImage: NetworkImage(widget.rssSetting.iconUrl),
-//                   backgroundColor: Colors.transparent,
-//                 ),
-//                 decoration: BoxDecoration(
-//                   // color: Colors.black54,
-//                   image: DecorationImage(
-//                     image: NetworkImage(widget.rssSetting.iconUrl),
-//                     fit: BoxFit.cover,
-//                     colorFilter:
-//                         ColorFilter.mode(Colors.black54, BlendMode.darken),
-//                   ),
-//                 ),
-//               ),
-//             ),

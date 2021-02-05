@@ -55,7 +55,7 @@ class Rss {
         }
       } else {
         var rssFeed = _praseRssFeed(response);
-
+        // debugPrint("rssFeed description: ${rssFeed.description}");
         if (getRssSetting) {
           rssEntity.rssSetting = RssSetting(
             url: url,
