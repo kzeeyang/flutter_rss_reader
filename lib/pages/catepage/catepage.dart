@@ -22,13 +22,21 @@ class CatePage extends StatefulWidget {
 class _CatePageState extends State<CatePage> {
   bool _canForward = false;
   double _sliverAppBarHeight = 200;
-  ScrollController _scrollController = new ScrollController();
   bool _showTitle = false;
   final double stateHeight = MediaQueryData.fromWindow(window).padding.top;
+
+  EasyRefreshController _refreshController;
+  ScrollController _scrollController;
+  LinkHeaderNotifier _headerNotifier;
 
   @override
   void initState() {
     super.initState();
+
+    _headerNotifier = LinkHeaderNotifier();
+    _refreshController = EasyRefreshController();
+    _scrollController = ScrollController();
+
     _scrollController.addListener(() {
       // debugPrint("${_scrollController.offset}");
       _showTitle =
@@ -37,6 +45,14 @@ class _CatePageState extends State<CatePage> {
               : false;
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _headerNotifier.dispose();
+    _refreshController.dispose();
+    _scrollController.dispose();
   }
 
   Future<bool> _goBackOrPopCallback() async {
@@ -92,6 +108,10 @@ class _CatePageState extends State<CatePage> {
         context: context,
         stateHeight: stateHeight,
         sliverAppBarHeight: _sliverAppBarHeight,
+        refreshAction: CircleHeader(
+          _headerNotifier,
+        ),
+        refreshActionSize: 24,
       ),
     );
   }
@@ -105,29 +125,95 @@ class _CatePageState extends State<CatePage> {
       onLeftDragEnd: _goBackOrPopCallback,
       // onRightDragEnd: _forwardCallback,
       // appBar: _appBar(),
-      body: EasyRefresh(
+      body: EasyRefresh.custom(
         enableControlFinishRefresh: true,
-        controller: Global.refreshController,
+        controller: _refreshController,
         scrollController: _scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
-        header: MaterialHeader(displacement: 40 + _sliverAppBarHeight),
+        // header: MaterialHeader(displacement: 40),
+        header: LinkHeader(_headerNotifier,
+            completeDuration: Duration(milliseconds: 500)),
         onRefresh: () async {
           await _loadRss();
-          Global.refreshController.finishRefresh();
+          _refreshController.finishRefresh();
         },
-        child: CustomScrollView(
-          slivers: [
-            _sliverAppBar(),
-            SliverPadding(
-              padding: EdgeInsets.only(top: 5.0),
-              sliver: ItemSliverList(
-                mRssItems:
-                    Global.appState.getCatePage(widget.rssSetting.rssName),
-                scrollController: _scrollController,
-                useCatePage: false,
-              ),
+        slivers: [
+          _sliverAppBar(),
+          SliverPadding(
+            padding: EdgeInsets.only(top: 5.0),
+            sliver: ItemSliverList(
+              mRssItems: Global.appState.getCatePage(widget.rssSetting.rssName),
+              scrollController: _scrollController,
+              useCatePage: false,
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// 圆形Header
+class CircleHeader extends StatefulWidget {
+  final LinkHeaderNotifier linkNotifier;
+  final double size;
+
+  const CircleHeader(this.linkNotifier, {Key key, this.size = 24})
+      : super(key: key);
+
+  @override
+  CircleHeaderState createState() {
+    return CircleHeaderState();
+  }
+}
+
+class CircleHeaderState extends State<CircleHeader> {
+  // 指示器值
+  double _indicatorValue = 0.0;
+
+  RefreshMode get _refreshState => widget.linkNotifier.refreshState;
+  double get _pulledExtent => widget.linkNotifier.pulledExtent;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.linkNotifier.addListener(onLinkNotify);
+  }
+
+  void onLinkNotify() {
+    setState(() {
+      if (_refreshState == RefreshMode.armed ||
+          _refreshState == RefreshMode.refresh) {
+        _indicatorValue = null;
+      } else if (_refreshState == RefreshMode.refreshed ||
+          _refreshState == RefreshMode.done) {
+        _indicatorValue = 1.0;
+      } else {
+        if (_refreshState == RefreshMode.inactive) {
+          _indicatorValue = 0.0;
+        } else {
+          double indicatorValue = _pulledExtent / 70.0 * 0.8;
+          _indicatorValue = indicatorValue < 0.8 ? indicatorValue : 0.8;
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        alignment: Alignment.center,
+        color: Colors.transparent,
+        margin: EdgeInsets.only(
+          right: 20.0,
+        ),
+        width: widget.size,
+        height: widget.size,
+        child: CircularProgressIndicator(
+          value: _indicatorValue,
+          valueColor: AlwaysStoppedAnimation(Colors.white),
+          strokeWidth: 2.4,
         ),
       ),
     );

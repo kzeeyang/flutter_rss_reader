@@ -18,7 +18,7 @@ Widget rewardWidget(double rewardHeight) {
           Container(
             height: 30,
             child: Text(
-              "这是一个赞赏码😉",
+              "这是一个打赏码😉",
               style: TextStyle(
                 fontSize: 16,
               ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rss_reader/common/provider/provider.dart';
 import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
+import 'package:flutter_rss_reader/pages/catepage/catepage.dart';
 
 Widget CatePageAppBar({
   String imageUrl,
@@ -12,6 +13,8 @@ Widget CatePageAppBar({
   BuildContext context,
   double stateHeight,
   double sliverAppBarHeight,
+  CircleHeader refreshAction,
+  double refreshActionSize,
 }) {
   final size = MediaQuery.of(context).size;
   final width = size.width;
@@ -60,7 +63,7 @@ Widget CatePageAppBar({
                     child: Text(
                       rssSetting.rssName,
                       style: TextStyle(
-                        fontSize: AppValue.titleSize * 1.2,
+                        fontSize: AppValue.titleSize,
                         fontWeight: AppValue.titleWeight,
                         color: Colors.white,
                       ),
@@ -80,7 +83,7 @@ Widget CatePageAppBar({
                         ? "这个Rss很懒，什么介绍都没有"
                         : rssSetting.description,
                     style: TextStyle(
-                      fontSize: AppValue.titleSize,
+                      fontSize: AppValue.titleSize * 0.8,
                       // fontWeight: AppValue.titleWeight,
                       color: Colors.white,
                     ),
@@ -92,6 +95,11 @@ Widget CatePageAppBar({
             ],
           ),
         ),
+      ),
+      Positioned(
+        top: 20 + stateHeight,
+        right: 0,
+        child: refreshAction,
       ),
     ],
   );

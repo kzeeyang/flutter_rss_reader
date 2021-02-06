@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter_rss_reader/common/utils/screen.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
@@ -23,8 +24,11 @@ class ApplicationPage extends StatefulWidget {
 
 class _ApplicationPageState extends State<ApplicationPage>
     with TickerProviderStateMixin {
-  final String topMsg = '已在最顶层';
-  final String bottomMsg = '已在最底层';
+  final String topMsg = '上面没有内容了唉~';
+  final String bottomMsg = '所有内容已经看完了，休息一下吧！';
+
+  EasyRefreshController _refreshController;
+  ScrollController _scrollController;
 
   DateTime _willPopLastTime;
 
@@ -43,14 +47,18 @@ class _ApplicationPageState extends State<ApplicationPage>
   @override
   void initState() {
     super.initState();
-    bool firstOpen = StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
+    _refreshController = new EasyRefreshController();
+    _scrollController = new ScrollController();
+    // bool firstOpen = StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
     _buildAppBar();
-    debugPrint("firstOpen: $firstOpen");
+    // debugPrint("firstOpen: $firstOpen");
   }
 
   @override
   void dispose() {
     super.dispose();
+    _refreshController.dispose();
+    _scrollController.dispose();
   }
 
   bool _popFunction() {
@@ -151,7 +159,11 @@ class _ApplicationPageState extends State<ApplicationPage>
               : Global.appState.showCategory.rssSettings.length == 0
                   ? Center(child: Text('分类下尚未添加RSS'))
                   : Positioned(
-                      child: BodyWidget(appBarSize: _appBar.preferredSize)),
+                      child: BodyWidget(
+                      appBarSize: _appBar.preferredSize,
+                      scrollController: _scrollController,
+                      refreshController: _refreshController,
+                    )),
           scrollDragtarget(
             left: 0,
             onWillAccept: (data) {
@@ -159,14 +171,14 @@ class _ApplicationPageState extends State<ApplicationPage>
               return true;
             },
             onAccept: (data) {
-              if (Global.scrollController.offset == 0) {
+              if (_scrollController.offset == 0) {
                 toastInfo(msg: topMsg);
               } else {
-                var offsize = Global.scrollController.offset - pageHeight;
+                var offsize = _scrollController.offset - pageHeight;
                 if (offsize < 0) {
                   offsize = 0;
                 }
-                Global.scrollController.animateTo(offsize,
+                _scrollController.animateTo(offsize,
                     duration: Duration(milliseconds: 300), curve: Curves.ease);
               }
               Global.appState.changeDragChoice(0);
@@ -179,16 +191,15 @@ class _ApplicationPageState extends State<ApplicationPage>
               return true;
             },
             onAccept: (data) {
-              if (Global.scrollController.offset ==
-                  Global.scrollController.position.maxScrollExtent) {
+              if (_scrollController.offset ==
+                  _scrollController.position.maxScrollExtent) {
                 toastInfo(msg: bottomMsg);
               } else {
-                var offsize = Global.scrollController.offset + pageHeight;
-                if (offsize >
-                    Global.scrollController.position.maxScrollExtent) {
-                  offsize = Global.scrollController.position.maxScrollExtent;
+                var offsize = _scrollController.offset + pageHeight;
+                if (offsize > _scrollController.position.maxScrollExtent) {
+                  offsize = _scrollController.position.maxScrollExtent;
                 }
-                Global.scrollController.animateTo(offsize,
+                _scrollController.animateTo(offsize,
                     duration: Duration(milliseconds: 300), curve: Curves.ease);
               }
               Global.appState.changeDragChoice(0);

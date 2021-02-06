@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_rss_reader/common/utils/full_screen_dialog_util.dart';
 import 'package:flutter_rss_reader/common/utils/utils.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
@@ -16,6 +17,10 @@ class AnimationFloatingButton extends StatefulWidget {
   // AnimationFloatingButton(PanelController controller) {
   //   this.panelController = controller;
   // }
+  final EasyRefreshController refreshController;
+
+  const AnimationFloatingButton({Key key, this.refreshController})
+      : super(key: key);
 
   @override
   _AnimationFloatingButtonState createState() =>
@@ -76,7 +81,7 @@ class _AnimationFloatingButtonState extends State<AnimationFloatingButton>
         ),
       ),
       onDoubleTap: () {
-        Global.refreshController.callRefresh();
+        widget.refreshController.callRefresh();
       },
       onLongPress: () {
         ExtendedNavigator.rootNavigator

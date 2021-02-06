@@ -25,9 +25,9 @@ class Global {
   /// 应用状态
   static AppState appState = AppState();
 
-  static PanelController panelController = new PanelController();
-  static EasyRefreshController refreshController = new EasyRefreshController();
-  static ScrollController scrollController = new ScrollController();
+  // static PanelController panelController = new PanelController();
+  // static EasyRefreshController refreshController = new EasyRefreshController();
+  // static ScrollController scrollController = new ScrollController();
 
   /// 是否 release
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");

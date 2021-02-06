@@ -14,8 +14,12 @@ import 'package:webfeed/webfeed.dart';
 
 class BodyWidget extends StatefulWidget {
   final Size appBarSize;
+  final ScrollController scrollController;
+  final EasyRefreshController refreshController;
 
-  const BodyWidget({Key key, this.appBarSize}) : super(key: key);
+  const BodyWidget(
+      {Key key, this.appBarSize, this.scrollController, this.refreshController})
+      : super(key: key);
 
   @override
   _BodyWidgetState createState() => _BodyWidgetState();
@@ -23,10 +27,12 @@ class BodyWidget extends StatefulWidget {
 
 class _BodyWidgetState extends State<BodyWidget> {
   // List<MRssItem> _mRssItems = new List();
+  PanelController _panelController;
 
   @override
   void initState() {
     super.initState();
+    _panelController = new PanelController();
     if (Global.appState.showCategory.rssSettings.isNotEmpty) {
       // print("body init get rss");
       _loadRss();
@@ -40,7 +46,7 @@ class _BodyWidgetState extends State<BodyWidget> {
 
   _loadCache() {
     Timer(Duration(seconds: 3), () {
-      Global.refreshController.callRefresh();
+      widget.refreshController.callRefresh();
     });
   }
 
@@ -63,7 +69,7 @@ class _BodyWidgetState extends State<BodyWidget> {
     final double _maxPanelHeight = height / 2.3;
 
     return SlidingUpPanel(
-      controller: Global.panelController,
+      controller: _panelController,
       minHeight: _minPanelHeight,
       maxHeight: _maxPanelHeight,
       backdropEnabled: true,
@@ -79,13 +85,13 @@ class _BodyWidgetState extends State<BodyWidget> {
       },
       body: EasyRefresh(
         enableControlFinishRefresh: true,
-        controller: Global.refreshController,
-        scrollController: Global.scrollController,
+        controller: widget.refreshController,
+        scrollController: widget.scrollController,
         // header: BezierHourGlassHeader(backgroundColor: Colors.grey),
         header: BezierCircleHeader(backgroundColor: Colors.blue[400]),
         onRefresh: () async {
           await _loadRss();
-          Global.refreshController.finishRefresh();
+          widget.refreshController.finishRefresh();
         },
 
         child: Global.appState.mRssItems.length > 0
@@ -111,7 +117,7 @@ class _BodyWidgetState extends State<BodyWidget> {
             padding: EdgeInsets.only(top: 5.0, bottom: 135),
             sliver: ItemSliverList(
               mRssItems: Global.appState.mRssItems,
-              scrollController: Global.scrollController,
+              scrollController: widget.scrollController,
               useCatePage: true,
             ),
           ),
@@ -131,10 +137,10 @@ class _BodyWidgetState extends State<BodyWidget> {
                 width: size.width,
                 child: FlatButton(
                   onPressed: () {
-                    if (Global.panelController.isPanelOpen()) {
-                      Global.panelController.close();
-                    } else if (Global.panelController.isPanelClosed()) {
-                      Global.panelController.open();
+                    if (_panelController.isPanelOpen()) {
+                      _panelController.close();
+                    } else if (_panelController.isPanelClosed()) {
+                      _panelController.open();
                     }
                   },
                   child: Center(
