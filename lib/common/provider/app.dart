@@ -76,19 +76,22 @@ class AppState with ChangeNotifier {
     this.mRssItems.clear();
 
     for (var i = 0; i < showCategory.rssSettings.length; i++) {
-      debugPrint(
-          'get rss from reloadMRssItems: ${showCategory.rssSettings[i].rssName}');
+      // debugPrint(
+      // 'get rss from reloadMRssItems: ${showCategory.rssSettings[i].rssName}');
       var url = showCategory.rssSettings[i].url;
       if (url.isNotEmpty) {
         var rssEntity = await Rss.getRss(
           url,
           context: null,
+          // getIconUrl: true,
           getRssSetting: true,
           getMRssItems: true,
           rssIconUrl: showCategory.rssSettings[i].iconUrl,
         );
+        // debugPrint("get rss item length: ${rssEntity.mrssItems.length}");
         showCategory.rssSettings[i].description =
             rssEntity.rssSetting.description;
+        showCategory.rssSettings[i].iconUrl = rssEntity.rssSetting.iconUrl;
         this.mRssItems.addAll(rssEntity.mrssItems);
       }
     }
@@ -96,6 +99,18 @@ class AppState with ChangeNotifier {
     this.mRssItems.sort((left, right) => right.pubDate.compareTo(left.pubDate));
     notifyListeners();
     return this.mRssItems;
+  }
+
+  Future<List<MRssItem>> reloadOneRSS(RssSetting rss) async {
+    var rssEntity = await Rss.getRss(
+      rss.url,
+      context: null,
+      // getRssSetting: true,
+      getMRssItems: true,
+      rssIconUrl: rss.iconUrl,
+    );
+
+    return rssEntity.mrssItems;
   }
 
   bool mRssItemIsShow(String rssname) {
@@ -210,6 +225,7 @@ class AppState with ChangeNotifier {
       changeShowCategory("");
     }
 
+    reloadMRssItems();
     notifyListeners();
     save(Save.Category);
   }

@@ -90,7 +90,7 @@ class _CateDetailState extends State<CateDetail> {
           child: Row(
             children: <Widget>[
               RssIcon(
-                item,
+                rss: item,
                 // onTap: () {
                 //   Global.appState.changeRssOpen(
                 //       widget.cateName, item.url, item.rssName, !item.opened);

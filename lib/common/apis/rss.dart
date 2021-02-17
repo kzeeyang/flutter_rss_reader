@@ -22,6 +22,8 @@ class Rss {
         .get(url, context: null, cacheDisk: cacheDisk)
         .then((response) {
       // debugPrint("$response");
+      // response.toString().replaceAll(RegExp(r"<!\[CDATA\["), "");
+      // response.toString().replaceAll(RegExp(r"\]\]"), "");
       RssEntity rssEntity = new RssEntity();
       String host = urlHost(url);
       if (url.endsWith('.xml') || url.endsWith('.atom')) {
@@ -69,8 +71,13 @@ class Rss {
 
         if (getMRssItems) {
           rssEntity.mrssItems = new List<MRssItem>();
-
+          // if (rssFeed.title == "什么值得买") {
+          //   debugPrint("什么值得买 lastBuildDate:${rssFeed.lastBuildDate}");
+          // }
           rssFeed.items.forEach((item) {
+            // if (rssFeed.title == "什么值得买") {
+            //   debugPrint("什么值得买 pubDate:${item.pubDate}");
+            // }
             MRssItem mRssItem = _parseItemToMRssItem(true, item, null);
             mRssItem.rssName = rssFeed.title;
             mRssItem.rssIcon = rssIconUrl;

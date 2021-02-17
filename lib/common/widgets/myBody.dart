@@ -1,15 +1,12 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rss_reader/common/values/values.dart';
 import 'package:flutter_rss_reader/common/widgets/widgets.dart';
 import 'package:flutter_rss_reader/global.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-class MyScaffold extends StatefulWidget {
-  final WillPopCallback onWillPop;
-  final Widget appBar;
+class MyBody extends StatefulWidget {
   final Widget body;
-  final Widget floatingActionButton;
 
   final bool showLeftDragItem;
   final bool showRightDragItem;
@@ -19,34 +16,28 @@ class MyScaffold extends StatefulWidget {
   final Function onLeftDragEnd;
   final Function onRightDragEnd;
 
-  final Color backgroundColor;
-
-  const MyScaffold({
+  const MyBody({
     Key key,
-    this.onWillPop,
-    this.appBar,
     this.body,
-    this.onLeftDragEnd,
-    this.onRightDragEnd,
-    this.floatingActionButton,
     this.showLeftDragItem = true,
     this.showRightDragItem = true,
-    this.dragItemWidth = 40,
+    this.dragItemWidth = 30,
     this.dragItemHeight = 160,
     this.dragItemEnableWidth = 10,
-    this.backgroundColor,
+    this.onLeftDragEnd,
+    this.onRightDragEnd,
   }) : super(key: key);
-
   @override
-  _MyScaffoldState createState() => _MyScaffoldState();
+  _MyBodyState createState() => _MyBodyState();
 }
 
-class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
+class _MyBodyState extends State<MyBody> with TickerProviderStateMixin {
   Animation _animation;
   AnimationController _animationController;
   double _animationWidth;
   double _animationTop;
 
+  double _startDx;
   double _enbaleWidth = 10;
   double _edgeFloatingBtnHeight = 160;
   double _edgeFloatingBtnWidth = 40;
@@ -54,8 +45,8 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
   bool _cando = false;
   bool _showIcon = false;
   bool _right = false;
-  Offset _startOffset;
-  Offset _endOffset;
+  // Offset _startOffset;
+  // Offset _endOffset;
 
   @override
   void initState() {
@@ -75,40 +66,38 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
     _animationController.dispose();
   }
 
-  void _onHorizontalDragStart(DragStartDetails details) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    _startOffset = details.globalPosition;
-    // debugPrint("startOffset: ${_startOffset.dx}");
-    _enbaleWidth =
-        Global.appState.mRssItems.length > 0 ? 15 + _enbaleWidth : _enbaleWidth;
-    if (_startOffset.dx + _enbaleWidth > screenWidth &&
+  void _onPointerDown(PointerDownEvent event) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    _startDx = event.position.dx;
+
+    if (_startDx < widget.dragItemEnableWidth) {
+      _enabel = true;
+    }
+    if (_startDx + widget.dragItemEnableWidth > width &&
         widget.showRightDragItem) {
       _enabel = true;
       _right = true;
     }
-
-    if (_startOffset.dx < _enbaleWidth && widget.showLeftDragItem) {
-      _enabel = true;
-    }
   }
 
-  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+  Future<void> _onPointerMove(PointerMoveEvent event) async {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
-    _endOffset = details.globalPosition;
+    var dx = event.position.dx;
+    var dy = event.position.dy;
 
     if (_enabel) {
-      _animationTop = height - _endOffset.dy - _edgeFloatingBtnHeight / 2;
+      _animationTop = height - dy - _edgeFloatingBtnHeight / 2;
       if (_right) {
-        _animationWidth =
-            (width - _endOffset.dx) * 4 * _edgeFloatingBtnWidth / width;
-        if (_endOffset.dx < width * 7 / 8) {
+        _animationWidth = (width - dx) * 4 * _edgeFloatingBtnWidth / width;
+        if (dx < width * 7 / 8) {
           _showIcon = true;
         } else {
           _showIcon = false;
         }
-        if (_endOffset.dx > width / 4 * 3) {
+        if (dx > width / 4 * 3) {
           _cando = false;
           debugPrint("cancel do something...");
         } else {
@@ -116,13 +105,13 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
           debugPrint("will do something...");
         }
       } else {
-        _animationWidth = _endOffset.dx * 4 * _edgeFloatingBtnWidth / width;
-        if (_endOffset.dx > width / 8) {
+        _animationWidth = dx * 4 * _edgeFloatingBtnWidth / width;
+        if (dx > width / 8) {
           _showIcon = true;
         } else {
           _showIcon = false;
         }
-        if (_endOffset.dx > width / 4) {
+        if (dx > width / 4) {
           _cando = true;
           debugPrint("will do something...");
         } else {
@@ -142,7 +131,7 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
     }
   }
 
-  void _onHorizontalDragEnd(DragEndDetails details) {
+  void _onPointerUp(PointerUpEvent event) {
     _animationController.reverse();
     if (_cando) {
       if (_right && widget.onRightDragEnd != null) {
@@ -191,29 +180,22 @@ class _MyScaffoldState extends State<MyScaffold> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: widget.onWillPop,
-      child: GestureDetector(
-        onHorizontalDragStart: _onHorizontalDragStart,
-        onHorizontalDragUpdate: _onHorizontalDragUpdate,
-        onHorizontalDragEnd: _onHorizontalDragEnd,
-        child: Scaffold(
-          appBar: widget.appBar,
-          backgroundColor: widget.backgroundColor,
-          body: Container(
-            color: AppColors.primaryGreyBackground,
-            child: Stack(
-              children: [
-                widget.body == null ? Container() : widget.body,
-                _floatingIcon(),
-              ],
-            ),
+    return Listener(
+      onPointerDown: _onPointerDown,
+      onPointerMove: _onPointerMove,
+      onPointerUp: _onPointerUp,
+      child: Stack(
+        children: [
+          PageView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              Scrollbar(
+                child: widget.body == null ? Container() : widget.body,
+              ),
+            ],
           ),
-          floatingActionButton: widget.floatingActionButton,
-          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-        ),
+          _floatingIcon(),
+        ],
       ),
     );
   }

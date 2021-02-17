@@ -57,7 +57,7 @@ Widget CatePageAppBar({
             children: [
               Row(
                 children: [
-                  RssIcon(rssSetting, size: 60),
+                  RssIcon(rss: rssSetting, size: 60),
                   Container(
                     padding: EdgeInsets.only(left: 8, right: 12),
                     child: Text(

@@ -27,7 +27,8 @@ class _DetailPageState extends State<DetailPage> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
-  // WebViewController webViewController;
+  ScrollController _scrollController = ScrollController();
+
   bool _isPageFinished = false;
   bool _canCallBack = false;
   bool _canForward = false;
@@ -35,8 +36,14 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   void initState() {
-    super.initState();
     _shareEndUrl.add(widget.item.link);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _canPopCallback() async {
@@ -212,7 +219,6 @@ class _DetailPageState extends State<DetailPage> {
                 _parentElement.removeChild(_element);
             }
           }
-
           removeElement('module-engadget-deeplink-top-ad');
           removeElement('module-engadget-deeplink-streams');
           removeElement('footer');
@@ -273,25 +279,13 @@ class _DetailPageState extends State<DetailPage> {
     //     ),
     //   ),
     // );
-    return MyScaffold(
-      showRightDragItem: _canForward,
-      dragItemWidth: 30,
-      onWillPop: _goBackOrPopCallback,
-      onLeftDragEnd: _goBackOrPopCallback,
-      onRightDragEnd: _forwardCallback,
+    return Scaffold(
       appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _isPageFinished
-              ? Container()
-              : Align(
-                  alignment: Alignment.center,
-                  child: LoadingBouncingGrid.square(
-                    backgroundColor: Colors.blue[400],
-                  ),
-                ),
-          _buildWebView(),
-        ],
+      body: MyBody(
+        showRightDragItem: _canForward,
+        onLeftDragEnd: _goBackOrPopCallback,
+        onRightDragEnd: _forwardCallback,
+        body: _buildWebView(),
       ),
     );
   }

@@ -18,3 +18,5 @@ export 'bottomMessage.dart';
 export 'edgeFloatingIcon.dart';
 export 'transparentIconButton.dart';
 export 'catePageAppBar.dart';
+export 'myScaffold.dart';
+export 'myBody.dart';

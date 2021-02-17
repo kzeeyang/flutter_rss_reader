@@ -24,6 +24,7 @@ class _CatePageState extends State<CatePage> {
   double _sliverAppBarHeight = 200;
   bool _showTitle = false;
   final double stateHeight = MediaQueryData.fromWindow(window).padding.top;
+  List<MRssItem> _mRssItems = List();
 
   EasyRefreshController _refreshController;
   ScrollController _scrollController;
@@ -45,6 +46,8 @@ class _CatePageState extends State<CatePage> {
               : false;
       setState(() {});
     });
+    // _loadRss();
+    _mRssItems = Global.appState.getCatePage(widget.rssSetting.rssName);
   }
 
   @override
@@ -61,9 +64,8 @@ class _CatePageState extends State<CatePage> {
   }
 
   _loadRss() async {
-    await Global.appState.reloadMRssItems();
-    Global.appState.mRssItems
-        .sort((left, right) => right.pubDate.compareTo(left.pubDate));
+    _mRssItems = await Global.appState.reloadOneRSS(widget.rssSetting);
+    _mRssItems.sort((left, right) => right.pubDate.compareTo(left.pubDate));
     // _mRssItems = Global.appState.mRssItems;
     if (mounted) {
       setState(() {});
@@ -142,7 +144,7 @@ class _CatePageState extends State<CatePage> {
           SliverPadding(
             padding: EdgeInsets.only(top: 5.0),
             sliver: ItemSliverList(
-              mRssItems: Global.appState.getCatePage(widget.rssSetting.rssName),
+              mRssItems: _mRssItems,
               scrollController: _scrollController,
               useCatePage: false,
             ),
@@ -153,7 +155,7 @@ class _CatePageState extends State<CatePage> {
   }
 }
 
-// 圆形Header
+// 圆形下拉刷新
 class CircleHeader extends StatefulWidget {
   final LinkHeaderNotifier linkNotifier;
   final double size;

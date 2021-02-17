@@ -24,7 +24,7 @@ Widget ItemHeader(BuildContext context, MRssItem item, bool useCatePage) {
         Container(
           width: iconWidth,
           child: RssIcon(
-            Global.appState.getShowCategoryRssSetting(item.rssName),
+            rss: Global.appState.getShowCategoryRssSetting(item.rssName),
             size: iconSize,
             onTap: () {
               if (useCatePage) {

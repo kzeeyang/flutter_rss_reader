@@ -1,3 +1,7 @@
+# Android ignore
+/android/key.properties
+/android/rss_reader.key.jks
+
 # Miscellaneous
 *.class
 *.log

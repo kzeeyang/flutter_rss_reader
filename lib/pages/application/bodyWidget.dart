@@ -110,6 +110,7 @@ class _BodyWidgetState extends State<BodyWidget> {
   }
 
   Widget _panelBody() {
+    print("show mRssItems length: ${Global.appState.mRssItems.length}");
     return CustomScrollView(
       slivers: [
         SliverSafeArea(
@@ -172,8 +173,9 @@ class _BodyWidgetState extends State<BodyWidget> {
                 var index = Global.appState.showCategory.rssSettings
                     .indexOf(rssSetting);
                 return RssIcon(
-                  rssSetting,
+                  rss: rssSetting,
                   size: 40,
+                  stokeWidth: 2,
                   onTap: () {
                     Global.appState.changeShowRssOpened(index);
                   },

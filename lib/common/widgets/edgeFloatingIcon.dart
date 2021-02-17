@@ -79,34 +79,34 @@ class EdgeClipper extends CustomClipper<Path> {
     if (right) {
       path.lineTo(size.width, 0);
       path.lineTo(size.width, height);
-      var firstPoint = Offset(size.width - offset / 8, height / 8 * 7);
-      var secondPoint = Offset(size.width - offset / 2, height / 4 * 3);
+      var firstPoint = Offset(size.width - offset / 8, height / 6 * 5);
+      var secondPoint = Offset(size.width - offset / 2, height / 3 * 2);
       path.quadraticBezierTo(
           firstPoint.dx, firstPoint.dy, secondPoint.dx, secondPoint.dy);
 
       var thirdPoint = Offset(size.width - offset, height / 2);
-      var fourthPoint = Offset(size.width - offset / 2, height / 4);
+      var fourthPoint = Offset(size.width - offset / 2, height / 3);
       path.quadraticBezierTo(
           thirdPoint.dx, thirdPoint.dy, fourthPoint.dx, fourthPoint.dy);
 
-      var fivePoint = Offset(size.width - offset / 8, height / 8);
+      var fivePoint = Offset(size.width - offset / 8, height / 6);
       var endPotin = Offset(size.width, 0);
       path.quadraticBezierTo(
           fivePoint.dx, fivePoint.dy, endPotin.dx, endPotin.dy);
     } else {
       path.lineTo(0, 0);
       path.lineTo(0, size.height);
-      var firstPoint = Offset(offset / 8, height / 8 * 7);
-      var secondPoint = Offset(offset / 2, height / 4 * 3);
+      var firstPoint = Offset(offset / 8, height / 6 * 5);
+      var secondPoint = Offset(offset / 2, height / 3 * 2);
       path.quadraticBezierTo(
           firstPoint.dx, firstPoint.dy, secondPoint.dx, secondPoint.dy);
 
       var thirdPoint = Offset(offset, height / 2);
-      var fourthPoint = Offset(offset / 2, height / 4);
+      var fourthPoint = Offset(offset / 2, height / 3);
       path.quadraticBezierTo(
           thirdPoint.dx, thirdPoint.dy, fourthPoint.dx, fourthPoint.dy);
 
-      var fivePoint = Offset(offset / 8, height / 8);
+      var fivePoint = Offset(offset / 8, height / 6);
       var endPotin = Offset(0, 0);
       path.quadraticBezierTo(
           fivePoint.dx, fivePoint.dy, endPotin.dx, endPotin.dy);
