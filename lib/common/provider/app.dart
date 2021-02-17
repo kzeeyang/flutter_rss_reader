@@ -96,6 +96,7 @@ class AppState with ChangeNotifier {
       }
     }
 
+    this.category[showCategory.cateName] = showCategory;
     this.mRssItems.sort((left, right) => right.pubDate.compareTo(left.pubDate));
     notifyListeners();
     return this.mRssItems;
