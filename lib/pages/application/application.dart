@@ -209,7 +209,9 @@ class _ApplicationPageState extends State<ApplicationPage>
       ),
       floatingActionButton: Global.appState.showCategory == null
           ? Container()
-          : AnimationFloatingButton(),
+          : AnimationFloatingButton(
+              refreshController: _refreshController,
+            ),
     );
   }
 }
