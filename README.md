@@ -1,4 +1,4 @@
-# flutter_rss_reader
+# RSS Reader
 
 A new Flutter project.
 

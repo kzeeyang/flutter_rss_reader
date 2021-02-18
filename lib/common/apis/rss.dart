@@ -22,11 +22,17 @@ class Rss {
         .get(url, context: null, cacheDisk: cacheDisk)
         .then((response) {
       // debugPrint("$response");
-      // response.toString().replaceAll(RegExp(r"<!\[CDATA\["), "");
-      // response.toString().replaceAll(RegExp(r"\]\]"), "");
+      response = response.toString().replaceAll("\n", "");
+      response = response.toString().replaceAll("\t", "");
+      // response = response.toString().replaceAll(" ", "");
+      // response.toString().replaceAll(RegExp(r"\]\]\n"), "");
+      // if (url.contains("http://www.qdaily.com/feed.xml")) {
+      //   debugPrint("$response");
+      // }
+
       RssEntity rssEntity = new RssEntity();
       String host = urlHost(url);
-      if (url.endsWith('.xml') || url.endsWith('.atom')) {
+      if (!response.toString().contains("<rss")) {
         var atomFeed = _parseAtomFeed(response);
 
         if (getRssSetting) {
@@ -119,14 +125,24 @@ class Rss {
     MRssItem mRssItem = new MRssItem();
     if (isRssItem) {
       mRssItem.title = rssItem.title;
-      mRssItem.pubDate = rssItem.pubDate;
+      if (rssItem.pubDate != null) {
+        mRssItem.pubDate = rssItem.pubDate;
+      } else {
+        mRssItem.pubDate = DateTime.now();
+      }
+
       mRssItem.author = rssItem.author;
       mRssItem.description = rssItem.description;
       mRssItem.link = rssItem.link;
       mRssItem.media = rssItem.media;
     } else {
       mRssItem.title = atomItem.title;
-      mRssItem.pubDate = atomItem.updated;
+      if (atomItem.updated != null) {
+        mRssItem.pubDate = atomItem.updated;
+      } else {
+        mRssItem.pubDate = DateTime.now();
+      }
+
       mRssItem.author = atomItem.authors.first.name;
       mRssItem.description = atomItem.content;
       mRssItem.link = atomItem.links.first.href;
