@@ -147,6 +147,7 @@ class _CatePageState extends State<CatePage> {
               mRssItems: _mRssItems,
               scrollController: _scrollController,
               useCatePage: false,
+              showCatePage: true,
             ),
           ),
         ],

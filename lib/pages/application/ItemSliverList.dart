@@ -8,10 +8,15 @@ class ItemSliverList extends StatelessWidget {
   final List<MRssItem> mRssItems;
   final ScrollController scrollController;
   final bool useCatePage;
+  final bool showCatePage;
 
-  const ItemSliverList(
-      {Key key, this.scrollController, this.mRssItems, this.useCatePage})
-      : super(key: key);
+  const ItemSliverList({
+    Key key,
+    this.scrollController,
+    this.mRssItems,
+    this.useCatePage = false,
+    this.showCatePage = false,
+  }) : super(key: key);
 
   _onTap(MRssItem mRssItem) {
     print('Enter to link: ${mRssItem.link}');
@@ -23,7 +28,8 @@ class ItemSliverList extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           var mRssitem = mRssItems[index];
-          if (Global.appState.mRssItemIsShow(mRssitem.rssName)) {
+          if (Global.appState.mRssItemIsShow(mRssitem.rssName) ||
+              showCatePage) {
             return Padding(
               padding: EdgeInsets.only(bottom: AppValue.ItemBottomPadding),
               child: Material(

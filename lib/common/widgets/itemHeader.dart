@@ -44,7 +44,7 @@ Widget ItemHeader(BuildContext context, MRssItem item, bool useCatePage) {
                   height: 30,
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    item.title,
+                    item.title.trimLeft(),
                     style: TextStyle(
                       fontSize: AppValue.titleSize,
                       fontWeight: AppValue.titleWeight,

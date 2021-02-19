@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter_rss_reader/common/router/router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_rss_reader/common/apis/api.dart';
@@ -178,6 +180,10 @@ class _BodyWidgetState extends State<BodyWidget> {
                   stokeWidth: 2,
                   onTap: () {
                     Global.appState.changeShowRssOpened(index);
+                  },
+                  onLongPress: () {
+                    ExtendedNavigator.rootNavigator.pushCatePage(
+                        rssSetting: Global.appState.getRss(rssSetting.rssName));
                   },
                 );
               }).toList(),

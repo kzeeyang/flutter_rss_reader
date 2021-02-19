@@ -14,6 +14,7 @@ class RssIcon extends StatefulWidget {
   final RssSetting rss;
   final double size;
   final Function onTap;
+  final Function onLongPress;
   final double stokeWidth;
 
   const RssIcon({
@@ -22,6 +23,7 @@ class RssIcon extends StatefulWidget {
     this.size = 30,
     this.onTap,
     this.stokeWidth = 0,
+    this.onLongPress,
   }) : super(key: key);
   @override
   _RssIconState createState() => _RssIconState();
@@ -113,6 +115,7 @@ class _RssIconState extends State<RssIcon> {
           child: _cachedNetworkImage(),
         ),
         onTap: widget.onTap,
+        onLongPress: widget.onLongPress,
       ),
     );
   }
